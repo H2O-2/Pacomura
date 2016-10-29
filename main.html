@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" type="text/css" href="bower_components/normalize-css/normalize.css">
+    <title>Madoka Pac-man</title>
+    <style>
+        canvas {
+            display: block;
+            position: absolute;
+            margin: 0 auto;
+            top: 10%;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0,0,0,0.8);
+            box-shadow: 0 0 40px 10px #1F1F1F;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
+        }
+        
+        .wrapper {
+            width: 100%;
+            height: 100%;
+            background: url("test.jpg");
+            background-size: cover;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <script src="sprite.js"></script>
+    <script src="main.js"></script>
+    <div class="wrapper"></div>
+</body>
+</html>

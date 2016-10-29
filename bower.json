@@ -1,0 +1,20 @@
+{
+  "name": "Pacomura",
+  "homepage": "https://github.com/H2O-2/Pacomura",
+  "authors": [
+    "H2O2"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "normalize-css": "normalize.css#^5.0.0"
+  }
+}
