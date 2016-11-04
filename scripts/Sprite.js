@@ -2,13 +2,9 @@
  * Created by H2O2 on 16/10/10.
  */
 
-var GRID_SIZE = 32;
-
 var s_homuraNorm, s_homuraKuro, s_qb, s_qbDead, s_soulgem,
     s_greifSeed, s_rocket, s_grenade, s_pistol,
     s_shotgun, s_map;
-
-var test;
 
 function Sprite(img, xSprite, ySprite, width, height) {
     this.img = img; // the whole sprite sheet
