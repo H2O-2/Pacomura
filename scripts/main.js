@@ -18,19 +18,22 @@ function main() {
         e = "mousedown";
     }
 
-    var game = new Game();
-    game.gameInit();
+    var img = new Image();
+    img.src = "img/gameSprite.png";
 
-    window.addEventListener("keyDown", game.readInput);
+    img.onload = function () {
+        spriteInit(this);
+        var game = new Game();
+        game.gameInit();
 
-    var loop = function () {
-        console.log("RENDER");
-        game.render();
+        var loop = function () {
+            //console.log("RENDER");
+            game.update();
+            game.render(ctx);
+            window.requestAnimationFrame(loop);
+        };
         window.requestAnimationFrame(loop);
     };
-    window.requestAnimationFrame(loop);
-
-
 }
 
 window.onload = function () {

@@ -29,25 +29,38 @@ function Monster(posnX, posnY) {
 
 Monster.prototype = new Character();
 
-function Player(posnX, posnY) {
+function Player(posnX, posnY, speed) {
     this.posnX = posnX;
     this.posnY = posnY;
     this.charDir = KEY.KEY_DOWN;
+    this.speed = speed;
 }
 
 Player.prototype = new Character();
 
-
 Player.prototype.charMove = function () {
-    if (charDir === KEY.KEY_UP) {
-        this.posnY += this.speed;
-    } else if (charDir === KEY.KEY_DOWN) {
+    if (this.charDir === KEY.KEY_UP) {
         this.posnY -= this.speed;
+    } else if (this.charDir === KEY.KEY_DOWN) {
+        this.posnY += this.speed;
+    } else if (this.charDir === KEY.KEY_LEFT) {
+        this.posnX -= this.speed;
+    } else if (this.charDir === KEY.KEY_RIGHT) {
+        this.posnX += this.speed;
     }
 };
 
+Player.prototype.update = function () {
+    //console.log("pass");
+    this.charDir = keyEvt.getDir();
+    //console.log(this.charDir);
+    this.charMove();
+};
+
 Player.prototype.render = function (ctx) {
-    console.log("TEST");
+    s_homuraNorm[0][0].draw(ctx, this.posnX, this.posnY);
+    //console.log(this.posnX);
+    //console.log("TEST");
     //s_homuraNorm[0][0].draw(ctx, 100, 100);
 };
 

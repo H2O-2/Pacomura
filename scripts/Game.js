@@ -11,33 +11,22 @@ function Game() {
     this.tile = new Array(MAP_WIDTH * MAP_HEIGHT);
     
     this.gameInit = function () {
-        this.player = new Player(INIT_POSN.PLAYER_X * TILE_LEN, INIT_POSN.PLAYER_Y * TILE_LEN, 5);
+        this.player = new Player(INIT_POSN.PLAYER_X * TILE_LEN, INIT_POSN.PLAYER_Y * TILE_LEN, 3);
 
         this.monster = new Monster(100, 100);
-
-        var img = new Image();
-        img.onload = function () {
-            spriteInit(this);
-            s_map.draw(ctx, 0, 0);
-            s_homuraNorm[0][0].draw(ctx, 100, 100);
-        };
-
-        img.src = "img/gameSprite.png";
+        //console.log(s_map);
+        //s_homuraNorm[0][0].draw(ctx, 100, 100);
     };
 
     this.update = function () {
-
+        this.player.update();
+        console.log(this.player.charDir);
     };
 
-    this.render = function () {
+    this.render = function (ctx) {
+        ctx.clearRect(0,0,WIDTH,HEIGHT);
+        s_map.draw(ctx, 0, 0);
         this.player.render(ctx);
     };
-
-    this.readInput = function (e) {
-        this.player.charDir = e.keyCode;
-        console.log("sdfdsf");
-        this.player.charMove();
-    }
 }
-
 

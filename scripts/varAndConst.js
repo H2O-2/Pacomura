@@ -8,7 +8,7 @@ var WIDTH = window.innerWidth,
     HEIGHT = window.innerHeight;
 
 var GAME_STATE = {START: "START", GAME: "GAME", FINISH: "FINISH"};
-var INIT_POSN = {PLAYER_X: 15, PLAYER_Y: 24};
+var INIT_POSN = {PLAYER_X: 3, PLAYER_Y: 3};
 var MAP_WIDTH = 28,
     MAP_HEIGHT = 31;
 
