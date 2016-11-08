@@ -24,69 +24,69 @@ function spriteInit(img) {
     // right for a = 2 and back for a = 3
     s_homuraNorm = [
         [
-            new Sprite(img, 4, 1, 27, 31),
             new Sprite(img, GRID_SIZE + 3, 0, 27, 32),
+            new Sprite(img, 4, 1, 27, 31),
             new Sprite(img, GRID_SIZE * 2 + 2, 1, 27, 31)
         ],
         [
-            new Sprite(img, 4, GRID_SIZE + 1, 26, 31),
             new Sprite(img, GRID_SIZE + 4, GRID_SIZE, 24, 32),
+            new Sprite(img, 4, GRID_SIZE + 1, 26, 31),
             new Sprite(img, GRID_SIZE * 2 + 4, GRID_SIZE + 1, 24, 31)
         ],
         [
-            new Sprite(img, 2, GRID_SIZE * 2 + 1, 26, 31),
             new Sprite(img, GRID_SIZE + 4, GRID_SIZE * 2, 24, 32),
+            new Sprite(img, 2, GRID_SIZE * 2 + 1, 26, 31),
             new Sprite(img, GRID_SIZE * 2 + 4, GRID_SIZE * 2 + 1, 24, 31)
         ],
         [
-            new Sprite(img, 5, GRID_SIZE * 3 + 1, 23, 31),
             new Sprite(img, GRID_SIZE + 4, GRID_SIZE * 3, 25, 32),
+            new Sprite(img, 5, GRID_SIZE * 3 + 1, 23, 31),
             new Sprite(img, GRID_SIZE * 2 + 4, GRID_SIZE * 3 + 1, 24, 31)
         ]
     ];
 
     s_homuraKuro = [
         [
-            new Sprite(img, GRID_SIZE * 3 + 4, 1, 27, 31),
             new Sprite(img, GRID_SIZE * 4 + 3, 0, 27, 32),
+            new Sprite(img, GRID_SIZE * 3 + 4, 1, 27, 31),
             new Sprite(img, GRID_SIZE * 5 + 2, 1, 27, 31)
         ],
         [
-            new Sprite(img, GRID_SIZE * 3 + 4, GRID_SIZE + 1, 26, 31),
             new Sprite(img, GRID_SIZE * 4 + 4, GRID_SIZE, 24, 32),
+            new Sprite(img, GRID_SIZE * 3 + 4, GRID_SIZE + 1, 26, 31),
             new Sprite(img, GRID_SIZE * 5 + 4, GRID_SIZE + 1, 24, 31)
         ],
         [
-            new Sprite(img, GRID_SIZE * 3 + 2, GRID_SIZE * 2 + 1, 26, 31),
             new Sprite(img, GRID_SIZE * 4 + 4, GRID_SIZE * 2, 24, 32),
+            new Sprite(img, GRID_SIZE * 3 + 2, GRID_SIZE * 2 + 1, 26, 31),
             new Sprite(img, GRID_SIZE * 5 + 4, GRID_SIZE * 2 + 1, 24, 31)
         ],
         [
-            new Sprite(img, 5, GRID_SIZE * 3 + 1, 23, 31),
             new Sprite(img, GRID_SIZE + 4, GRID_SIZE * 3, 25, 32),
+            new Sprite(img, 5, GRID_SIZE * 3 + 1, 23, 31),
             new Sprite(img, GRID_SIZE * 2 + 4, GRID_SIZE * 3 + 1, 24, 31)
         ]
     ];
 
     s_qb = [
         [
-            new Sprite(img, GRID_SIZE * 12 + 3, 4, 26, 28),
             new Sprite(img, GRID_SIZE * 13 + 4, 3, 24, 29),
+            new Sprite(img, GRID_SIZE * 12 + 3, 4, 26, 28),
             new Sprite(img, GRID_SIZE * 14 + 3, 4, 26, 28)
         ],
         [
-            new Sprite(img, GRID_SIZE * 12 + 2, GRID_SIZE + 11, 28, 21),
             new Sprite(img, GRID_SIZE * 13 + 2, GRID_SIZE + 9, 29, 23),
+            new Sprite(img, GRID_SIZE * 12 + 2, GRID_SIZE + 11, 28, 21),
             new Sprite(img, GRID_SIZE * 14 + 2, GRID_SIZE + 9, 30, 23)
         ],
         [
-            new Sprite(img, GRID_SIZE * 12 + 2, GRID_SIZE * 2 + 11, 28, 21),
             new Sprite(img, GRID_SIZE * 13 + 1, GRID_SIZE * 2 + 9, 29, 23),
+            new Sprite(img, GRID_SIZE * 12 + 2, GRID_SIZE * 2 + 11, 28, 21),
             new Sprite(img, GRID_SIZE * 14, GRID_SIZE * 2 + 9, 30, 23)
         ],
         [
-            new Sprite(img, GRID_SIZE * 12 + 4, GRID_SIZE * 3 + 9, 24, 23),
             new Sprite(img, GRID_SIZE * 13 + 4, GRID_SIZE * 3 + 8, 24, 24),
+            new Sprite(img, GRID_SIZE * 12 + 4, GRID_SIZE * 3 + 9, 24, 23),
             new Sprite(img, GRID_SIZE * 14 + 4, GRID_SIZE * 3 + 9, 24, 23)
         ]
     ];

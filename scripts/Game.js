@@ -20,7 +20,7 @@ function Game() {
 
     this.update = function () {
         this.player.update();
-        console.log(this.player.charDir);
+        //console.log(this.player);
     };
 
     this.render = function (ctx) {

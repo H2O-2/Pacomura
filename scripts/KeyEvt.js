@@ -8,7 +8,7 @@ function KeyEvt() {
     var dirPressed;
 
     this.setDir = function (dir) {
-        dirPressed = dir;
+        dirPressed = dir - KEY_TO_DIR;
     };
 
     this.getDir = function () {
