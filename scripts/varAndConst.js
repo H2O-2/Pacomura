@@ -21,3 +21,6 @@ var TILE_LEN = 32;
 var GRID_SIZE = 32;
 
 var ANIMATION_FRAMES = 4;
+var REFRESH_SPEED = 7;
+
+var PLAYER_SPEED = 2.5;

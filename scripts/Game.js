@@ -11,7 +11,8 @@ function Game() {
     this.tile = new Array(MAP_WIDTH * MAP_HEIGHT);
     
     this.gameInit = function () {
-        this.player = new Player(INIT_POSN.PLAYER_X * TILE_LEN, INIT_POSN.PLAYER_Y * TILE_LEN, 3);
+        this.player = new Player(INIT_POSN.PLAYER_X * TILE_LEN, INIT_POSN.PLAYER_Y * TILE_LEN, PLAYER_SPEED);
+        this.player.init();
 
         this.monster = new Monster(100, 100);
         //console.log(s_map);

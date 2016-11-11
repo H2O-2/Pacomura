@@ -4,17 +4,21 @@
 
 function Animation(sprite) {
     this.sprite = sprite;
+    this.globalFrame = 0;
     this.frames = 0;
 
     this.update = function () {
-        this.frames++;
+
+        if (this.globalFrame % REFRESH_SPEED === 0) { this.frames++; }
         if (this.frames >= ANIMATION_FRAMES) {
             this.frames = 0;
         }
+
+        this.globalFrame++;
     };
 
     this.currentFrame = function () {
-        return this.sprite[frames];
+        return this.sprite[this.frames];
     }
 }
 
