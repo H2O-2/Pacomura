@@ -39,6 +39,7 @@ function Player(posnX, posnY, speed) {
 Player.prototype = new Character();
 
 Player.prototype.charMove = function () {
+    //console.log(this.charDir);
     if (this.charDir === KEY.KEY_UP - KEY_TO_DIR) {
         this.posnY -= this.speed;
     } else if (this.charDir === KEY.KEY_DOWN - KEY_TO_DIR) {
@@ -58,8 +59,13 @@ Player.prototype.update = function () {
 };
 
 Player.prototype.render = function (ctx) {
-    console.log(this);
-    s_homuraNorm[this.charDir][this.charDir].draw(ctx, this.posnX, this.posnY);
+    //console.log(this);
+    if (this.charDir != undefined) {
+        s_homuraNorm[this.charDir][0].draw(ctx, this.posnX, this.posnY);
+    } else {
+        console.log("PASS");
+        s_homuraNorm[3][0].draw(ctx, this.posnX, this.posnY);
+    }
     //console.log(this.posnX);
     //console.log("TEST");
     //s_homuraNorm[0][0].draw(ctx, 100, 100);
