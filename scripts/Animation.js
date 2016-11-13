@@ -10,6 +10,7 @@ function Animation(sprite) {
     this.update = function () {
 
         if (this.globalFrame % REFRESH_SPEED === 0) { this.frames++; }
+
         if (this.frames >= ANIMATION_FRAMES) {
             this.frames = 0;
         }

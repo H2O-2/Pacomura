@@ -36,23 +36,24 @@ function Player(posnX, posnY, speed) {
     this.posnY = posnY;
     this.speed = speed;
     this.animationArray = new Array(ANIMATION_FRAMES * 2);
+    this.camera = null;
 }
 
 Player.prototype = new Character();
 
-Player.prototype.init = function () {
+Player.prototype.init = function (camera) {
     for (var i = 0; i < ANIMATION_FRAMES; i++) {
-        console.log("INIT");
         this.animationArray[i] = new Animation(s_homuraNorm[i]);
     }
 
     for (var j = 4; j < ANIMATION_FRAMES * 2; j++) {
-        this.animationArray[i] = new Animation(s_homuraKuro[i]);
+        this.animationArray[j] = new Animation(s_homuraKuro[j - ANIMATION_FRAMES]);
     }
+
+    this.camera = camera;
 };
 
 Player.prototype.charMove = function () {
-    //console.log(this.charDir);
     if (this.charDir === KEY.KEY_UP - KEY_TO_DIR) {
         this.posnY -= this.speed;
     } else if (this.charDir === KEY.KEY_DOWN - KEY_TO_DIR) {
@@ -66,6 +67,7 @@ Player.prototype.charMove = function () {
 
 Player.prototype.setAnimation = function () {
     if (this.kuro) {
+        //console.log(this.charDir);
         this.currentAnimation = this.animationArray[ANIMATION_FRAMES + this.charDir];
     } else {
         //console.log(this.charDir);
@@ -88,22 +90,20 @@ Player.prototype.update = function () {
 };
 
 Player.prototype.render = function (ctx) {
-    //console.log("pass");
-    if (this.charDir != undefined && !this.kuro) {
-        //console.log(this.currentAnimation);
-        //s_homuraNorm[this.charDir][0].draw(ctx, this.posnX, this.posnY);
-        this.currentAnimation.currentFrame().draw(ctx, this.posnX, this.posnY);
-    } else if (this.charDir != undefined && this.kuro) {
-        //s_homuraKuro[this.charDir][0].draw(ctx, this.posnX, this.posnY);
-        this.currentAnimation.currentFrame().draw(ctx, this.posnX, this.posnY);
-    } else if (this.charDir == undefined && !this.kuro) {
-        s_homuraNorm[3][0].draw(ctx, this.posnX, this.posnY);
+    //console.log(this.camera.cameraX);
+    if (this.charDir != undefined) {
+        if (this.currentAnimation.currentFrame() === s_homuraNorm[2][1] || this.currentAnimation.currentFrame() === s_homuraKuro[2][1]) {
+            this.currentAnimation.currentFrame().draw(ctx, this.posnX - offsetX(this.camera.cameraX) - 2, this.posnY - offsetY(this.camera.cameraY));
+        } else {
+            this.currentAnimation.currentFrame().draw(ctx, this.posnX - offsetX(this.camera.cameraX), this.posnY - offsetY(this.camera.cameraY));
+        }
+
     } else {
-        s_homuraKuro[3][0].draw(ctx, this.posnX, this.posnY);
+        for (var i = 0; i < 4; i++) {
+            s_homuraNorm[2][i].draw(ctx, 200 + 40 * i, 200);
+            s_homuraNorm[0][i].draw(ctx, 200 + 40 * i, 250);
+        }
     }
-    //console.log(this.posnX);
-    //console.log("TEST");
-    //s_homuraNorm[0][0].draw(ctx, 100, 100);
 };
 
 

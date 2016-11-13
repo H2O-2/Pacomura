@@ -2,13 +2,13 @@
  * Created by H2O2 on 16/10/30.
  */
 
-var canvas, ctx;
+var canvas, ctx, bg, bgCtx;
 
 var WIDTH = window.innerWidth,
     HEIGHT = window.innerHeight;
 
 var GAME_STATE = {START: "START", GAME: "GAME", FINISH: "FINISH"};
-var INIT_POSN = {PLAYER_X: 3, PLAYER_Y: 3};
+var INIT_POSN = {PLAYER_X: 10, PLAYER_Y: 10};
 var MAP_WIDTH = 28,
     MAP_HEIGHT = 31;
 
@@ -20,7 +20,16 @@ var TILE_LEN = 32;
 
 var GRID_SIZE = 32;
 
-var ANIMATION_FRAMES = 4;
-var REFRESH_SPEED = 7;
+var PLAYER_SPEED = 2;
 
-var PLAYER_SPEED = 2.5;
+var ANIMATION_FRAMES = 4;
+var REFRESH_SPEED = 10;
+var CAMERA_SPEED = 10;
+
+function offsetX(cameraX) {
+    return cameraX - canvas.width/2;
+}
+
+function offsetY(cameraY) {
+    return cameraY - canvas.height/2;
+}

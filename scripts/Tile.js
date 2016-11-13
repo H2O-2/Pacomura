@@ -5,5 +5,5 @@
 function Tile(tileX, tileY) {
     this.tileX = tileX;
     this.tileY = tileY;
-    this.tileStatus = TILE_STATUS.OCCUPIED;
+    this.tileStatus = TILE_STATUS.EMPTY;
 }

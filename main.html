@@ -17,6 +17,10 @@
             bottom: 0;
             left: 0;
             right: 0;
+        }
+
+        canvas#bgCanvas {
+            z-index: 5;
             background-color: rgba(0,0,0,.8);
             box-shadow: 0 0 40px 10px #1F1F1F;
         }
@@ -40,6 +44,7 @@
     <script src="scripts/varAndConst.js"></script>
     <script src="scripts/Sprite.js"></script>
     <script src="scripts/KeyEvt.js"></script>
+    <script src="scripts/Map.js"></script>
     <script src="scripts/Tile.js"></script>
     <script src="scripts/Item.js"></script>
     <script src="scripts/Camera.js"></script>
@@ -48,6 +53,7 @@
     <script src="scripts/Game.js"></script>
     <script src="scripts/main.js"></script>
     <canvas id="myCanvas"></canvas>
+    <canvas id="bgCanvas"></canvas>
     <div class="wrapper"></div>
 </body>
 </html>

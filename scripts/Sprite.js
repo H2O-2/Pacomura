@@ -14,9 +14,9 @@ function Sprite(img, xSprite, ySprite, width, height) {
     this.height = height;
 }
 
-Sprite.prototype.draw = function (ctx, xCanvas, yCanvas) {
+Sprite.prototype.draw = function (context, xCanvas, yCanvas) {
     // xCanvas and yCanvas are positions of the image to place in the canvas
-    ctx.drawImage(this.img, this.xSprite, this.ySprite, this.width, this.height, xCanvas, yCanvas, this.width, this.height);
+    context.drawImage(this.img, this.xSprite, this.ySprite, this.width, this.height, xCanvas, yCanvas, this.width, this.height);
 };
 
 function spriteInit(img) {
@@ -136,8 +136,6 @@ function spriteInit(img) {
     s_shotgun = new Sprite(img, GRID_SIZE * 16 + 4, GRID_SIZE * 2 + 7, 24, 19);
 
     s_map = new Sprite(img, 0, GRID_SIZE * 8, GRID_SIZE * 30 + 16, GRID_SIZE * 32 + 7);
-
-
 }
 
 
