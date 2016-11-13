@@ -19,12 +19,8 @@ function KeyEvt() {
 var keyEvt = new KeyEvt();
 
 function readInput(e) {
-    //console.log(e.keyCode);
     if (e.keyCode === KEY.KEY_UP || e.keyCode === KEY.KEY_DOWN ||
         e.keyCode === KEY.KEY_LEFT || e.keyCode === KEY.KEY_RIGHT) {
-        //console.log(this.player);
         keyEvt.setDir(e.keyCode);
-        //console.log("sdfdsf");
-        //this.player.charMove();
     }
 }

@@ -17,6 +17,9 @@ function Map(bgCtx, camera) {
     this.render = function () {
         bgCtx.clearRect(0,0,WIDTH,HEIGHT);
         s_map.draw(bgCtx, -offsetX(camera.cameraX), -offsetY(camera.cameraY));
+        s_greifSeed.draw(bgCtx, 300-offsetX(camera.cameraX), 300-offsetY(camera.cameraY));
+        s_grenade.draw(bgCtx, 350-offsetX(camera.cameraX), 300-offsetY(camera.cameraY))
+        s_rocket.draw(bgCtx, 400-offsetX(camera.cameraX), 300-offsetY(camera.cameraY))
     }
 
 }

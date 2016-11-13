@@ -2,6 +2,8 @@
  * Created by H2O2 on 16/10/29.
  */
 
+//var INIT_STATUS = s_homuraNorm[3][0];
+
 function Character(posnX, posnY, speed) {
     this.posnX = posnX;
     this.posnY = posnY;
@@ -67,23 +69,14 @@ Player.prototype.charMove = function () {
 
 Player.prototype.setAnimation = function () {
     if (this.kuro) {
-        //console.log(this.charDir);
         this.currentAnimation = this.animationArray[ANIMATION_FRAMES + this.charDir];
     } else {
-        //console.log(this.charDir);
-        /*
-        console.log(this.animationArray[3]);
-        console.log(this.animationArray[this.charDir]);
-        */
         this.currentAnimation = this.animationArray[this.charDir];
-        //this.animationArray[3].currentFrame().draw(ctx, 200, 200);
     }
 };
 
 Player.prototype.update = function () {
-    //console.log("pass");
     this.charDir = keyEvt.getDir();
-    //console.log(this.charDir);
     this.setAnimation();
     this.charMove();
     if (this.currentAnimation) this.currentAnimation.update();
@@ -99,10 +92,7 @@ Player.prototype.render = function (ctx) {
         }
 
     } else {
-        for (var i = 0; i < 4; i++) {
-            s_homuraNorm[2][i].draw(ctx, 200 + 40 * i, 200);
-            s_homuraNorm[0][i].draw(ctx, 200 + 40 * i, 250);
-        }
+        s_homuraNorm[3][0].draw(ctx, this.posnX - offsetX(this.camera.cameraX), this.posnY - offsetY(this.camera.cameraY))
     }
 };
 
