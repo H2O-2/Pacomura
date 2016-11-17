@@ -11,7 +11,7 @@ function main() {
     var e = "touchstart";
     if(WIDTH >= 500) {
         canvas.width = 640;
-        canvas.height = 426;
+        canvas.height = 384;
         canvas.style.padding = "1px";
         canvas.style.borderRadius = "10px";
         bg.width = 640;
@@ -32,7 +32,7 @@ function main() {
 
         var loop = function () {
             game.update();
-            game.render(ctx);
+            game.render(ctx, bgCtx);
             //console.log(game.player.posnX, game.player.posnY);
             window.requestAnimationFrame(loop);
         };
