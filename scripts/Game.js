@@ -13,6 +13,7 @@ function Game() {
     this.gameInit = function (ctx, bgCtx) {
         //this.player = new Player(INIT_POSN.PLAYER_X * TILE_LEN, INIT_POSN.PLAYER_Y * TILE_LEN, CHARACTER_SPEED);
         this.player = new Player(INIT_POSN.PLAYER_X * TILE_LEN, INIT_POSN.PLAYER_Y * TILE_LEN, CHARACTER_SPEED);
+        console.log("PLAYER: " + this.player.posnX, this.player.posnY);
 
         this.camera = new Camera(this.player);
         this.player.init(this.camera);
@@ -29,7 +30,7 @@ function Game() {
 
     this.update = function () {
         this.player.update();
-        this.map.update();
+        this.map.update(this.player);
         //console.log(this.player);
     };
 

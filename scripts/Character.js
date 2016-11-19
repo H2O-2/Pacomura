@@ -24,22 +24,27 @@ Character.prototype.antiDir = function (curDir) {
 
 Character.prototype.canMove = function (dir, outOfBirthPlace) {
 
+    //if (x < 0 || y < 0 || x > MAP_WIDTH * TILE_LEN || x > MAP_HEIGHT * TILE_LEN) return false;
+
+
     // check for border
-    if (((dir == KEY.KEY_UP) && (this.posnY - BORDER.START_POINT * TILE_LEN <= 3)) ||
+    if (((dir == KEY.KEY_UP) && (this.posnY - BORDER.START_POINT * TILE_LEN <= 0)) ||
         ((dir == KEY.KEY_DOWN) && (BORDER.END_POINT_Y * TILE_LEN - this.posnY <= 0)) ||
-        ((dir == KEY.KEY_LEFT) && (this.posnX - BORDER.START_POINT * TILE_LEN <= 3)) ||
-        ((dir == KEY.KEY_RIGHT) && (BORDER.END_POINT_X * TILE_LEN - this.posnX <= 15))) {
+        ((dir == KEY.KEY_LEFT) && (this.posnX - BORDER.START_POINT * TILE_LEN <= 0)) ||
+        ((dir == KEY.KEY_RIGHT) && (BORDER.END_POINT_X * TILE_LEN - this.posnX <= 0))) {
         return false;
     }
 
 
     if (dir == KEY.KEY_UP && outOfBirthPlace) {
+        console.log("GO");
         return posnToTile(this.posnX, this.posnY - TILE_LEN / 2).isEmpty();
     } else if (dir == KEY.KEY_DOWN && outOfBirthPlace) {
         return posnToTile(this.posnX, this.posnY + TILE_LEN / 2).isEmpty();
     } else if (dir == KEY.KEY_RIGHT && outOfBirthPlace) {
+        //console.log(this.posnX, this.posnY);
         return posnToTile(this.posnX + TILE_LEN / 2, this.posnY).isEmpty();
-    } else if (outOfBirthPlace) {
+    } else if (dir == KEY.KEY_LEFT && outOfBirthPlace) {
         return posnToTile(this.posnX - TILE_LEN / 2, this.posnY).isEmpty();
     } else if (dir == KEY.KEY_UP) {
         return posnToTile(this.posnX, this.posnY - TILE_LEN / 2).isEmptyForBirth();
