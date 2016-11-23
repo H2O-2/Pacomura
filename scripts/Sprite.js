@@ -90,35 +90,32 @@ function spriteInit(img) {
     s_qb = [
         // left
         [
-            new Sprite(img, TILE_LEN * 13 + 2, TILE_LEN + 9, 29, 23),
-            new Sprite(img, TILE_LEN * 12 + 2, TILE_LEN + 11, 28, 21),
-            new Sprite(img, TILE_LEN * 13 + 2, TILE_LEN + 9, 29, 23),
-            new Sprite(img, TILE_LEN * 14 + 2, TILE_LEN + 9, 30, 23)
+            new Sprite(img, TILE_LEN * 13 + 2, TILE_LEN + 4, 29, 23),
+            new Sprite(img, TILE_LEN * 12 + 2, TILE_LEN + 6, 28, 21),
+            new Sprite(img, TILE_LEN * 13 + 2, TILE_LEN + 4, 29, 23),
+            new Sprite(img, TILE_LEN * 14 + 2, TILE_LEN + 4, 30, 23)
         ],
         // up
         [
-            new Sprite(img, TILE_LEN * 13 + 4, TILE_LEN * 3 + 8, 24, 24),
-            new Sprite(img, TILE_LEN * 12 + 4, TILE_LEN * 3 + 9, 24, 23),
-            new Sprite(img, TILE_LEN * 13 + 4, TILE_LEN * 3 + 8, 24, 24),
-            new Sprite(img, TILE_LEN * 14 + 4, TILE_LEN * 3 + 9, 24, 23)
+            new Sprite(img, TILE_LEN * 13 + 4, TILE_LEN * 3 + 4, 24, 24),
+            new Sprite(img, TILE_LEN * 12 + 4, TILE_LEN * 3 + 4, 24, 23),
+            new Sprite(img, TILE_LEN * 13 + 4, TILE_LEN * 3 + 4, 24, 24),
+            new Sprite(img, TILE_LEN * 14 + 4, TILE_LEN * 3 + 4, 24, 23)
         ],
         // right
         [
-            new Sprite(img, TILE_LEN * 13 + 1, TILE_LEN * 2 + 9, 29, 23),
-            new Sprite(img, TILE_LEN * 12 + 2, TILE_LEN * 2 + 11, 28, 21),
-            new Sprite(img, TILE_LEN * 13 + 1, TILE_LEN * 2 + 9, 29, 23),
-            new Sprite(img, TILE_LEN * 14, TILE_LEN * 2 + 9, 30, 23)
+            new Sprite(img, TILE_LEN * 13 + 1, TILE_LEN * 2 + 4, 29, 23),
+            new Sprite(img, TILE_LEN * 12 + 2, TILE_LEN * 2 + 6, 28, 21),
+            new Sprite(img, TILE_LEN * 13 + 1, TILE_LEN * 2 + 4, 29, 23),
+            new Sprite(img, TILE_LEN * 14 + 1, TILE_LEN * 2 + 4, 30, 23)
         ],
         // down
         [
-            new Sprite(img, TILE_LEN * 13 + 4, 3, 24, 29),
-            new Sprite(img, TILE_LEN * 12 + 3, 4, 26, 28),
-            new Sprite(img, TILE_LEN * 13 + 4, 3, 24, 29),
-            new Sprite(img, TILE_LEN * 14 + 3, 4, 26, 28)
+            new Sprite(img, TILE_LEN * 13 + 4, 2, 24, 29),
+            new Sprite(img, TILE_LEN * 12 + 3, 2, 26, 28),
+            new Sprite(img, TILE_LEN * 13 + 4, 2, 24, 29),
+            new Sprite(img, TILE_LEN * 14 + 3, 2, 26, 28)
         ]
-
-
-
     ];
 
     s_qbDead = new Sprite(img, TILE_LEN * 15 + 5, TILE_LEN * 3 + 6, 22, 21);

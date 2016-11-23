@@ -32,20 +32,18 @@ function Map() {
     this.render = function (bgCtx) {
         //console.log(-offsetX(this.camera.cameraX),-offsetY(this.camera.cameraY));
         s_map.draw(bgCtx, -offsetX(this.camera.cameraX), -offsetY(this.camera.cameraY));
-        s_homuraKuro[3][0].draw(bgCtx, this.tiles[0][0].tileX, this.tiles[0][0].tileY);
-        //console.log("TESTER: " + this.tiles[0][0].tileX, this.tiles[0][0].tileY);
+        s_homuraKuro[3][0].draw(bgCtx, this.tiles[0][0].posnX, this.tiles[0][0].posnY);
+        //console.log("TESTER: " + this.tiles[0][0].posnX, this.tiles[0][0].posnY);
 
+
+        // DEBUG
         for (var i = 0; i < MAP_WIDTH; i++) {
             for (var j = 0; j < MAP_HEIGHT; j++) {
-                //console.log(this.tiles[i][j].tileX);
-                //s_homuraKuro[3][0].draw(bgCtx, this.tiles[i][j].tileX, this.tiles[i][j].tileY)
+                //console.log(this.tiles[i][j].posnX);
+                //s_homuraKuro[3][0].draw(bgCtx, this.tiles[i][j].posnX, this.tiles[i][j].posnY);
             }
         }
 
-
-       // s_greifSeed.draw(bgCtx, 300-offsetX(this.camera.cameraX), 300-offsetY(this.camera.cameraY));
-        //s_grenade.draw(bgCtx, 350-offsetX(this.camera.cameraX), 300-offsetY(this.camera.cameraY));
-        //s_rocket.draw(bgCtx, 400-offsetX(this.camera.cameraX), 300-offsetY(this.camera.cameraY));
     }
 
 }
@@ -64,13 +62,12 @@ function posnToTile(x, y) {
     }
 
     if (tileY < 0) {
-        console.log("PASS");
         tileY = 0;
     } else if (tileY >= MAP_HEIGHT) {
         tileY = MAP_HEIGHT - 1;
     }
 
-    console.log(tileX, tileY, mapAll.tiles[tileX][tileY].tileStatus);
+    //console.log(x, y, tileX, tileY, mapAll.tiles[tileX][tileY].tileStatus);
 
     return mapAll.tiles[tileX][tileY];
 }
