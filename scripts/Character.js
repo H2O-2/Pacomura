@@ -25,6 +25,10 @@ Character.prototype.antiDir = function (curDir) {
     }
 };
 
+Character.prototype.posnCenter = function (posn) {
+    return posn + TILE_LEN / 2;
+};
+
 Character.prototype.canMove = function (dir, outOfBirthPlace) {
 
     //if (x < 0 || y < 0 || x > MAP_WIDTH * TILE_LEN || x > MAP_HEIGHT * TILE_LEN) return false;
@@ -38,56 +42,63 @@ Character.prototype.canMove = function (dir, outOfBirthPlace) {
         return false;
     }
 
-/*
+
     var tileFront = null,
-        tileSide = null,
-        nextTileEmpty;
+        tileSide = null;
 
     if (dir == KEY.KEY_UP) {
-        tileFront = posnToTile(this.posnX, this.posnY - this.speed - this.height / 2);
-        if (this.posnX - tileFront.posnX < 0) {
-            tileSide = posnToTile(tileFront.posnX - TILE_LEN, tileFront.posnY);
+        tileFront = posnToTile(this.posnCenter(this.posnX), this.posnCenter(this.posnY) - this.speed - this.height / 2);
+        if (this.posnX - tileFront.posnX <= 0) {
+            tileSide = posnToTile(tileFront.posnX - TILE_LEN / 2, tileFront.posnY);
         } else if (this.posnX - tileFront.posnX > 0) {
-            tileSide = posnToTile(tileFront.posnX + TILE_LEN, tileFront.posnY);
+            tileSide = posnToTile(tileFront.posnX + 3 * TILE_LEN / 2, tileFront.posnY);
         }
     } else if (dir == KEY.KEY_DOWN) {
-        tileFront = posnToTile(this.posnX, this.posnY + this.speed + this.height / 2);
-        if (this.posnX - tileFront.posnX < 0) {
-            tileSide = posnToTile(tileFront.posnX - TILE_LEN, tileFront.posnY);
+        tileFront = posnToTile(this.posnCenter(this.posnX), this.posnCenter(this.posnY) + this.speed + this.height / 2);
+        if (this.posnX - tileFront.posnX <= 0) {
+            tileSide = posnToTile(tileFront.posnX - TILE_LEN / 2, tileFront.posnY);
         } else if (this.posnX - tileFront.posnX > 0) {
-            tileSide = posnToTile(tileFront.posnX + TILE_LEN, tileFront.posnY);
+            tileSide = posnToTile(tileFront.posnX + 3 * TILE_LEN / 2, tileFront.posnY);
         }
     } else if (dir == KEY.KEY_RIGHT) {
-        tileFront = posnToTile(this.posnX + this.speed + this.width / 2, this.posnY);
-        if (this.posnY - tileFront.posnY < 0) {
-            tileSide = posnToTile(tileFront.posnX, tileFront.posnY - TILE_LEN);
-        } else if (this.posnX - tileFront.posnX > 0) {
-            tileSide = posnToTile(tileFront.posnX, tileFront.posnY + TILE_LEN);
+        tileFront = posnToTile(this.posnCenter(this.posnX) + this.speed + this.width / 2, this.posnCenter(this.posnY));
+        if (this.posnY - tileFront.posnY <= 0) {
+            tileSide = posnToTile(tileFront.posnX, tileFront.posnY - TILE_LEN / 2);
+        } else if (this.posnY - tileFront.posnY > 0) {
+            tileSide = posnToTile(tileFront.posnX, tileFront.posnY + 3 * TILE_LEN / 2);
         }
     } else {
-        tileFront = posnToTile(this.posnX - this.speed - this.width / 2, this.posnY);
-        if (this.posnY - tileFront.posnY < 0) {
-            tileSide = posnToTile(tileFront.posnX, tileFront.posnY - TILE_LEN);
-        } else if (this.posnX - tileFront.posnX > 0) {
-            tileSide = posnToTile(tileFront.posnX, tileFront.posnY + TILE_LEN);
+        tileFront = posnToTile(this.posnCenter(this.posnX) - this.speed - this.width / 2, this.posnCenter(this.posnY));
+        if (this.posnY - tileFront.posnY <= 0) {
+            tileSide = posnToTile(tileFront.posnX, tileFront.posnY - TILE_LEN / 2);
+        } else if (this.posnY - tileFront.posnY > 0) {
+            tileSide = posnToTile(tileFront.posnX, tileFront.posnY + 3 * TILE_LEN / 2);
         }
     }
 
     //console.log(tileFront.tileStatus, tileRight.tileStatus, tileLeft.tileStatus);
+    var frontEmpty = tileFront.isEmpty(outOfBirthPlace),
+        sideEmpty = true;
 
-    if (tileSide == null) {
-        return !this.collision(tileFront) || tileFront.isEmpty(outOfBirthPlace);
-    } else {
-        nextTileEmpty = tileFront.isEmpty(outOfBirthPlace) && tileSide.isEmpty(outOfBirthPlace);
-
-        if (!nextTileEmpty) {
-            //console.log(!this.collision(tileFront) , !this.collision(tileLeft) , !this.collision(tileRight));
-
-            return !this.collision(tileFront) && !this.collision(tileSide);
-        }
+    if (tileSide != null) {
+        sideEmpty = tileSide.isEmpty(outOfBirthPlace);
     }
 
-    return true;
+    console.log(tileFront, this);
+
+    if (frontEmpty && sideEmpty) {
+        return true;
+    } else if (frontEmpty && !sideEmpty) {
+        console.log("collision " + !this.collision(tileSide));
+        return !this.collision(tileSide);
+    } else if (!frontEmpty && sideEmpty) {
+        console.log("collision " + !this.collision(tileFront));
+        return !this.collision(tileFront);
+    }
+
+    return !this.collision(tileFront) && !this.collision(tileSide);
+
+
 
 /*
     if (dir == KEY.KEY_UP && outOfBirthPlace) {
@@ -210,8 +221,8 @@ function Player(posnX, posnY, speed) {
     this.posnX = posnX;
     this.posnY = posnY;
     this.radius = PLAYER_RAD;
-    this.height = PLAYER_RAD;
-    this.width = PLAYER_RAD;
+    this.height = PLAYER_RAD * 2;
+    this.width = PLAYER_RAD * 2;
     this.speed = speed;
     this.camera = null;
     this.animationArray = new Array(ANIMATION_FRAMES * 2);
@@ -267,10 +278,14 @@ Player.prototype.update = function () {
     this.notifyObserver();
 };
 
+var MODIFY_RIGHT = 8;
+
 Player.prototype.render = function (ctx) {
     if (this.charDir != undefined) {
         if (this.currentAnimation.currentFrame() === s_homuraNorm[2][1] || this.currentAnimation.currentFrame() === s_homuraKuro[2][1]) {
-            this.currentAnimation.currentFrame().draw(ctx, this.posnX - offsetX(this.camera.cameraX) - 2, this.posnY - offsetY(this.camera.cameraY));
+            this.currentAnimation.currentFrame().draw(ctx, this.posnX - offsetX(this.camera.cameraX) - 2 + MODIFY_RIGHT, this.posnY - offsetY(this.camera.cameraY));
+        } else if (this.charDir == keyToDir(KEY.KEY_RIGHT)) {
+            this.currentAnimation.currentFrame().draw(ctx, this.posnX - offsetX(this.camera.cameraX) + MODIFY_RIGHT, this.posnY - offsetY(this.camera.cameraY));
         } else {
             this.currentAnimation.currentFrame().draw(ctx, this.posnX - offsetX(this.camera.cameraX), this.posnY - offsetY(this.camera.cameraY));
         }

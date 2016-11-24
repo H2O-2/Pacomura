@@ -14,10 +14,6 @@ function Tile(tileX, tileY) {
 
         return (this.tileStatus == TILE_STATUS.EMPTY || this.tileStatus == TILE_STATUS.BIRTH_AREA);
     };
-
-    this.isEmptyForBirth = function () {
-        return (this.tileStatus == TILE_STATUS.EMPTY || this.tileStatus == TILE_STATUS.BIRTH_AREA);
-    }
 }
 
 Tile.prototype = new GameElement();

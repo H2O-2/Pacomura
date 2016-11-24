@@ -26,6 +26,9 @@ function Game() {
         this.monster = new Monster(100, 100);
         //console.log(s_map);
         //s_homuraNorm[0][0].draw(ctx, 100, 100);
+
+
+
     };
 
     this.update = function () {
@@ -40,6 +43,21 @@ function Game() {
         this.player.render(ctx);
         bgCtx.clearRect(0,0,WIDTH,HEIGHT);
         this.map.render(bgCtx);
+        //console.log(posnToTile(this.player.posnX + TILE_LEN + 1, this.player.posnY + 9 *TILE_LEN / 10), this.player);
+        //console.log(mapAll.tiles[0][0], this.player);
     };
+
+
+    this.debugging = function () {
+        console.log("DEBUG");
+        for (var i = 0; i < MAP_WIDTH; i++) {
+            for (var j = 0; j < MAP_HEIGHT; j++) {
+                //console.log(this.tiles[i][j].posnX);
+                //s_homuraKuro[3][0].draw(bgCtx, this.tiles[i][j].posnX, this.tiles[i][j].posnY);
+                debugCtx.rect(this.map.tiles[i][j].posnX, this.map.tiles[i][j].posnY, TILE_LEN, TILE_LEN);
+                debugCtx.stroke();
+            }
+        }
+    }
 }
 

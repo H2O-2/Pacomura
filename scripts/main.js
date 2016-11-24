@@ -2,21 +2,26 @@
  * Created by H2O2 on 16/10/27.
  */
 
+var debugging = document.getElementById("debug"),
+    debugCtx = debugging.getContext("2d");
+
 function main() {
 
 
     var e = "touchstart";
-    if(WIDTH >= 500) {
+    if(WIDTH >= C_WIDTH) {
         canvas.width = C_WIDTH;
         canvas.height = C_HEIGHT;
         canvas.style.padding = "1px";
         canvas.style.borderRadius = "10px";
-        bg.width = 640;
-        bg.height = 384;
+        bg.width = C_WIDTH;
+        bg.height = C_HEIGHT;
         bg.style.padding = "1px";
         bg.style.borderRadius = "10px";
+        debugging.width = C_WIDTH;
+        debugging.height = C_HEIGHT;
         e = "mousedown";
-        console.log(C_WIDTH, C_HEIGHT);
+        console.log("DEBUG" + debugging.height);
     }
 
     var img = new Image();
@@ -26,7 +31,7 @@ function main() {
         spriteInit(this);
         var game = new Game();
         game.gameInit(ctx, bgCtx);
-
+        game.debugging();
 
         var loop = function () {
             game.update();
@@ -36,6 +41,22 @@ function main() {
         window.requestAnimationFrame(loop);
     };
 }
+
+/*
+// DEBUG
+function debugging(debugCtx) {
+    console.log("DEBUG");
+    for (var i = 0; i < MAP_WIDTH; i++) {
+        for (var j = 0; j < MAP_HEIGHT; j++) {
+            //console.log(this.tiles[i][j].posnX);
+            //s_homuraKuro[3][0].draw(bgCtx, this.tiles[i][j].posnX, this.tiles[i][j].posnY);
+            debugCtx.rect(this.tiles[i][j].posnX, this.tiles[i][j].posnY, TILE_LEN, TILE_LEN);
+            debugCtx.stroke();
+        }
+    }
+}
+*/
+
 
 window.onload = function () {
     main();

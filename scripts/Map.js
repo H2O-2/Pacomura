@@ -15,7 +15,7 @@ function Map() {
 
         for (var m = 0; m < WALL_ARRAY.length; m++) {
             for (var n = 0; n < WALL_ARRAY[m].length; n++) {
-                console.log(m, WALL_ARRAY[m][n]);
+                //console.log(m, WALL_ARRAY[m][n]);
                 this.tiles[WALL_ARRAY[m][n]][m].tileStatus = TILE_STATUS.OCCUPIED;
             }
         }
@@ -34,18 +34,7 @@ function Map() {
         s_map.draw(bgCtx, -offsetX(this.camera.cameraX), -offsetY(this.camera.cameraY));
         s_homuraKuro[3][0].draw(bgCtx, this.tiles[0][0].posnX, this.tiles[0][0].posnY);
         //console.log("TESTER: " + this.tiles[0][0].posnX, this.tiles[0][0].posnY);
-
-
-        // DEBUG
-        for (var i = 0; i < MAP_WIDTH; i++) {
-            for (var j = 0; j < MAP_HEIGHT; j++) {
-                //console.log(this.tiles[i][j].posnX);
-                //s_homuraKuro[3][0].draw(bgCtx, this.tiles[i][j].posnX, this.tiles[i][j].posnY);
-            }
-        }
-
     }
-
 }
 
 var mapAll = new Map();
@@ -71,3 +60,4 @@ function posnToTile(x, y) {
 
     return mapAll.tiles[tileX][tileY];
 }
+

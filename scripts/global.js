@@ -9,16 +9,16 @@ function GameElement(posnX, posnY) {
     this.width = 0;
 
     this.collision = function (obj) {
-        console.log(this instanceof Player);
+        if (obj == null) return false;
 
-        if ((this instanceof Player && this.radius + obj.width > Math.abs(this.posnX - obj.posnX) &&
-            this.radius + obj.height > Math.abs(this.posnY - obj.posnY)) ||
-            (obj instanceof Player && this.posnX + obj.radius > Math.abs(this.posnX - obj.posnX) &&
-            this.height + obj.radius > Math.abs(this.posnY - obj.posnY))) {
+        if ((this instanceof Player && this.radius + obj.width/2 > Math.abs(this.posnX - obj.posnX) &&
+            this.radius + obj.height/2 > Math.abs(this.posnY - obj.posnY)) ||
+            (obj instanceof Player && this.width/2 + obj.radius > Math.abs(this.posnX - obj.posnX) &&
+            this.height/2 + obj.radius > Math.abs(this.posnY - obj.posnY))) {
             return true;
         } else if (!(this instanceof Player) && !(obj instanceof Player) &&
-            this.width + obj.width > Math.abs(this.posnX - obj.posnX) &&
-            this.height + obj.height > Math.abs(this.posnY - obj.posnY)) {
+            this.width/2 + obj.width/2 > Math.abs(this.posnX - obj.posnX) &&
+            this.height/2 + obj.height/2 > Math.abs(this.posnY - obj.posnY)) {
             return true;
         } else {
             console.log(this,obj);
