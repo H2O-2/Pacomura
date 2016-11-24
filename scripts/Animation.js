@@ -20,6 +20,6 @@ function Animation(sprite) {
 
     this.currentFrame = function () {
         return this.sprite[this.frames];
-    }
+    };
 }
 

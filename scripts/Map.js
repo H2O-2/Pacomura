@@ -34,7 +34,7 @@ function Map() {
         s_map.draw(bgCtx, -offsetX(this.camera.cameraX), -offsetY(this.camera.cameraY));
         s_homuraKuro[3][0].draw(bgCtx, this.tiles[0][0].posnX, this.tiles[0][0].posnY);
         //console.log("TESTER: " + this.tiles[0][0].posnX, this.tiles[0][0].posnY);
-    }
+    };
 }
 
 var mapAll = new Map();

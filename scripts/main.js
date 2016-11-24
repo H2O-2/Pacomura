@@ -7,6 +7,7 @@ var debugging = document.getElementById("debug"),
 
 function main() {
 
+    var MOBILE_OFFESET = 1/10;
 
     var e = "touchstart";
     if(WIDTH >= C_WIDTH) {
@@ -22,6 +23,19 @@ function main() {
         debugging.height = C_HEIGHT;
         e = "mousedown";
         console.log("DEBUG" + debugging.height);
+    } else {
+        canvas.width = WIDTH * (1 + MOBILE_OFFESET);
+        canvas.height = HEIGHT * (1 + MOBILE_OFFESET);
+        canvas.style.padding = "1px";
+        canvas.style.borderRadius = "10px";
+        bg.width = WIDTH * (1 + MOBILE_OFFESET);
+        bg.height = HEIGHT * (1 + MOBILE_OFFESET);
+        bg.style.padding = "1px";
+        bg.style.borderRadius = "10px";
+        debugging.width = WIDTH * (1 + MOBILE_OFFESET);
+        debugging.height = HEIGHT * (1 + MOBILE_OFFESET);
+        e = "mousedown";
+        console.log("DEBUG" + debugging.height);
     }
 
     var img = new Image();
@@ -31,7 +45,7 @@ function main() {
         spriteInit(this);
         var game = new Game();
         game.gameInit(ctx, bgCtx);
-        game.debugging();
+        //game.debugging();
 
         var loop = function () {
             game.update();

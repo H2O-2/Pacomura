@@ -13,7 +13,7 @@ function KeyEvt() {
 
     this.getDir = function () {
         return dirPressed;
-    }
+    };
 }
 
 var keyEvt = new KeyEvt();

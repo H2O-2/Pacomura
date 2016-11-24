@@ -2,15 +2,22 @@
  * Created by H2O2 on 16/10/29.
  */
 
+ var TEST = 1;
+
 function Character(posnX, posnY, speed) {
     this.posnX = posnX;
     this.posnY = posnY;
-    this.curTile = null;
-    this.height = 0;
-    this.width = 0;
-    this.charDir = keyToDir(KEY.KEY_UP);
-    this.kuro = false;
-    this.speed = speed;
+    this.curTile = null; // current tile status
+    this.height = 0; // character height
+    this.width = 0; // character
+    this.charDir = keyToDir(KEY.KEY_UP); // current direction
+    this.frontEmpty = true; // true if the tile in front of the character is empty
+    this.tileFront = null; // tile in front of character
+    this.sideEmpty = true; // true if both tiles on two sides of the front tile are empty
+    this.tileSide = null; // tile beside that in front of character
+    this.sideBlock = null; // the direction of the blocked side tile
+    this.kuro = false; // true if player has the effect of special item (kuroka)
+    this.speed = speed; // speed of the character
     this.animationArray = new Array(ANIMATION_FRAMES);
     this.currentAnimation = null;
 }
@@ -29,6 +36,8 @@ Character.prototype.posnCenter = function (posn) {
     return posn + TILE_LEN / 2;
 };
 
+
+// return -1 (can't move), 0 (front tolerate), 1(can move), 2(double direction tolerate)
 Character.prototype.canMove = function (dir, outOfBirthPlace) {
 
     //if (x < 0 || y < 0 || x > MAP_WIDTH * TILE_LEN || x > MAP_HEIGHT * TILE_LEN) return false;
@@ -42,97 +51,128 @@ Character.prototype.canMove = function (dir, outOfBirthPlace) {
         return false;
     }
 
-
-    var tileFront = null,
-        tileSide = null;
-
     if (dir == KEY.KEY_UP) {
-        tileFront = posnToTile(this.posnCenter(this.posnX), this.posnCenter(this.posnY) - this.speed - this.height / 2);
-        if (this.posnX - tileFront.posnX <= 0) {
-            tileSide = posnToTile(tileFront.posnX - TILE_LEN / 2, tileFront.posnY);
-        } else if (this.posnX - tileFront.posnX > 0) {
-            tileSide = posnToTile(tileFront.posnX + 3 * TILE_LEN / 2, tileFront.posnY);
+        this.tileFront = posnToTile(this.posnCenter(this.posnX), this.posnCenter(this.posnY) - this.speed - this.height / 2);
+        if (this.posnX - this.tileFront.posnX <= 0) {
+            this.tileSide = posnToTile(this.tileFront.posnX - TILE_LEN / 2, this.tileFront.posnY);
+            this.sideBlock = KEY.KEY_LEFT;
+        } else if (this.posnX - this.tileFront.posnX > 0) {
+            this.tileSide = posnToTile(this.tileFront.posnX + 3 * TILE_LEN / 2, this.tileFront.posnY);
+            this.sideBlock = KEY.KEY_RIGHT;
         }
     } else if (dir == KEY.KEY_DOWN) {
-        tileFront = posnToTile(this.posnCenter(this.posnX), this.posnCenter(this.posnY) + this.speed + this.height / 2);
-        if (this.posnX - tileFront.posnX <= 0) {
-            tileSide = posnToTile(tileFront.posnX - TILE_LEN / 2, tileFront.posnY);
-        } else if (this.posnX - tileFront.posnX > 0) {
-            tileSide = posnToTile(tileFront.posnX + 3 * TILE_LEN / 2, tileFront.posnY);
+        this.tileFront = posnToTile(this.posnCenter(this.posnX), this.posnCenter(this.posnY) + this.speed + this.height / 2);
+        if (this.posnX - this.tileFront.posnX <= 0) {
+            this.tileSide = posnToTile(this.tileFront.posnX - TILE_LEN / 2, this.tileFront.posnY);
+            this.sideBlock = KEY.KEY_LEFT;
+        } else if (this.posnX - this.tileFront.posnX > 0) {
+            this.tileSide = posnToTile(this.tileFront.posnX + 3 * TILE_LEN / 2, this.tileFront.posnY);
+            this.sideBlock = KEY.KEY_RIGHT;
         }
     } else if (dir == KEY.KEY_RIGHT) {
-        tileFront = posnToTile(this.posnCenter(this.posnX) + this.speed + this.width / 2, this.posnCenter(this.posnY));
-        if (this.posnY - tileFront.posnY <= 0) {
-            tileSide = posnToTile(tileFront.posnX, tileFront.posnY - TILE_LEN / 2);
-        } else if (this.posnY - tileFront.posnY > 0) {
-            tileSide = posnToTile(tileFront.posnX, tileFront.posnY + 3 * TILE_LEN / 2);
+        this.tileFront = posnToTile(this.posnCenter(this.posnX) + this.speed + this.width / 2, this.posnCenter(this.posnY));
+        if (this.posnY - this.tileFront.posnY <= 0) {
+            this.tileSide = posnToTile(this.tileFront.posnX, this.tileFront.posnY - TILE_LEN / 2);
+            this.sideBlock = KEY.KEY_UP;
+        } else if (this.posnY - this.tileFront.posnY > 0) {
+            this.tileSide = posnToTile(this.tileFront.posnX, this.tileFront.posnY + 3 * TILE_LEN / 2);
+            this.sideBlock = KEY.KEY_DOWN;
         }
     } else {
-        tileFront = posnToTile(this.posnCenter(this.posnX) - this.speed - this.width / 2, this.posnCenter(this.posnY));
-        if (this.posnY - tileFront.posnY <= 0) {
-            tileSide = posnToTile(tileFront.posnX, tileFront.posnY - TILE_LEN / 2);
-        } else if (this.posnY - tileFront.posnY > 0) {
-            tileSide = posnToTile(tileFront.posnX, tileFront.posnY + 3 * TILE_LEN / 2);
+        this.tileFront = posnToTile(this.posnCenter(this.posnX) - this.speed - this.width / 2, this.posnCenter(this.posnY));
+        if (this.posnY - this.tileFront.posnY <= 0) {
+            this.tileSide = posnToTile(this.tileFront.posnX, this.tileFront.posnY - TILE_LEN / 2);
+            this.sideBlock = KEY.KEY_UP;
+        } else if (this.posnY - this.tileFront.posnY > 0) {
+            this.tileSide = posnToTile(this.tileFront.posnX, this.tileFront.posnY + 3 * TILE_LEN / 2);
+            this.sideBlock = KEY.KEY_DOWN;
         }
     }
 
-    //console.log(tileFront.tileStatus, tileRight.tileStatus, tileLeft.tileStatus);
-    var frontEmpty = tileFront.isEmpty(outOfBirthPlace),
-        sideEmpty = true;
+    this.frontEmpty = this.tileFront.isEmpty(outOfBirthPlace);
 
-    if (tileSide != null) {
-        sideEmpty = tileSide.isEmpty(outOfBirthPlace);
+    if (this.tileSide !== null) {
+        this.sideEmpty = this.tileSide.isEmpty(outOfBirthPlace);
     }
 
-    console.log(tileFront, this);
+    //console.log(this.tileFront, this);
 
-    if (frontEmpty && sideEmpty) {
-        return true;
-    } else if (frontEmpty && !sideEmpty) {
-        console.log("collision " + !this.collision(tileSide));
-        return !this.collision(tileSide);
-    } else if (!frontEmpty && sideEmpty) {
-        console.log("collision " + !this.collision(tileFront));
-        return !this.collision(tileFront);
+    if (this.frontEmpty && this.sideEmpty) {
+        //console.log(1);
+        return MOVE_ACTION.MOVE;
+    } else if (this.frontEmpty && !this.sideEmpty && this.collision(this.tileSide) === MOVE_ACTION.FRONT_TOLERENT) {
+        //console.log(2);
+        //console.log("collision " + !this.collision(this.tileSide));
+        return MOVE_ACTION.DOUBLE_TOLERENT;
+    } else if (this.frontEmpty && !this.sideEmpty) {
+        //console.log(3);
+        //console.log("collision " + this.collision(this.tileFront));
+        //console.log(this.tileFront);
+        return this.collision(this.tileSide);
+    } else if (!this.frontEmpty && this.sideEmpty) {
+        //console.log(4);
+        return this.collision(this.tileFront);
     }
 
-    return !this.collision(tileFront) && !this.collision(tileSide);
-
-
-
-/*
-    if (dir == KEY.KEY_UP && outOfBirthPlace) {
-        console.log("GO");
-        return posnToTile(this.posnX, this.posnY - TILE_LEN).isEmpty();
-    } else if (dir == KEY.KEY_DOWN && outOfBirthPlace) {
-        return posnToTile(this.posnX, this.posnY + TILE_LEN).isEmpty();
-    } else if (dir == KEY.KEY_RIGHT && outOfBirthPlace) {
-        //console.log(this.posnX, this.posnY);
-        return posnToTile(this.posnX + TILE_LEN, this.posnY).isEmpty();
-    } else if (dir == KEY.KEY_LEFT && outOfBirthPlace) {
-        return posnToTile(this.posnX - TILE_LEN, this.posnY).isEmpty();
-    } else if (dir == KEY.KEY_UP) {
-        return posnToTile(this.posnX, this.posnY - TILE_LEN / 2).isEmptyForBirth();
-    } else if (dir == KEY.KEY_DOWN) {
-        return posnToTile(this.posnX, this.posnY + TILE_LEN / 2).isEmptyForBirth();
-    } else if (dir == KEY.KEY_RIGHT) {
-        return posnToTile(this.posnX + TILE_LEN / 2, this.posnY).isEmptyForBirth();
-    } else {
-        return posnToTile(this.posnX - TILE_LEN / 2, this.posnY).isEmptyForBirth();
-    }
-*/
+    return this.collision(this.tileFront);
 };
 
 Character.prototype.basicMove = function (outOfBirthPlace) {
-    if ((this.charDir === keyToDir(KEY.KEY_UP)) && this.canMove(KEY.KEY_UP, outOfBirthPlace)) {
+    //console.log("START: " + this.posnX, this.posnY);
+
+    var moveNum;
+    if ((this.charDir === keyToDir(KEY.KEY_UP)) && this.canMove(KEY.KEY_UP, outOfBirthPlace) > MOVE_ACTION.MOVE) {
+        moveNum = this.canMove(KEY.KEY_UP, outOfBirthPlace);
+        this.posnY = this.tileFront.posnY + TILE_LEN + TEST;
+        console.log(this);
+        /*
+        if (moveNum === MOVE_ACTION.DOUBLE_TOLERENT && this.sideBlock === KEY.KEY_LEFT) {
+            this.posnX = this.tileFront.posnX;
+        } else if (moveNum === MOVE_ACTION.DOUBLE_TOLERENT && this.sideBlock === KEY.KEY_RIGHT) {
+            this.posnX = this.tileFront.posnX - TILE_LEN;
+        }
+        */
+    } else if ((this.charDir === keyToDir(KEY.KEY_UP)) && this.canMove(KEY.KEY_UP, outOfBirthPlace) === MOVE_ACTION.MOVE) {
         this.posnY -= this.speed;
-    } else if ((this.charDir === keyToDir(KEY.KEY_DOWN)) && this.canMove(KEY.KEY_DOWN, outOfBirthPlace)) {
+    } else if ((this.charDir === keyToDir(KEY.KEY_DOWN)) && this.canMove(KEY.KEY_DOWN, outOfBirthPlace) > MOVE_ACTION.MOVE) {
+        moveNum = this.canMove(KEY.KEY_DOWN, outOfBirthPlace);
+        this.posnY = this.tileFront.posnY - TILE_LEN;
+        /*
+        if (moveNum === MOVE_ACTION.DOUBLE_TOLERENT && this.sideBlock === KEY.KEY_LEFT) {
+            console.log("PASS");
+            this.posnX = this.tileFront.posnX + TEST;
+        } else if (moveNum === MOVE_ACTION.DOUBLE_TOLERENT && this.sideBlock === KEY.KEY_RIGHT) {
+            this.posnX = this.tileFront.posnX + TEST;
+        }
+        */
+    } else if ((this.charDir === keyToDir(KEY.KEY_DOWN)) && this.canMove(KEY.KEY_DOWN, outOfBirthPlace) === MOVE_ACTION.MOVE) {
         this.posnY += this.speed;
-    } else if ((this.charDir === keyToDir(KEY.KEY_LEFT)) && this.canMove(KEY.KEY_LEFT, outOfBirthPlace)) {
+    } else if ((this.charDir === keyToDir(KEY.KEY_LEFT)) && this.canMove(KEY.KEY_LEFT, outOfBirthPlace) > MOVE_ACTION.MOVE) {
+        moveNum = this.canMove(KEY.KEY_LEFT, outOfBirthPlace);
+        this.posnX = this.tileFront.posnX + TILE_LEN + TEST;
+        /*
+        if (moveNum === MOVE_ACTION.DOUBLE_TOLERENT && this.sideBlock === KEY.KEY_UP) {
+            this.posnY = this.tileFront.posnY - TEST;
+        } else if (moveNum === MOVE_ACTION.DOUBLE_TOLERENT && this.sideBlock === KEY.KEY_DOWN) {
+            this.posnY = this.tileFront.posnY - TILE_LEN;
+        }
+        */
+    } else if ((this.charDir === keyToDir(KEY.KEY_LEFT)) && this.canMove(KEY.KEY_LEFT, outOfBirthPlace) === MOVE_ACTION.MOVE) {
         this.posnX -= this.speed;
-    } else if ((this.charDir === keyToDir(KEY.KEY_RIGHT)) && this.canMove(KEY.KEY_RIGHT, outOfBirthPlace)) {
+    } else if ((this.charDir === keyToDir(KEY.KEY_RIGHT)) && this.canMove(KEY.KEY_RIGHT, outOfBirthPlace) > MOVE_ACTION.MOVE) {
+        moveNum = this.canMove(KEY.KEY_RIGHT, outOfBirthPlace);
+        this.posnX = this.tileFront.posnX - TILE_LEN;
+        /*
+        if (moveNum === MOVE_ACTION.DOUBLE_TOLERENT && this.sideBlock === KEY.KEY_UP) {
+            this.posnY = this.tileFront.posnY - TILE_LEN;
+        } else if (moveNum === MOVE_ACTION.DOUBLE_TOLERENT && this.sideBlock === KEY.KEY_DOWN) {
+            this.posnY = this.tileFront.posnY;
+        }
+        */
+    } else if ((this.charDir === keyToDir(KEY.KEY_RIGHT)) && this.canMove(KEY.KEY_RIGHT, outOfBirthPlace) === MOVE_ACTION.MOVE) {
         this.posnX += this.speed;
     }
+    //console.log("END: " + this.posnX, this.posnY);
 };
 
 Character.prototype.charMove = function () {
@@ -165,7 +205,7 @@ Monster.prototype.init = function () {
 };
 
 Monster.prototype.attach = function (player) {
-    this.player = player
+    this.player = player;
 };
 
 Monster.prototype.dirIsAvailable = function (dir, outOfBirthPlace) {
@@ -281,7 +321,7 @@ Player.prototype.update = function () {
 var MODIFY_RIGHT = 8;
 
 Player.prototype.render = function (ctx) {
-    if (this.charDir != undefined) {
+    if (this.charDir !== undefined) {
         if (this.currentAnimation.currentFrame() === s_homuraNorm[2][1] || this.currentAnimation.currentFrame() === s_homuraKuro[2][1]) {
             this.currentAnimation.currentFrame().draw(ctx, this.posnX - offsetX(this.camera.cameraX) - 2 + MODIFY_RIGHT, this.posnY - offsetY(this.camera.cameraY));
         } else if (this.charDir == keyToDir(KEY.KEY_RIGHT)) {
@@ -291,7 +331,7 @@ Player.prototype.render = function (ctx) {
         }
 
     } else {
-        s_homuraNorm[3][0].draw(ctx, this.posnX - offsetX(this.camera.cameraX), this.posnY - offsetY(this.camera.cameraY))
+        s_homuraNorm[3][0].draw(ctx, this.posnX - offsetX(this.camera.cameraX), this.posnY - offsetY(this.camera.cameraY));
     }
 };
 

@@ -31,5 +31,5 @@ function Camera(player) {
         }
 
         //console.log("CAMERA END " + this.cameraX, this.cameraY);
-    }
+    };
 }

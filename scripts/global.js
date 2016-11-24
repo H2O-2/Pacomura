@@ -8,24 +8,39 @@ function GameElement(posnX, posnY) {
     this.height = 0;
     this.width = 0;
 
+    // return -1 (can't move), 0 (can move), 1(tolerate)
     this.collision = function (obj) {
-        if (obj == null) return false;
+        if (obj === null) return false;
 
-        if ((this instanceof Player && this.radius + obj.width/2 > Math.abs(this.posnX - obj.posnX) &&
-            this.radius + obj.height/2 > Math.abs(this.posnY - obj.posnY)) ||
-            (obj instanceof Player && this.width/2 + obj.radius > Math.abs(this.posnX - obj.posnX) &&
-            this.height/2 + obj.radius > Math.abs(this.posnY - obj.posnY))) {
-            return true;
-        } else if (!(this instanceof Player) && !(obj instanceof Player) &&
-            this.width/2 + obj.width/2 > Math.abs(this.posnX - obj.posnX) &&
-            this.height/2 + obj.height/2 > Math.abs(this.posnY - obj.posnY)) {
-            return true;
-        } else {
-            console.log(this,obj);
+        var tolernce;
+
+        if (this instanceof Player && this.kuro === false) {
+            tolernce = CHARACTER_SPEED;
+        } else if (this instanceof Player) {
+            tolernce = KURO_SPEED;
         }
 
-        return false;
-    }
+        if (((this instanceof Player && this.radius + obj.width/2 > Math.abs(this.posnX - obj.posnX) + tolernce &&
+            this.radius + obj.height/2 > Math.abs(this.posnY - obj.posnY) + tolernce) ||
+            (obj instanceof Player && this.width/2 + obj.radius > Math.abs(this.posnX - obj.posnX) + tolernce &&
+            this.height/2 + obj.radius > Math.abs(this.posnY - obj.posnY) + tolernce)) || 
+            (!(this instanceof Player) && !(obj instanceof Player) &&
+            this.width/2 + obj.width/2 > Math.abs(this.posnX - obj.posnX) + tolernce &&
+            this.height/2 + obj.height/2 > Math.abs(this.posnY - obj.posnY) + tolernce)) {
+            return MOVE_ACTION.NO_MOVE;
+        } else if (((this instanceof Player && this.radius + obj.width/2 <= Math.abs(this.posnX - obj.posnX) &&
+            this.radius + obj.height/2 <= Math.abs(this.posnY - obj.posnY)) ||
+            (obj instanceof Player && this.width/2 + obj.radius <= Math.abs(this.posnX - obj.posnX) &&
+            this.height/2 + obj.radius <= Math.abs(this.posnY - obj.posnY))) || 
+            (!(this instanceof Player) && !(obj instanceof Player) &&
+            this.width/2 + obj.width/2 <= Math.abs(this.posnX - obj.posnX) &&
+            this.height/2 + obj.height/2 <= Math.abs(this.posnY - obj.posnY))) {
+            return MOVE_ACTION.MOVE;
+        }
+        //console.log('PASS');
+
+        return MOVE_ACTION.FRONT_TOLERENT;
+    };
 }
 
 /*
