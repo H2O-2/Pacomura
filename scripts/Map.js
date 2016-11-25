@@ -37,7 +37,7 @@ function Map() {
                 this.tiles[i][j].update(this.camera, player);
             }
         }
-        s_homuraKuro[3][0].draw(bgCtx, this.tiles[0][0].posnX, this.tiles[0][0].posnY);
+        //s_homuraKuro[3][0].draw(bgCtx, this.tiles[0][0].posnX, this.tiles[0][0].posnY);
         //console.log(this.tiles[0][0].posnX, this.tiles[0][0].posnY);
         //console.log(this.tiles);
         //console.log("TESTER: " + this.tiles[0][0].posnX, this.tiles[0][0].posnY);
@@ -64,6 +64,7 @@ function posnToTile(x, y) {
     }
 
     //console.log(x, y, tileX, tileY, mapAll.tiles[tileX][tileY].tileStatus);
+    //console.log(x);
 
     return mapAll.tiles[tileX][tileY];
 }

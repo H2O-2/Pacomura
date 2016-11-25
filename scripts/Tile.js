@@ -21,7 +21,7 @@ function Tile(tileX, tileY) {
         //console.log("PASS");
         this.actualX = this.posnX - offsetX(camera.cameraX);
         this.actualY = this.posnX - offsetY(camera.cameraY);
-    }
+    };
 }
 
 Tile.prototype = new GameElement();

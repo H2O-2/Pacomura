@@ -8,7 +8,7 @@ function Game() {
     this.camera = null;
 
     this.player = null;
-    this.monster = new Array(4);
+    this.monster = new Array(MONSTER_NUM);
     
     this.gameInit = function (ctx, bgCtx) {
         //this.player = new Player(INIT_POSN.PLAYER_X * TILE_LEN, INIT_POSN.PLAYER_Y * TILE_LEN, CHARACTER_SPEED);
@@ -18,12 +18,16 @@ function Game() {
         this.camera = new Camera(this.player);
         this.player.init(this.camera);
 
+        // initialize Monsters
+        for (var i = 0; i < this.monster.length; i++) {
+            this.monster[i] = new Monster((i+1) * INIT_POSN.PLAYER_X * TILE_LEN, INIT_POSN.PLAYER_Y * TILE_LEN, CHARACTER_SPEED);
+            this.monster[i].init();
+        }
+
         this.map = mapAll;
         s_map.draw(bgCtx, 0, 0);
         this.map.setCamera(this.camera);
         //s_qb[0][0].draw(bgCtx, 200, 200);
-
-        this.monster = new Monster(100, 100);
         //console.log(s_map);
         //s_homuraNorm[0][0].draw(ctx, 100, 100);
 
@@ -33,6 +37,24 @@ function Game() {
 
     this.update = function () {
         this.player.update();
+
+        // update Monster
+        for (var i = 0; i < this.monster.length; i++) {
+            this.monster[i].update();
+        }
+
+        //console.log(this.player.animationArray);
+
+        //console.log(this.monster[0].animationArray);
+        //console.log(this.monster[1].animationArray);
+        console.log(this.monster[2].animationArray);
+        //console.log(this.monster[3].animationArray);        
+
+        // DEBUG
+        //this.monster[0].update();
+
+        //console.log(this.monster[0].animationArray);
+
         this.map.update(this.player);
         //console.log(this.player);
     };
@@ -41,6 +63,21 @@ function Game() {
         ctx.clearRect(0,0,WIDTH,HEIGHT);
         //console.log(this.camera.cameraX);
         this.player.render(ctx);
+
+
+        // render Monsters
+        for (var i = 0; i < this.monster.length; i++) {
+            this.monster[i].render(ctx);
+        }
+
+
+
+
+        //DEBUG
+        //this.monster[0].render(ctx);
+
+
+
         //console.log(this.player.posnX);
         bgCtx.clearRect(0,0,WIDTH,HEIGHT);
         this.map.render(bgCtx, this.player);

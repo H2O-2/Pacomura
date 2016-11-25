@@ -8,9 +8,9 @@ function Character(posnX, posnY, speed) {
     this.posnX = posnX;
     this.posnY = posnY;
     this.curTile = null; // current tile status
-    this.height = 0; // character height
-    this.width = 0; // character
-    this.charDir = keyToDir(KEY.KEY_UP); // current direction
+    this.height = MONSTER_BACK_LEN; // character height
+    this.width = MONSTER_BACK_LEN; // character
+    this.charDir = keyToDir(KEY.KEY_DOWN); // current direction
     this.frontEmpty = true; // true if the tile in front of the character is empty
     this.tileFront = null; // tile in front of character
     this.sideEmpty = true; // true if both tiles on two sides of the front tile are empty
@@ -127,7 +127,6 @@ Character.prototype.canMove = function (dir, outOfBirthPlace) {
 
 Character.prototype.basicMove = function (outOfBirthPlace) {
     //console.log("START: " + this.posnX, this.posnY);
-
     if (((this.charDir === keyToDir(KEY.KEY_LEFT)) && (this.posnX - BORDER.START_POINT * TILE_LEN <= 0) && this.checkJump(this.posnY))) {
         this.posnX = BORDER.END_POINT_X * TILE_LEN;
     } else if ((this.charDir === keyToDir(KEY.KEY_RIGHT)) && (BORDER.END_POINT_X * TILE_LEN - this.posnX <= 0) && this.checkJump(this.posnY)) {
@@ -190,24 +189,14 @@ Character.prototype.basicMove = function (outOfBirthPlace) {
     //console.log("END: " + this.posnX, this.posnY);
 };
 
-Character.prototype.charMove = function () {
-
-};
-
-Character.prototype.update = function () {
-
-};
-
-Character.prototype.render = function () {
-
-};
-
-function Monster(posnX, posnY) {
+function Monster(posnX, posnY, speed) {
     this.posnX = posnX;
     this.posnY = posnY;
+    this.speed = speed;
     this.availableDir = new Array(1);
     this.outOfBirthPlace = false;
     this.player = null;
+    this.animationArray = new Array(ANIMATION_FRAMES);
 }
 
 
@@ -215,8 +204,15 @@ function Monster(posnX, posnY) {
 Monster.prototype = new Character();
 
 Monster.prototype.init = function () {
+    for (var i = 0; i < ANIMATION_FRAMES; i++) {
+        this.animationArray[i] = new Animation(s_qb[i]);
+    }
+
+    //this.charDir = keyToDir(KEY.KEY_UP);
     this.availableDir[0] = this.charDir;
     this.curTile = posnToTile(this.posnX, this.posnY);
+    //console.log("1: " + this.availableDir);
+    console.log("SPEED: ", this.speed);
 };
 
 Monster.prototype.attach = function (player) {
@@ -250,16 +246,35 @@ Monster.prototype.checkDir = function () {
 };
 
 Monster.prototype.charMove = function () {
-    this.checkDir();
 
-    if (this.availableDir.length == 1) {
+    this.basicMove(this.outOfBirthPlace);
+
+    /*
+    //console.log("2: " + this.availableDir);
+    this.checkDir();
+    //console.log("3: " + this.availableDir);
+
+    if (this.availableDir.length === 1) {
+        this.charDir = availableDir[0];
+        console.log("test: " + this.charDir);
         this.basicMove(this.outOfBirthPlace);
         return;
     }
 
-    var newDir = this.availableDir[Math.random() * this.availableDir.length];
+    console.log(Math.floor(Math.random() * this.availableDir.length));
+    //var newDir = this.availableDir[Math.floor(Math.random() * this.availableDir.length)];
+    var newDir = this.availableDir[Math.floor(Math.random() * this.availableDir.length)];
 
-    if (newDir == this.charDir) {
+    this.charDir = newDir;
+    //console.log("test: " + this.charDir);
+    this.basicMove(this.outOfBirthPlace);
+    this.availableDir = null;
+    this.availableDir = new Array(1);
+    this.availableDir.push(newDir);
+    //console.log(this.charDir);
+
+/*
+    if (newDir === this.charDir) {
         for (var i = 0; i < this.availableDir.length; i++) { this.availableDir.pop(); }
     } else {
         this.availableDir = null;
@@ -268,6 +283,22 @@ Monster.prototype.charMove = function () {
         this.charDir = newDir;
         this.basicMove(this.outOfBirthPlace);
     }
+*/
+};
+
+Monster.prototype.setAnimation = function () {
+    this.currentAnimation = this.animationArray[this.charDir];
+};
+
+Monster.prototype.update = function () {
+    this.setAnimation();
+    this.charMove();
+    this.currentAnimation.update();
+};
+
+Monster.prototype.render = function (ctx) {
+    //console.log(this.charDir);
+    this.currentAnimation.currentFrame().draw(ctx, this.posnX, this.posnY);
 };
 
 
@@ -320,7 +351,7 @@ Player.prototype.setAnimation = function () {
 
 Player.prototype.notifyObserver = function () {
     for (var i = 0; i < MONSTER_NUM; i++) {
-        this.observers[i].update();
+        //this.observers[i].update();
     }
 };
 
