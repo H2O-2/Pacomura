@@ -95,7 +95,7 @@ Character.prototype.canMove = function (dir, outOfBirthPlace) {
         this.sideEmpty = this.tileSide.isEmpty(outOfBirthPlace);
     }
 
-    //console.log(this.tileFront, this);
+    console.log(this.tileFront, this);
 
     if (this.frontEmpty && this.sideEmpty) {
         //console.log(1);
@@ -124,7 +124,7 @@ Character.prototype.basicMove = function (outOfBirthPlace) {
     if ((this.charDir === keyToDir(KEY.KEY_UP)) && this.canMove(KEY.KEY_UP, outOfBirthPlace) > MOVE_ACTION.MOVE) {
         moveNum = this.canMove(KEY.KEY_UP, outOfBirthPlace);
         this.posnY = this.tileFront.posnY + TILE_LEN + TEST;
-        console.log(this);
+        //console.log(this);
         /*
         if (moveNum === MOVE_ACTION.DOUBLE_TOLERENT && this.sideBlock === KEY.KEY_LEFT) {
             this.posnX = this.tileFront.posnX;
@@ -137,6 +137,7 @@ Character.prototype.basicMove = function (outOfBirthPlace) {
     } else if ((this.charDir === keyToDir(KEY.KEY_DOWN)) && this.canMove(KEY.KEY_DOWN, outOfBirthPlace) > MOVE_ACTION.MOVE) {
         moveNum = this.canMove(KEY.KEY_DOWN, outOfBirthPlace);
         this.posnY = this.tileFront.posnY - TILE_LEN;
+        //console.log(this.tileFront);
         /*
         if (moveNum === MOVE_ACTION.DOUBLE_TOLERENT && this.sideBlock === KEY.KEY_LEFT) {
             console.log("PASS");
@@ -291,8 +292,8 @@ Player.prototype.init = function (camera) {
 };
 
 Player.prototype.charMove = function () {
-
     this.basicMove(true);
+    //console.log(this);
 };
 
 Player.prototype.setAnimation = function () {
@@ -317,8 +318,6 @@ Player.prototype.update = function () {
 
     this.notifyObserver();
 };
-
-var MODIFY_RIGHT = 8;
 
 Player.prototype.render = function (ctx) {
     if (this.charDir !== undefined) {

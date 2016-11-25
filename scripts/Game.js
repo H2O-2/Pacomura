@@ -41,8 +41,10 @@ function Game() {
         ctx.clearRect(0,0,WIDTH,HEIGHT);
         //console.log(this.camera.cameraX);
         this.player.render(ctx);
+        //console.log(this.player.posnX);
         bgCtx.clearRect(0,0,WIDTH,HEIGHT);
-        this.map.render(bgCtx);
+        this.map.render(bgCtx, this.player);
+        //console.log(this.map.tiles[0][0].posnY);
         //console.log(posnToTile(this.player.posnX + TILE_LEN + 1, this.player.posnY + 9 *TILE_LEN / 10), this.player);
         //console.log(mapAll.tiles[0][0], this.player);
     };

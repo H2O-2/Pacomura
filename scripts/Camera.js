@@ -3,11 +3,12 @@
  */
 
 function Camera(player) {
-    this.cameraX = 0;
-    this.cameraY = 0;
+    this.cameraX = 200;
+    this.cameraY = 400;
     this.player = player;
 
     this.update = function () {
+
         //console.log("CAMERA BEFORE " + this.cameraX, this.cameraY);
 
         this.cameraX += (player.posnX - this.cameraX) / CAMERA_SPEED;
@@ -31,5 +32,6 @@ function Camera(player) {
         }
 
         //console.log("CAMERA END " + this.cameraX, this.cameraY);
+
     };
 }

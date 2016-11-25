@@ -29,10 +29,17 @@ function Map() {
         this.camera.update();
     };
 
-    this.render = function (bgCtx) {
+    this.render = function (bgCtx, player) {
         //console.log(-offsetX(this.camera.cameraX),-offsetY(this.camera.cameraY));
         s_map.draw(bgCtx, -offsetX(this.camera.cameraX), -offsetY(this.camera.cameraY));
+        for (var i = 0; i < MAP_WIDTH; i++) {
+            for (var j = 0; j < MAP_HEIGHT; j++) {
+                this.tiles[i][j].update(this.camera, player);
+            }
+        }
         s_homuraKuro[3][0].draw(bgCtx, this.tiles[0][0].posnX, this.tiles[0][0].posnY);
+        console.log(this.tiles[0][0].posnX, this.tiles[0][0].posnY);
+        //console.log(this.tiles);
         //console.log("TESTER: " + this.tiles[0][0].posnX, this.tiles[0][0].posnY);
     };
 }
