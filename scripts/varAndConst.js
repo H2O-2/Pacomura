@@ -21,6 +21,8 @@ var INIT_POSN = {PLAYER_X: 2, PLAYER_Y: 2};
 var MAP_WIDTH = 31,
     MAP_HEIGHT = 34;
 var BORDER = {START_POINT: 2, END_POINT_X: 28, END_POINT_Y: 31};
+var JUMP_ARRAY = [14,15,17,18];
+
 
 var KEY = {KEY_LEFT: 37, KEY_UP: 38, KEY_RIGHT: 39, KEY_DOWN: 40};
 var KEY_TO_DIR = 37;
@@ -84,9 +86,5 @@ var WALL_ARRAY = [
 ];
 
 var BIRTH_ARRAY = [
-
-];
-
-var JUMP_ARRAY = [
 
 ];

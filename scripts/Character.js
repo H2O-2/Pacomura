@@ -36,12 +36,20 @@ Character.prototype.posnCenter = function (posn) {
     return posn + TILE_LEN / 2;
 };
 
+Character.prototype.checkJump = function (posn) {
+    for (var i = 0; i < JUMP_ARRAY.length; i += 2) {
+        //console.log(posn,JUMP_ARRAY[i] * TILE_LEN);
+        if (posn >= JUMP_ARRAY[i] * TILE_LEN && posn <= JUMP_ARRAY[i + 1] * TILE_LEN) {
+            return true;
+        }
+    }
+    return false;
+};
 
 // return -1 (can't move), 0 (front tolerate), 1(can move), 2(double direction tolerate)
 Character.prototype.canMove = function (dir, outOfBirthPlace) {
 
     //if (x < 0 || y < 0 || x > MAP_WIDTH * TILE_LEN || x > MAP_HEIGHT * TILE_LEN) return false;
-
 
     // check for border
     if (((dir == KEY.KEY_UP) && (this.posnY - BORDER.START_POINT * TILE_LEN <= 0)) ||
@@ -95,7 +103,7 @@ Character.prototype.canMove = function (dir, outOfBirthPlace) {
         this.sideEmpty = this.tileSide.isEmpty(outOfBirthPlace);
     }
 
-    console.log(this.tileFront, this);
+    //console.log(this.tileFront, this);
 
     if (this.frontEmpty && this.sideEmpty) {
         //console.log(1);
@@ -119,6 +127,12 @@ Character.prototype.canMove = function (dir, outOfBirthPlace) {
 
 Character.prototype.basicMove = function (outOfBirthPlace) {
     //console.log("START: " + this.posnX, this.posnY);
+
+    if (((this.charDir === keyToDir(KEY.KEY_LEFT)) && (this.posnX - BORDER.START_POINT * TILE_LEN <= 0) && this.checkJump(this.posnY))) {
+        this.posnX = BORDER.END_POINT_X * TILE_LEN;
+    } else if ((this.charDir === keyToDir(KEY.KEY_RIGHT)) && (BORDER.END_POINT_X * TILE_LEN - this.posnX <= 0) && this.checkJump(this.posnY)) {
+        this.posnX = BORDER.START_POINT * TILE_LEN;
+    }
 
     var moveNum;
     if ((this.charDir === keyToDir(KEY.KEY_UP)) && this.canMove(KEY.KEY_UP, outOfBirthPlace) > MOVE_ACTION.MOVE) {
