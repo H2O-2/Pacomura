@@ -8,8 +8,8 @@ function Character(posnX, posnY, speed) {
     this.posnX = posnX;
     this.posnY = posnY;
     this.curTile = null; // current tile status
-    this.height = MONSTER_BACK_LEN; // character height
-    this.width = MONSTER_BACK_LEN; // character
+    this.height = 0; // character height
+    this.width = 0; // character
     this.charDir = keyToDir(KEY.KEY_DOWN); // current direction
     this.frontEmpty = true; // true if the tile in front of the character is empty
     this.tileFront = null; // tile in front of character
@@ -60,7 +60,10 @@ Character.prototype.canMove = function (dir, outOfBirthPlace) {
     }
 
     if (dir == KEY.KEY_UP) {
-        this.tileFront = posnToTile(this.posnCenter(this.posnX), this.posnCenter(this.posnY) - this.speed - this.height / 2);
+        var testing = this.posnCenter(this.posnY) - this.speed - TILE_LEN / 2;
+        var selfY = this.posnCenter(this.posnY);
+        var tileNow  = posnToTile(this.posnCenter(this.posnX), this.posnCenter(this.posnY));
+        this.tileFront = posnToTile(this.posnCenter(this.posnX), this.posnCenter(this.posnY) - this.speed - TILE_LEN / 2);
         if (this.posnX - this.tileFront.posnX <= 0) {
             this.tileSide = posnToTile(this.tileFront.posnX - TILE_LEN / 2, this.tileFront.posnY);
             this.sideBlock = KEY.KEY_LEFT;
@@ -69,7 +72,7 @@ Character.prototype.canMove = function (dir, outOfBirthPlace) {
             this.sideBlock = KEY.KEY_RIGHT;
         }
     } else if (dir == KEY.KEY_DOWN) {
-        this.tileFront = posnToTile(this.posnCenter(this.posnX), this.posnCenter(this.posnY) + this.speed + this.height / 2);
+        this.tileFront = posnToTile(this.posnCenter(this.posnX), this.posnCenter(this.posnY) + this.speed + TILE_LEN / 2);
         if (this.posnX - this.tileFront.posnX <= 0) {
             this.tileSide = posnToTile(this.tileFront.posnX - TILE_LEN / 2, this.tileFront.posnY);
             this.sideBlock = KEY.KEY_LEFT;
@@ -78,7 +81,7 @@ Character.prototype.canMove = function (dir, outOfBirthPlace) {
             this.sideBlock = KEY.KEY_RIGHT;
         }
     } else if (dir == KEY.KEY_RIGHT) {
-        this.tileFront = posnToTile(this.posnCenter(this.posnX) + this.speed + this.width / 2, this.posnCenter(this.posnY));
+        this.tileFront = posnToTile(this.posnCenter(this.posnX) + this.speed + TILE_LEN / 2, this.posnCenter(this.posnY));
         if (this.posnY - this.tileFront.posnY <= 0) {
             this.tileSide = posnToTile(this.tileFront.posnX, this.tileFront.posnY - TILE_LEN / 2);
             this.sideBlock = KEY.KEY_UP;
@@ -87,7 +90,7 @@ Character.prototype.canMove = function (dir, outOfBirthPlace) {
             this.sideBlock = KEY.KEY_DOWN;
         }
     } else {
-        this.tileFront = posnToTile(this.posnCenter(this.posnX) - this.speed - this.width / 2, this.posnCenter(this.posnY));
+        this.tileFront = posnToTile(this.posnCenter(this.posnX) - this.speed - TILE_LEN / 2, this.posnCenter(this.posnY));
         if (this.posnY - this.tileFront.posnY <= 0) {
             this.tileSide = posnToTile(this.tileFront.posnX, this.tileFront.posnY - TILE_LEN / 2);
             this.sideBlock = KEY.KEY_UP;
@@ -108,10 +111,10 @@ Character.prototype.canMove = function (dir, outOfBirthPlace) {
     if (this.frontEmpty && this.sideEmpty) {
         //console.log(1);
         return MOVE_ACTION.MOVE;
-    } else if (this.frontEmpty && !this.sideEmpty && this.collision(this.tileSide) === MOVE_ACTION.FRONT_TOLERENT) {
+    } else if (this.frontEmpty && !this.sideEmpty && this.collision(this.tileSide) === MOVE_ACTION.FRONT_TOLERANT) {
         //console.log(2);
         //console.log("collision " + !this.collision(this.tileSide));
-        return MOVE_ACTION.DOUBLE_TOLERENT;
+        return MOVE_ACTION.DOUBLE_TOLERANT;
     } else if (this.frontEmpty && !this.sideEmpty) {
         //console.log(3);
         //console.log("collision " + this.collision(this.tileFront));
@@ -136,12 +139,12 @@ Character.prototype.basicMove = function (outOfBirthPlace) {
     var moveNum;
     if ((this.charDir === keyToDir(KEY.KEY_UP)) && this.canMove(KEY.KEY_UP, outOfBirthPlace) > MOVE_ACTION.MOVE) {
         moveNum = this.canMove(KEY.KEY_UP, outOfBirthPlace);
-        this.posnY = this.tileFront.posnY + TILE_LEN + TEST;
+        this.posnY = this.tileFront.posnY + TILE_LEN;
         //console.log(this);
         /*
-        if (moveNum === MOVE_ACTION.DOUBLE_TOLERENT && this.sideBlock === KEY.KEY_LEFT) {
+        if (moveNum === MOVE_ACTION.DOUBLE_TOLERANT && this.sideBlock === KEY.KEY_LEFT) {
             this.posnX = this.tileFront.posnX;
-        } else if (moveNum === MOVE_ACTION.DOUBLE_TOLERENT && this.sideBlock === KEY.KEY_RIGHT) {
+        } else if (moveNum === MOVE_ACTION.DOUBLE_TOLERANT && this.sideBlock === KEY.KEY_RIGHT) {
             this.posnX = this.tileFront.posnX - TILE_LEN;
         }
         */
@@ -149,13 +152,14 @@ Character.prototype.basicMove = function (outOfBirthPlace) {
         this.posnY -= this.speed;
     } else if ((this.charDir === keyToDir(KEY.KEY_DOWN)) && this.canMove(KEY.KEY_DOWN, outOfBirthPlace) > MOVE_ACTION.MOVE) {
         moveNum = this.canMove(KEY.KEY_DOWN, outOfBirthPlace);
+        console.log(this.posnY);
         this.posnY = this.tileFront.posnY - TILE_LEN;
-        //console.log(this.tileFront);
+        console.log(this.posnY);
         /*
-        if (moveNum === MOVE_ACTION.DOUBLE_TOLERENT && this.sideBlock === KEY.KEY_LEFT) {
+        if (moveNum === MOVE_ACTION.DOUBLE_TOLERANT && this.sideBlock === KEY.KEY_LEFT) {
             console.log("PASS");
             this.posnX = this.tileFront.posnX + TEST;
-        } else if (moveNum === MOVE_ACTION.DOUBLE_TOLERENT && this.sideBlock === KEY.KEY_RIGHT) {
+        } else if (moveNum === MOVE_ACTION.DOUBLE_TOLERANT && this.sideBlock === KEY.KEY_RIGHT) {
             this.posnX = this.tileFront.posnX + TEST;
         }
         */
@@ -165,9 +169,9 @@ Character.prototype.basicMove = function (outOfBirthPlace) {
         moveNum = this.canMove(KEY.KEY_LEFT, outOfBirthPlace);
         this.posnX = this.tileFront.posnX + TILE_LEN + TEST;
         /*
-        if (moveNum === MOVE_ACTION.DOUBLE_TOLERENT && this.sideBlock === KEY.KEY_UP) {
+        if (moveNum === MOVE_ACTION.DOUBLE_TOLERANT && this.sideBlock === KEY.KEY_UP) {
             this.posnY = this.tileFront.posnY - TEST;
-        } else if (moveNum === MOVE_ACTION.DOUBLE_TOLERENT && this.sideBlock === KEY.KEY_DOWN) {
+        } else if (moveNum === MOVE_ACTION.DOUBLE_TOLERANT && this.sideBlock === KEY.KEY_DOWN) {
             this.posnY = this.tileFront.posnY - TILE_LEN;
         }
         */
@@ -177,9 +181,9 @@ Character.prototype.basicMove = function (outOfBirthPlace) {
         moveNum = this.canMove(KEY.KEY_RIGHT, outOfBirthPlace);
         this.posnX = this.tileFront.posnX - TILE_LEN;
         /*
-        if (moveNum === MOVE_ACTION.DOUBLE_TOLERENT && this.sideBlock === KEY.KEY_UP) {
+        if (moveNum === MOVE_ACTION.DOUBLE_TOLERANT && this.sideBlock === KEY.KEY_UP) {
             this.posnY = this.tileFront.posnY - TILE_LEN;
-        } else if (moveNum === MOVE_ACTION.DOUBLE_TOLERENT && this.sideBlock === KEY.KEY_DOWN) {
+        } else if (moveNum === MOVE_ACTION.DOUBLE_TOLERANT && this.sideBlock === KEY.KEY_DOWN) {
             this.posnY = this.tileFront.posnY;
         }
         */
@@ -247,6 +251,17 @@ Monster.prototype.checkDir = function () {
 
 Monster.prototype.charMove = function () {
 
+    if (this.charDir === keyToDir(KEY.KEY_LEFT) || this.charDir === keyToDir(KEY.KEY_RIGHT)) {
+        this.height = MONSTER_SIDE_HEIGHT;
+        this.width = MONSTER_SIDE_WIDTH;
+    } else if (this.charDir === keyToDir(KEY.KEY_UP)) {
+        this.height = MONSTER_BACK_LEN;
+        this.width = MONSTER_BACK_LEN
+    } else {
+        this.height = MONSTER_FRONT_LEN;
+        this.width = MONSTER_FRONT_LEN;
+    }
+
     this.basicMove(this.outOfBirthPlace);
 
     /*
@@ -291,6 +306,7 @@ Monster.prototype.setAnimation = function () {
 };
 
 Monster.prototype.update = function () {
+    this.curTile = posnToTile(this.posnX, this.posnY);
     this.setAnimation();
     this.charMove();
     this.currentAnimation.update();
@@ -366,12 +382,18 @@ Player.prototype.update = function () {
 
 Player.prototype.render = function (ctx) {
     if (this.charDir !== undefined) {
-        if (this.currentAnimation.currentFrame() === s_homuraNorm[2][1] || this.currentAnimation.currentFrame() === s_homuraKuro[2][1]) {
-            this.currentAnimation.currentFrame().draw(ctx, this.posnX - offsetX(this.camera.cameraX) - 2 + MODIFY_RIGHT, this.posnY - offsetY(this.camera.cameraY));
+        if (this.currentAnimation.currentFrame() === s_homuraNorm[2][1] ||
+            this.currentAnimation.currentFrame() === s_homuraKuro[2][1])
+        {
+
+            this.currentAnimation.currentFrame().draw(ctx, this.posnX - offsetX(this.camera.cameraX) - 2 + MODIFY_RIGHT,
+                                                        this.posnY - offsetY(this.camera.cameraY));
         } else if (this.charDir == keyToDir(KEY.KEY_RIGHT)) {
-            this.currentAnimation.currentFrame().draw(ctx, this.posnX - offsetX(this.camera.cameraX) + MODIFY_RIGHT, this.posnY - offsetY(this.camera.cameraY));
+            this.currentAnimation.currentFrame().draw(ctx, this.posnX - offsetX(this.camera.cameraX) + MODIFY_RIGHT,
+                                                        this.posnY - offsetY(this.camera.cameraY));
         } else {
-            this.currentAnimation.currentFrame().draw(ctx, this.posnX - offsetX(this.camera.cameraX), this.posnY - offsetY(this.camera.cameraY));
+            this.currentAnimation.currentFrame().draw(ctx, this.posnX - offsetX(this.camera.cameraX),
+                                                        this.posnY - offsetY(this.camera.cameraY));
         }
 
     } else {

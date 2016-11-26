@@ -20,7 +20,7 @@ function Game() {
 
         // initialize Monsters
         for (var i = 0; i < this.monster.length; i++) {
-            this.monster[i] = new Monster((i+1) * INIT_POSN.PLAYER_X * TILE_LEN, INIT_POSN.PLAYER_Y * TILE_LEN, CHARACTER_SPEED);
+            this.monster[i] = new Monster((i+1) * INIT_POSN.PLAYER_X * TILE_LEN, 2 * TILE_LEN, CHARACTER_SPEED);
             this.monster[i].init();
         }
 
@@ -47,11 +47,11 @@ function Game() {
 
         //console.log(this.monster[0].animationArray);
         //console.log(this.monster[1].animationArray);
-        console.log(this.monster[2].animationArray);
+        //console.log(this.monster[2].animationArray);
         //console.log(this.monster[3].animationArray);        
 
         // DEBUG
-        //this.monster[0].update();
+        //this.monster[2].update();
 
         //console.log(this.monster[0].animationArray);
 
@@ -74,7 +74,7 @@ function Game() {
 
 
         //DEBUG
-        //this.monster[0].render(ctx);
+        //this.monster[2].render(ctx);
 
 
 
