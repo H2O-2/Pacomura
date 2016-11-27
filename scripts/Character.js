@@ -139,7 +139,7 @@ Character.prototype.basicMove = function (outOfBirthPlace) {
     var moveNum;
     if ((this.charDir === keyToDir(KEY.KEY_UP)) && this.canMove(KEY.KEY_UP, outOfBirthPlace) > MOVE_ACTION.MOVE) {
         moveNum = this.canMove(KEY.KEY_UP, outOfBirthPlace);
-        this.posnY = this.tileFront.posnY + TILE_LEN;
+        this.posnY = this.tileFront.posnY + TILE_LEN + TEST;
         //console.log(this);
         /*
         if (moveNum === MOVE_ACTION.DOUBLE_TOLERANT && this.sideBlock === KEY.KEY_LEFT) {
@@ -201,13 +201,16 @@ function Monster(posnX, posnY, speed) {
     this.outOfBirthPlace = false;
     this.player = null;
     this.animationArray = new Array(ANIMATION_FRAMES);
+    this.currentAnimation = null;
+    this.newDirMove = 0;
+    this.camera = null;
 }
 
 
 // MONSTER IMPLEMENTATION
 Monster.prototype = new Character();
 
-Monster.prototype.init = function () {
+Monster.prototype.init = function (camera) {
     for (var i = 0; i < ANIMATION_FRAMES; i++) {
         this.animationArray[i] = new Animation(s_qb[i]);
     }
@@ -217,6 +220,8 @@ Monster.prototype.init = function () {
     this.curTile = posnToTile(this.posnX, this.posnY);
     //console.log("1: " + this.availableDir);
     console.log("SPEED: ", this.speed);
+
+    this.camera = camera;
 };
 
 Monster.prototype.attach = function (player) {
@@ -225,21 +230,23 @@ Monster.prototype.attach = function (player) {
 
 Monster.prototype.dirIsAvailable = function (dir, outOfBirthPlace) {
         if (dir == KEY.KEY_UP) {
-            return (posnToTile(this.posnX, this.posnY - TILE_LEN).isEmpty(outOfBirthPlace) &&
+            return (posnToTile(this.posnX, this.posnY - 2 * TILE_LEN).isEmpty(outOfBirthPlace) &&
                     posnToTile(this.posnX, this.posnY - 2 * TILE_LEN).isEmpty(outOfBirthPlace));
         } else if (dir == KEY.KEY_DOWN) {
-            return (posnToTile(this.posnX, this.posnY + TILE_LEN).isEmpty(outOfBirthPlace) &&
+            return (posnToTile(this.posnX, this.posnY + 2 * TILE_LEN).isEmpty(outOfBirthPlace) &&
                     posnToTile(this.posnX, this.posnY + 2 * TILE_LEN).isEmpty(outOfBirthPlace));
         } else if (dir == KEY.KEY_RIGHT) {
-            return (posnToTile(this.posnX + TILE_LEN, this.posnY).isEmpty(outOfBirthPlace) &&
+            return (posnToTile(this.posnX + 2 * TILE_LEN, this.posnY).isEmpty(outOfBirthPlace) &&
                     posnToTile(this.posnX + 2 * TILE_LEN, this.posnY).isEmpty(outOfBirthPlace));
         } else {
-            return (posnToTile(this.posnX - TILE_LEN, this.posnY).isEmpty(outOfBirthPlace) &&
+            return (posnToTile(this.posnX - 2 * TILE_LEN, this.posnY).isEmpty(outOfBirthPlace) &&
                     posnToTile(this.posnX - 2 * TILE_LEN, this.posnY).isEmpty(outOfBirthPlace));
         }
 };
 
 Monster.prototype.checkDir = function () {
+    if (this.newDirMove < NEW_DIR_MOVE) return;
+
     if (this.charDir == keyToDir(KEY.KEY_UP) || this.charDir == keyToDir(KEY.KEY_DOWN)) {
         if (this.dirIsAvailable(KEY.KEY_LEFT)) this.availableDir.push(keyToDir(KEY.KEY_LEFT));
         if (this.dirIsAvailable(KEY.KEY_RIGHT)) this.availableDir.push(keyToDir(KEY.KEY_RIGHT));
@@ -262,17 +269,18 @@ Monster.prototype.charMove = function () {
         this.width = MONSTER_FRONT_LEN;
     }
 
-    this.basicMove(this.outOfBirthPlace);
+    //this.basicMove(this.outOfBirthPlace);
 
-    /*
+
     //console.log("2: " + this.availableDir);
     this.checkDir();
     //console.log("3: " + this.availableDir);
 
     if (this.availableDir.length === 1) {
-        this.charDir = availableDir[0];
+        this.charDir = this.availableDir[0];
         console.log("test: " + this.charDir);
         this.basicMove(this.outOfBirthPlace);
+        this.newDirMove++;
         return;
     }
 
@@ -283,9 +291,15 @@ Monster.prototype.charMove = function () {
     this.charDir = newDir;
     //console.log("test: " + this.charDir);
     this.basicMove(this.outOfBirthPlace);
+
+    for (var i = 0; i < this.availableDir.length; i++) {
+        this.availableDir[i] = null;
+    }
+
     this.availableDir = null;
     this.availableDir = new Array(1);
-    this.availableDir.push(newDir);
+    this.availableDir[0] = newDir;
+    this.newDirMove = 0;
     //console.log(this.charDir);
 
 /*
@@ -309,12 +323,12 @@ Monster.prototype.update = function () {
     this.curTile = posnToTile(this.posnX, this.posnY);
     this.setAnimation();
     this.charMove();
-    this.currentAnimation.update();
+    if (this.currentAnimation) this.currentAnimation.update();
 };
 
 Monster.prototype.render = function (ctx) {
     //console.log(this.charDir);
-    this.currentAnimation.currentFrame().draw(ctx, this.posnX, this.posnY);
+    this.currentAnimation.currentFrame().draw(ctx, this.posnX - offsetX(this.camera.cameraX), this.posnY - offsetY(this.camera.cameraY));
 };
 
 

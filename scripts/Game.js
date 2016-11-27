@@ -21,7 +21,7 @@ function Game() {
         // initialize Monsters
         for (var i = 0; i < this.monster.length; i++) {
             this.monster[i] = new Monster((i+1) * INIT_POSN.PLAYER_X * TILE_LEN, 2 * TILE_LEN, CHARACTER_SPEED);
-            this.monster[i].init();
+            this.monster[i].init(this.camera);
         }
 
         this.map = mapAll;
