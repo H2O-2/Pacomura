@@ -51,7 +51,7 @@ function Game() {
         //console.log(this.monster[3].animationArray);        
 
         // DEBUG
-        //this.monster[2].update();
+        this.monster[2].update();
 
         //console.log(this.monster[0].animationArray);
 

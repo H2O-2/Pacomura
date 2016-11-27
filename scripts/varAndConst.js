@@ -21,6 +21,10 @@ var INIT_POSN = {PLAYER_X: 2, PLAYER_Y: 2};
 var MAP_WIDTH = 31,
     MAP_HEIGHT = 34;
 var BORDER = {START_POINT: 2, END_POINT_X: 28, END_POINT_Y: 31};
+var BIRTH_BORDER_X = 11;
+var BIRTH_BORDER_Y = 13;
+var BIRTH_WIDTH = 7;
+var BIRTH_HEIGHT = 4;
 var JUMP_ARRAY = [14,15,17,18];
 
 
@@ -38,9 +42,9 @@ var MONSTER_BACK_LEN = 23;
 var MONSTER_SIDE_WIDTH = 28;
 var MONSTER_SIDE_HEIGHT = 21;
 
-var CHARACTER_SPEED = 2.4;
+var CHARACTER_SPEED = 2.7;
 var KURO_SPEED = 5;
-var NEW_DIR_MOVE = 30;
+var NEW_DIR_MOVE = 20;
 
 var ANIMATION_FRAMES = 4;
 var MODIFY_RIGHT = 7;
@@ -50,7 +54,7 @@ var CAMERA_SPEED = 10;
 var CAMERA_BORDER = 1/2;
 var COLLISION_TOLERENCE = 0;
 
-var MONSTER_NUM = 4;
+var MONSTER_NUM = 10;
 
 var WALL_ARRAY = [
     // MAP
@@ -59,7 +63,7 @@ var WALL_ARRAY = [
     [2,5,6,7,10,11,12,13,14,15,16,19,20,21,24],
     [2,5,6,7,10,16,19,20,21,24],
     [2,10,16,24],
-    [2,10,16,24],
+    [2,10,13,16,24],
     [2,3,4,7,10,13,16,19,22,23,24],
     [7,13,19],
     [7,13,19],
@@ -84,8 +88,4 @@ var WALL_ARRAY = [
     [2,5,6,7,8,9,10,13,16,17,18,19,20,21,24],
     [13],
     [13]
-];
-
-var BIRTH_ARRAY = [
-
 ];

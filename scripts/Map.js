@@ -13,10 +13,22 @@ function Map() {
             }
         }
 
+        this.tiles[MAP_WIDTH - 1].push(new Tile(-1,-1));
+        this.tiles[MAP_WIDTH - 1][MAP_HEIGHT].tileStatus = TILE_STATUS.OCCUPIED;
+
+        console.log("FIRST");
+        console.log(this.tiles[0][0]);
+
         for (var m = 0; m < WALL_ARRAY.length; m++) {
             for (var n = 0; n < WALL_ARRAY[m].length; n++) {
                 //console.log(m, WALL_ARRAY[m][n]);
                 this.tiles[WALL_ARRAY[m][n]][m].tileStatus = TILE_STATUS.OCCUPIED;
+            }
+        }
+
+        for (var a = 0; a < BIRTH_WIDTH; a++) {
+            for (var b = 0; b < BIRTH_HEIGHT; b++) {
+                this.tiles[BIRTH_BORDER_X + a - 1][BIRTH_BORDER_Y + b - 1].tileStatus = TILE_STATUS.BIRTH_AREA;
             }
         }
     };

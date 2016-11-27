@@ -33,8 +33,8 @@ function GameElement(posnX, posnY) {
             (obj instanceof Player && this.width/2 + obj.radius < Math.abs(this.posnX - obj.posnX) &&
             this.height/2 + obj.radius < Math.abs(this.posnY - obj.posnY))) ||
             (!(this instanceof Player) && !(obj instanceof Player) &&
-            this.width/2 + obj.width/2 < Math.abs(this.posnX - obj.posnX) &&
-            this.height/2 + obj.height/2 < Math.abs(this.posnY - obj.posnY))) {
+            TILE_LEN/2 + obj.width/2 <= Math.abs(this.posnX - obj.posnX) &&
+            TILE_LEN/2 + obj.height/2 <= Math.abs(this.posnY - obj.posnY))) {
             return MOVE_ACTION.MOVE;
         }
         //console.log('PASS');
