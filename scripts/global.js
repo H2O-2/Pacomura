@@ -25,31 +25,22 @@ function GameElement(posnX, posnY) {
             (obj instanceof Player && this.width/2 + obj.radius > Math.abs(this.posnX - obj.posnX) + tolerance &&
             this.height/2 + obj.radius > Math.abs(this.posnY - obj.posnY) + tolerance)) ||
             (!(this instanceof Player) && !(obj instanceof Player) &&
-            this.width/2 + obj.width/2 > Math.abs(this.posnX - obj.posnX) + tolerance &&
-            this.height/2 + obj.height/2 > Math.abs(this.posnY - obj.posnY) + tolerance)) {
+            TILE_LEN/2 + obj.width/2 >= Math.abs(this.posnX - obj.posnX) + tolerance &&
+            TILE_LEN/2 + obj.height/2 >= Math.abs(this.posnY - obj.posnY) + tolerance)) {
             return MOVE_ACTION.NO_MOVE;
         } else if (((this instanceof Player && this.radius + obj.width/2 < Math.abs(this.posnX - obj.posnX) &&
             this.radius + obj.height/2 < Math.abs(this.posnY - obj.posnY)) ||
             (obj instanceof Player && this.width/2 + obj.radius < Math.abs(this.posnX - obj.posnX) &&
             this.height/2 + obj.radius < Math.abs(this.posnY - obj.posnY))) ||
             (!(this instanceof Player) && !(obj instanceof Player) &&
-            TILE_LEN/2 + obj.width/2 <= Math.abs(this.posnX - obj.posnX) &&
-            TILE_LEN/2 + obj.height/2 <= Math.abs(this.posnY - obj.posnY))) {
+            TILE_LEN/2 + obj.width/2 < Math.abs(this.posnX - obj.posnX) &&
+            TILE_LEN/2 + obj.height/2 < Math.abs(this.posnY - obj.posnY))) {
             return MOVE_ACTION.MOVE;
         }
-        //console.log('PASS');
 
         return MOVE_ACTION.FRONT_TOLERANT;
     };
 }
-
-/*
-function collision(obj1, obj2) {
-    if (obj1 instanceof Player || obj2 instanceof Player) {
-
-    }
-}
-*/
 
 function offsetX(cameraX) {
     return cameraX - canvas.width/2;

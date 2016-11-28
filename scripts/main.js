@@ -56,21 +56,6 @@ function main() {
     };
 }
 
-/*
-// DEBUG
-function debugging(debugCtx) {
-    console.log("DEBUG");
-    for (var i = 0; i < MAP_WIDTH; i++) {
-        for (var j = 0; j < MAP_HEIGHT; j++) {
-            //console.log(this.tiles[i][j].posnX);
-            //s_homuraKuro[3][0].draw(bgCtx, this.tiles[i][j].posnX, this.tiles[i][j].posnY);
-            debugCtx.rect(this.tiles[i][j].posnX, this.tiles[i][j].posnY, TILE_LEN, TILE_LEN);
-            debugCtx.stroke();
-        }
-    }
-}
-*/
-
 
 window.onload = function () {
     main();
