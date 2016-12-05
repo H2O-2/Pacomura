@@ -12,7 +12,7 @@ function Game() {
     this.player = null;
     this.monster = new Array(MONSTER_NUM);
 
-    this.dieTimer = 0;
+    this.dieTimer = DIE_TIME;
     this.items = new Array (ITEM_NUM);
 
     this.gameInit = function (ctx, bgCtx) {
@@ -24,7 +24,7 @@ function Game() {
 
         // initialize Monsters
         for (var i = 0; i < this.monster.length; i++) {
-            this.monster[i] = new Monster((i+3) * INIT_POSN.PLAYER_X * TILE_LEN, 2 * TILE_LEN, 1);
+            this.monster[i] = new Monster((i+3) * INIT_POSN.PLAYER_X * TILE_LEN, 2 * TILE_LEN, CHARACTER_SPEED);
             this.monster[i].init(this.camera);
         }
 
@@ -54,10 +54,10 @@ function Game() {
         if (this.player.life <= 0) this.gameStatus = GAME_STATE.FINISH;
         else if (this.player.caught) this.gameStatus = GAME_STATE.DIE;
 
-        if (this.gameStatus == GAME_STATE.DIE && this.dieTimer > DIE_TIME){
+        if (this.gameStatus == GAME_STATE.DIE && this.dieTimer <= 0){
             this.gameStatus = GAME_STATE.GAME;
             this.player.revive();
-            this.dieTimer = 0   ;
+            this.dieTimer = DIE_TIME   ;
         }
         //console.log(this);
 
@@ -79,7 +79,7 @@ function Game() {
                 this.player.notifyObserver();
                 break;
             case GAME_STATE.DIE:
-                this.dieTimer++;
+                this.dieTimer--;
                 break;
             case GAME_STATE.FINISH:
                 break;
@@ -110,7 +110,7 @@ function Game() {
                 break;
             case GAME_STATE.DIE:
                 ctx.clearRect(0,0,WIDTH,HEIGHT);
-                this.player.render(ctx);
+                this.player.DieRender(ctx, this.dieTimer);
                 break;
             case GAME_STATE.FINISH:
                 break;

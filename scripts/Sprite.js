@@ -19,6 +19,10 @@ Sprite.prototype.draw = function (context, xCanvas, yCanvas) {
     context.drawImage(this.img, this.xSprite, this.ySprite, this.width, this.height, xCanvas, yCanvas, this.width, this.height);
 };
 
+Sprite.prototype.drawWithSize = function (context, xCanvas, yCanvas, width, height) {
+    context.drawImage(this.img, this.xSprite, this.ySprite, width, height, xCanvas, yCanvas, width, height);
+};
+
 function spriteInit(img) {
     // in s_X[a][b], character faces front for a = 0, left for a = 1,
     // right for a = 2 and back for a = 3

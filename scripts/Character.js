@@ -368,29 +368,47 @@ Player.prototype.update = function () {
     this.notifyObserver();
 };
 
+var ANIMATION_CORRECTION = 2;
+
 Player.prototype.render = function (ctx) {
-
-    if (this.caught) {
-
-    }
-
     if (this.charDir !== undefined) {
-        if (this.currentAnimation.currentFrame() === s_homuraNorm[2][1] ||
-            this.currentAnimation.currentFrame() === s_homuraKuro[2][1])
-        {
+        var curAnime = this.currentAnimation.currentFrame();
 
-            this.currentAnimation.currentFrame().draw(ctx, this.posnX - offsetX(this.camera.cameraX) - 2 + MODIFY_RIGHT,
+        if (curAnime === s_homuraNorm[2][1] || curAnime === s_homuraKuro[2][1]) {
+            curAnime.draw(ctx, this.posnX - offsetX(this.camera.cameraX) - ANIMATION_CORRECTION + MODIFY_RIGHT,
                                                         this.posnY - offsetY(this.camera.cameraY));
         } else if (this.charDir == keyToDir(KEY.KEY_RIGHT)) {
-            this.currentAnimation.currentFrame().draw(ctx, this.posnX - offsetX(this.camera.cameraX) + MODIFY_RIGHT,
-                                                        this.posnY - offsetY(this.camera.cameraY));
+            curAnime.draw(ctx, this.posnX - offsetX(this.camera.cameraX) + MODIFY_RIGHT,
+                this.posnY - offsetY(this.camera.cameraY));
         } else {
-            this.currentAnimation.currentFrame().draw(ctx, this.posnX - offsetX(this.camera.cameraX),
-                                                        this.posnY - offsetY(this.camera.cameraY));
+            curAnime.draw(ctx, this.posnX - offsetX(this.camera.cameraX), this.posnY - offsetY(this.camera.cameraY));
         }
 
     } else {
         s_homuraNorm[3][0].draw(ctx, this.posnX - offsetX(this.camera.cameraX), this.posnY - offsetY(this.camera.cameraY));
+    }
+};
+
+Player.prototype.DieRender = function(ctx , dieTime) {
+    var curAnime;
+    if (this.charDir !== undefined) {
+        curAnime = this.currentAnimation.currentFrame();
+        console.log(curAnime.height * (dieTime / DIE_TIME));
+
+        if (curAnime === s_homuraNorm[2][1] || curAnime === s_homuraKuro[2][1]) {
+            curAnime.drawWithSize(ctx, this.posnX - offsetX(this.camera.cameraX) - ANIMATION_CORRECTION + MODIFY_RIGHT,
+                this.posnY - offsetY(this.camera.cameraY), curAnime.width, curAnime.height * (dieTime / DIE_TIME));
+        } else if (this.charDir == keyToDir(KEY.KEY_RIGHT)) {
+            curAnime.drawWithSize(ctx, this.posnX + MODIFY_RIGHT - offsetX(this.camera.cameraX),
+                this.posnY - offsetY(this.camera.cameraY), curAnime.width, curAnime.height * (dieTime / DIE_TIME));
+        } else {
+            curAnime.drawWithSize(ctx, this.posnX - offsetX(this.camera.cameraX),
+                this.posnY - offsetY(this.camera.cameraY), curAnime.width, curAnime.height * (dieTime / DIE_TIME));
+        }
+    } else {
+        curAnime = s_homuraNorm[3][0];
+        s_homuraNorm[3][0].drawWithSize(ctx, this.posnX - offsetX(this.camera.cameraX),
+            this.posnY - offsetY(this.camera.cameraY), curAnime.width, curAnime.height * (dieTime / DIE_TIME));
     }
 };
 
