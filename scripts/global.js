@@ -53,3 +53,12 @@ function offsetY(cameraY) {
 function keyToDir(key) {
     return key - KEY_TO_DIR;
 }
+
+function posnCenter(posn) {
+    return posn + TILE_LEN / 2;
+}
+
+function manhattanS(obj1, obj2) {
+    return (Math.abs(posnCenter(obj1.posnX) - posnCenter(obj2.posnX)) +
+            Math.abs(posnCenter(obj1.posnY) - posnCenter(obj2.posnY)));
+}

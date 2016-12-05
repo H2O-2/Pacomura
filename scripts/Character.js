@@ -21,10 +21,7 @@ function Character(posnX, posnY, speed) {
 
 Character.prototype = new GameElement();
 
-Character.prototype.posnCenter = function (posn) {
-    return posn + TILE_LEN / 2;
-};
-
+// check if Character should jump to the other side of the map
 Character.prototype.checkJump = function (posn) {
     for (var i = 0; i < JUMP_ARRAY.length; i += 2) {
         if (posn >= JUMP_ARRAY[i] * TILE_LEN && posn <= JUMP_ARRAY[i + 1] * TILE_LEN) {
@@ -39,7 +36,7 @@ Character.prototype.checkBorder = function (dir, x, y) {
     return (((dir == KEY.KEY_UP) && (y - BORDER.START_POINT * TILE_LEN <= 0)) ||
             ((dir == KEY.KEY_DOWN) && (BORDER.END_POINT_Y * TILE_LEN - y <= 0)) ||
             ((dir == KEY.KEY_LEFT) && (x - BORDER.START_POINT * TILE_LEN <= 0)) ||
-            ((dir == KEY.KEY_RIGHT) && (BORDER.END_POINT_X * TILE_LEN - x <= 0)))
+            ((dir == KEY.KEY_RIGHT) && (BORDER.END_POINT_X * TILE_LEN - x <= 0)));
 };
 
 // return -1 (can't move), 0 (front tolerate), 1(can move), 2(double direction tolerate)
@@ -50,28 +47,28 @@ Character.prototype.canMove = function (dir, outOfBirthPlace) {
     }
 
     if (dir == KEY.KEY_UP) {
-        this.tileFront = posnToTile(this.posnCenter(this.posnX), this.posnCenter(this.posnY) - this.speed - TILE_LEN / 2);
+        this.tileFront = posnToTile(posnCenter(this.posnX), posnCenter(this.posnY) - this.speed - TILE_LEN / 2);
         if (this.posnX - this.tileFront.posnX <= 0) {
             this.tileSide = posnToTile(this.tileFront.posnX - TILE_LEN / 2, this.tileFront.posnY);
         } else if (this.posnX - this.tileFront.posnX > 0) {
             this.tileSide = posnToTile(this.tileFront.posnX + 3 * TILE_LEN / 2, this.tileFront.posnY);
         }
     } else if (dir == KEY.KEY_DOWN) {
-        this.tileFront = posnToTile(this.posnCenter(this.posnX), this.posnCenter(this.posnY) + this.speed + TILE_LEN / 2);
+        this.tileFront = posnToTile(posnCenter(this.posnX), posnCenter(this.posnY) + this.speed + TILE_LEN / 2);
         if (this.posnX - this.tileFront.posnX <= 0) {
             this.tileSide = posnToTile(this.tileFront.posnX - TILE_LEN / 2, this.tileFront.posnY);
         } else if (this.posnX - this.tileFront.posnX > 0) {
             this.tileSide = posnToTile(this.tileFront.posnX + 3 * TILE_LEN / 2, this.tileFront.posnY);
         }
     } else if (dir == KEY.KEY_RIGHT) {
-        this.tileFront = posnToTile(this.posnCenter(this.posnX) + this.speed + TILE_LEN / 2, this.posnCenter(this.posnY));
+        this.tileFront = posnToTile(posnCenter(this.posnX) + this.speed + TILE_LEN / 2, posnCenter(this.posnY));
         if (this.posnY - this.tileFront.posnY <= 0) {
             this.tileSide = posnToTile(this.tileFront.posnX, this.tileFront.posnY - TILE_LEN / 2);
         } else if (this.posnY - this.tileFront.posnY > 0) {
             this.tileSide = posnToTile(this.tileFront.posnX, this.tileFront.posnY + 3 * TILE_LEN / 2);
         }
     } else {
-        this.tileFront = posnToTile(this.posnCenter(this.posnX) - this.speed - TILE_LEN / 2, this.posnCenter(this.posnY));
+        this.tileFront = posnToTile(posnCenter(this.posnX) - this.speed - TILE_LEN / 2, posnCenter(this.posnY));
         if (this.posnY - this.tileFront.posnY <= 0) {
             this.tileSide = posnToTile(this.tileFront.posnX, this.tileFront.posnY - TILE_LEN / 2);
         } else if (this.posnY - this.tileFront.posnY > 0) {
@@ -112,9 +109,7 @@ Character.prototype.basicMove = function (outOfBirthPlace) {
     } else if ((this.charDir === keyToDir(KEY.KEY_UP)) && this.canMove(KEY.KEY_UP, outOfBirthPlace) === MOVE_ACTION.MOVE) {
         this.posnY -= this.speed;
     } else if ((this.charDir === keyToDir(KEY.KEY_DOWN)) && this.canMove(KEY.KEY_DOWN, outOfBirthPlace) > MOVE_ACTION.MOVE) {
-        console.log(this.posnY);
         this.posnY = this.tileFront.posnY - TILE_LEN;
-        console.log(this.posnY);
     } else if ((this.charDir === keyToDir(KEY.KEY_DOWN)) && this.canMove(KEY.KEY_DOWN, outOfBirthPlace) === MOVE_ACTION.MOVE) {
         this.posnY += this.speed;
     } else if ((this.charDir === keyToDir(KEY.KEY_LEFT)) && this.canMove(KEY.KEY_LEFT, outOfBirthPlace) > MOVE_ACTION.MOVE) {
@@ -139,7 +134,7 @@ function Monster(posnX, posnY, speed) {
     this.player = null;
     this.animationArray = new Array(ANIMATION_FRAMES);
     this.currentAnimation = null;
-    this.newDirMove = 0;
+    this.newDirMove = 0; // makes Monster move at least NEW_DIR_MOVE of frames before changing direction again
     this.camera = null;
 }
 
@@ -160,6 +155,19 @@ Monster.prototype.init = function (camera) {
 
 Monster.prototype.attach = function (player) {
     this.player = player;
+};
+
+Monster.prototype.checkPlayer = function () {
+    if (manhattanS(this, this.player) > 2 * TILE_LEN) {
+        var test = (manhattanS(this, this.player));
+        return;
+    }
+
+    if (!this.player.caught && this.player.collision(this) == MOVE_ACTION.NO_MOVE) {
+        console.log("COLLIDE");
+        this.player.caught = true;
+        this.player.life--;
+    }
 };
 
 Monster.prototype.dirIsAvailable = function (dir, outOfBirthPlace) {
@@ -233,7 +241,7 @@ Monster.prototype.charMove = function () {
         this.width = MONSTER_SIDE_WIDTH;
     } else if (this.charDir === keyToDir(KEY.KEY_UP)) {
         this.height = MONSTER_BACK_LEN;
-        this.width = MONSTER_BACK_LEN
+        this.width = MONSTER_BACK_LEN;
     } else {
         this.height = MONSTER_FRONT_LEN;
         this.width = MONSTER_FRONT_LEN;
@@ -279,8 +287,8 @@ Monster.prototype.update = function () {
     if (this.currentAnimation) this.currentAnimation.update();
 };
 
-Monster.prototype.render = function (ctx) {
-    this.currentAnimation.currentFrame().draw(ctx, this.posnX - offsetX(this.camera.cameraX),
+Monster.prototype.render = function (bgCtx) {
+    this.currentAnimation.currentFrame().draw(bgCtx, this.posnX - offsetX(this.camera.cameraX),
                                                 this.posnY - offsetY(this.camera.cameraY));
 };
 
@@ -292,10 +300,15 @@ function Player(posnX, posnY, speed) {
     this.radius = PLAYER_RAD;
     this.height = PLAYER_RAD * 2;
     this.width = PLAYER_RAD * 2;
+    this.charDir = keyToDir(KEY.KEY_LEFT);
     this.speed = speed;
+    this.itemNum = 0; // the POINT ITEM player gets
     this.camera = null;
     this.animationArray = new Array(ANIMATION_FRAMES * 2);
     this.observers = new Array(MONSTER_NUM);
+    this.life = PLAYER_LIFE; // life of player
+    this.caught = false;
+    //this.playerStatus =
 }
 
 Player.prototype = new Character();
@@ -307,12 +320,6 @@ Player.prototype.init = function (camera) {
 
     for (var j = 4; j < ANIMATION_FRAMES * 2; j++) {
         this.animationArray[j] = new Animation(s_homuraKuro[j - ANIMATION_FRAMES]);
-    }
-
-    for (var k = 0; k < MONSTER_NUM; k++) {
-        this.observers[k] = new Monster(350, 350);
-        console.log(this.observers[k]);
-        this.observers[k].attach(this);
     }
 
     this.camera = camera;
@@ -332,7 +339,24 @@ Player.prototype.setAnimation = function () {
 
 Player.prototype.notifyObserver = function () {
     for (var i = 0; i < MONSTER_NUM; i++) {
+        //console.log("PASS");
+        this.observers[i].checkPlayer();
     }
+};
+
+Player.prototype.revive = function () {
+    this.posnX = INIT_POSN.PLAYER_X * TILE_LEN;
+    this.posnY = INIT_POSN.PLAYER_Y * TILE_LEN;
+    this.speed = CHARACTER_SPEED;
+    this.charDir = keyToDir(KEY.KEY_DOWN);
+    this.frontEmpty = true;
+    this.tileFront = null;
+    this.sideEmpty = true;
+    this.tileSide = null;
+    this.kuro = false;
+    this.caught = false;
+
+    keyEvt = new KeyEvt();
 };
 
 Player.prototype.update = function () {
@@ -345,6 +369,11 @@ Player.prototype.update = function () {
 };
 
 Player.prototype.render = function (ctx) {
+
+    if (this.caught) {
+
+    }
+
     if (this.charDir !== undefined) {
         if (this.currentAnimation.currentFrame() === s_homuraNorm[2][1] ||
             this.currentAnimation.currentFrame() === s_homuraKuro[2][1])
