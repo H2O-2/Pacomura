@@ -2,6 +2,8 @@
  * Created by H2O2 on 16/10/29.
  */
 
+ // 加一层canvas
+
 function Game() {
     //this.gameStatus = GAME_STATE.START;
     this.gameStatus = GAME_STATE.GAME;
@@ -69,7 +71,10 @@ function Game() {
 
                 // update Monster
                 for (var i = 0; i < this.monster.length; i++) {
-                    this.monster[i].update();
+                    var curMonster = this.monster[i];
+
+                    curMonster.update();
+                    
                 }
 
                 // DEBUG
@@ -103,7 +108,15 @@ function Game() {
 
                 // render Monsters
                 for (var i = 0; i < this.monster.length; i++) {
-                    this.monster[i].render(bgCtx);
+                    var curMonster = this.monster[i];
+
+                    if (curMonster.corpseTime > MONSTER_CORPSE_TIME) {
+                        curMonster = null;
+                    } else {
+                        this.monster[i].render(bgCtx);
+                    }
+
+                    
                 }
 
                 this.map.render(bgCtx, this.player);
@@ -117,7 +130,7 @@ function Game() {
             default:
                 console.log("ERROR");
         }
-/*
+
         for (t = 0; t < this.items.length; t++) {
             if (this.items[t] === null) {
                 continue;
@@ -126,7 +139,7 @@ function Game() {
                 this.items[t][s].render(bgCtx);
             }
         }
-*/
+
 
 /*
         // DEBUG

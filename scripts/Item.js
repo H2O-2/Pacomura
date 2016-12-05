@@ -7,8 +7,11 @@ function Item(posnX, posnY) {
 	this.posnY = posnY ; // move item to the node position
 	this.type = ITEM_TYPE.POINT;
 	this.isUsed = false;
+}
 
-	this.render = function (bgCtx) {
+Item.prototype = new GameElement();
+
+Item.prototype.render = function (bgCtx) {
 		if (this.isUsed) return;
 
 		if (this.type == ITEM_TYPE.POINT) {
@@ -26,6 +29,18 @@ function Item(posnX, posnY) {
 			s_soulgem.draw(bgCtx, this.posnX, this.posnY);
 		}
 	};
+
+function PointItem(posnX, posnY) {
+	this.posnX = posnX;
+	this.posnY = posnY;
 }
 
-Item.prototype = new GameElement();
+PointItem.prototype = new Item();
+
+function SpecialItem(posnX, posnY, itemType) {
+	this.posnX = posnX;
+	this.posnY = posnY;
+	this.itemType = itemType;
+}
+
+SpecialItem.prototype = new Item();

@@ -34,8 +34,7 @@ function main() {
         bg.style.borderRadius = "10px";
         debugging.width = WIDTH * (1 + MOBILE_OFFESET);
         debugging.height = HEIGHT * (1 + MOBILE_OFFESET);
-        e = "mousedown";
-        console.log("DEBUG" + debugging.height);
+        console.log("MOBILE" + debugging.height);
     }
 
     var img = new Image();

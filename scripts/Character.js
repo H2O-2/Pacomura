@@ -12,7 +12,7 @@ function Character(posnX, posnY, speed) {
     this.tileFront = null; // tile in front of character
     this.sideEmpty = true; // true if both tiles on two sides of the front tile are empty
     this.tileSide = null; // tile beside that in front of character
-    this.kuro = false; // true if player has the effect of special item (kuroka)
+    this.kuro = true; // true if player has the effect of special item (kuroka)
     this.speed = speed; // speed of the character
     this.animationArray = new Array(ANIMATION_FRAMES);
     this.currentAnimation = null;
@@ -136,6 +136,8 @@ function Monster(posnX, posnY, speed) {
     this.currentAnimation = null;
     this.newDirMove = 0; // makes Monster move at least NEW_DIR_MOVE of frames before changing direction again
     this.camera = null;
+    this.killed = false;
+    this.corpseTime = 0;
 }
 
 
@@ -158,15 +160,16 @@ Monster.prototype.attach = function (player) {
 };
 
 Monster.prototype.checkPlayer = function () {
-    if (manhattanS(this, this.player) > 2 * TILE_LEN) {
-        var test = (manhattanS(this, this.player));
-        return;
-    }
+    if (manhattanS(this, this.player) > 2 * TILE_LEN) return;
 
-    if (!this.player.caught && this.player.collision(this) == MOVE_ACTION.NO_MOVE) {
-        console.log("COLLIDE");
-        this.player.caught = true;
-        this.player.life--;
+    if (this.player.collision(this) == MOVE_ACTION.NO_MOVE && !this.player.caught) {
+        if (!this.player.kuro) {
+            console.log("COLLIDE");
+            this.player.caught = true;
+            this.player.life--;
+        } else {
+            this.killed = true;
+        }
     }
 };
 
@@ -282,14 +285,23 @@ Monster.prototype.setAnimation = function () {
 };
 
 Monster.prototype.update = function () {
-    this.setAnimation();
-    this.charMove();
-    if (this.currentAnimation) this.currentAnimation.update();
+    if (this.killed) {
+        this.corpseTime++;
+    } else {
+        this.setAnimation();
+        this.charMove();
+        if (this.currentAnimation) this.currentAnimation.update();
+    }
 };
 
 Monster.prototype.render = function (bgCtx) {
-    this.currentAnimation.currentFrame().draw(bgCtx, this.posnX - offsetX(this.camera.cameraX),
+    if (this.killed) {
+        s_qbDead.draw(bgCtx, this.posnX - offsetX(this.camera.cameraX), 
+            this.posnY - offsetY(this.camera.cameraY));
+    } else {
+        this.currentAnimation.currentFrame().draw(bgCtx, this.posnX - offsetX(this.camera.cameraX),
                                                 this.posnY - offsetY(this.camera.cameraY));
+    }
 };
 
 
@@ -342,6 +354,12 @@ Player.prototype.notifyObserver = function () {
         //console.log("PASS");
         this.observers[i].checkPlayer();
     }
+};
+
+Player.prototype.findItem = function () {
+    var curTile = posnToTile(posnCenter(this.posnX), posnCenter(this.posnY));
+
+
 };
 
 Player.prototype.revive = function () {
