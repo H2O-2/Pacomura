@@ -305,6 +305,22 @@ Monster.prototype.charMove = function () {
     this.newDirMove = 0;
 };
 
+Monster.prototype.revive = function () {
+    this.posnX = INIT_POSN.MONSTER_X * TILE_LEN;
+    this.posnY = INIT_POSN.MONSTER_Y * TILE_LEN;
+    this.charDir = keyToDir(KEY.KEY_UP);
+    this.frontEmpty = true;
+    this.tileFront = null;
+    this.sideEmpty = true;
+    this.tileSide = null;
+    this.outOfBirthPlace = false;
+    this.corpseTime = 0;
+    this.killed = false;
+    this.newDirMove = 0;
+
+    keyEvt = new KeyEvt();
+};
+
 Monster.prototype.setAnimation = function () {
     this.currentAnimation = this.animationArray[this.charDir];
 };
@@ -341,7 +357,7 @@ function Player(posnX, posnY, speed) {
     this.radius = PLAYER_RAD;
     this.height = PLAYER_RAD * 2;
     this.width = PLAYER_RAD * 2;
-    this.charDir = keyToDir(KEY.KEY_LEFT);
+    this.charDir = undefined;
     this.speed = speed;
     this.itemNum = 0; // the POINT ITEM player gets
     this.camera = null;
@@ -382,6 +398,9 @@ Player.prototype.setAnimation = function () {
 
 Player.prototype.notifyObserver = function () {
     for (var i = 0; i < MONSTER_NUM; i++) {
+        if (this.observers[i] === null) {
+            var test = this.observers[i];
+        }
         //console.log("PASS");
         this.observers[i].checkPlayer();
     }
@@ -397,7 +416,8 @@ Player.prototype.revive = function () {
     this.posnX = INIT_POSN.PLAYER_X * TILE_LEN;
     this.posnY = INIT_POSN.PLAYER_Y * TILE_LEN;
     this.speed = CHARACTER_SPEED;
-    this.charDir = keyToDir(KEY.KEY_DOWN);
+    this.charDir = undefined;
+    this.charDirPrev = undefined;
     this.frontEmpty = true;
     this.tileFront = null;
     this.sideEmpty = true;
@@ -409,9 +429,13 @@ Player.prototype.revive = function () {
 };
 
 Player.prototype.update = function () {
+    this.charDirPrev = this.charDir;
     this.charDir = keyEvt.getDir();
-    this.setAnimation();
     this.charMove();
+    if (this.charDir === undefined && this.posnX != INIT_POSN.PLAYER_X * TILE_LEN && this.posnY != INIT_POSN.posnY * TILE_LEN) {
+        this.charDir = this.charDirPrev;
+    }
+    this.setAnimation();
     if (this.currentAnimation) this.currentAnimation.update();
 
     this.notifyObserver();

@@ -15,6 +15,35 @@ function Game() {
     this.dieTimer = DIE_TIME;
     this.items = new Array (ITEM_NUM);
 
+    this.monsterReset = function () {
+        for (var i = 0; i < this.monster.length; i++) {
+            this.monster[i] = null;
+        }
+
+        this.monster = new Array(MONSTER_BIRTHPLACE);
+
+        for (var j = 0; j < MONSTER_BIRTHPLACE / 2; j++) {
+            this.monster[j] = new Monster(j * (TILE_LEN + 3) + INIT_POSN.MONSTER_X * TILE_LEN,
+                INIT_POSN.MONSTER_Y * TILE_LEN, CHARACTER_SPEED);
+            this.monster[j + MONSTER_BIRTHPLACE / 2] = new Monster(j * (TILE_LEN + 3) + INIT_POSN.MONSTER_X * TILE_LEN,
+                1.5 * TILE_LEN + INIT_POSN.MONSTER_Y * TILE_LEN, CHARACTER_SPEED);
+            this.monster[j].init(this.camera);
+            this.monster[j + MONSTER_BIRTHPLACE / 2].init(this.camera);
+        }
+
+        for (var m = 0; m < MONSTER_NUM - MONSTER_BIRTHPLACE; m++) {
+            var newMonster = new Monster(MONSTER_INIT_OUT[m][0] * TILE_LEN, MONSTER_INIT_OUT[m][1] * TILE_LEN, CHARACTER_SPEED);
+            newMonster.init(this.camera);
+            newMonster.outOfBirthPlace = true;
+            this.monster.push(newMonster);
+        }
+
+        for (var k = 0; k < MONSTER_NUM; k++) {
+            this.player.observers = this.monster;
+            this.player.observers[k].attach(this.player);
+        }
+    };
+
     this.gameInit = function (ctx, bgCtx) {
         this.player = new Player(INIT_POSN.PLAYER_X * TILE_LEN, INIT_POSN.PLAYER_Y * TILE_LEN, CHARACTER_SPEED);
         console.log("PLAYER: " + this.player.posnX, this.player.posnY);
@@ -95,7 +124,7 @@ function Game() {
                 //this.monster[2].update();
 
                 this.map.update();
-                this.player.notifyObserver();
+                //this.player.notifyObserver();
                 break;
             case GAME_STATE.DIE:
                 this.dieTimer--;
@@ -130,10 +159,6 @@ function Game() {
                         }
 
 
-
-
-
-
                         if (this.items[t][s] === undefined) {
                             continue;
                         }
@@ -152,7 +177,7 @@ function Game() {
                     var curMonster = this.monster[i];
 
                     if (curMonster.corpseTime > MONSTER_CORPSE_TIME) {
-                        curMonster = null;
+                        curMonster.revive();
                     } else {
                         this.monster[i].render(enemyCtx);
                     }
@@ -163,6 +188,7 @@ function Game() {
             case GAME_STATE.DIE:
                 ctx.clearRect(0,0,WIDTH,HEIGHT);
                 this.player.DieRender(ctx, this.dieTimer);
+                this.monsterReset();
                 break;
             case GAME_STATE.FINISH:
                 break;
