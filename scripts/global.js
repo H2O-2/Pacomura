@@ -58,6 +58,38 @@ function posnCenter(posn) {
     return posn + TILE_LEN / 2;
 }
 
+function playerViewLeftTop(camera) {
+    var leftPosn = offsetX(camera.cameraX),
+        topPosn = offsetY(camera.cameraY);
+
+    if (leftPosn < ITEM_BORDER.START * TILE_LEN) {
+        leftPosn = ITEM_BORDER.START * TILE_LEN;
+    }
+
+    if (topPosn < ITEM_BORDER.START * TILE_LEN) {
+        topPosn = ITEM_BORDER.START * TILE_LEN;
+    }
+
+    //console.log(leftPosn, topPosn);
+
+    return posnToTile(leftPosn, topPosn);
+}
+
+function playerViewRightBottom(camera) {
+    var rightPosn = offsetX(camera.cameraX) + C_WIDTH + TILE_LEN,
+        bottomPosn = offsetY(camera.cameraY) + C_HEIGHT + TILE_LEN;
+
+    if (rightPosn > ITEM_BORDER.END_X * TILE_LEN) {
+        rightPosn = ITEM_BORDER.END_X * TILE_LEN;
+    }
+
+    if (bottomPosn > ITEM_BORDER.END_Y * TILE_LEN) {
+        bottomPosn = ITEM_BORDER.END_Y * TILE_LEN;
+    }
+
+    return posnToTile(rightPosn, bottomPosn);
+}
+
 function manhattanS(obj1, obj2) {
     return (Math.abs(posnCenter(obj1.posnX) - posnCenter(obj2.posnX)) +
             Math.abs(posnCenter(obj1.posnY) - posnCenter(obj2.posnY)));

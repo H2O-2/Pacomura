@@ -3,8 +3,8 @@
  */
 
 function Camera(player) {
-    this.cameraX = 200;
-    this.cameraY = 400;
+    this.cameraX = 0;
+    this.cameraY = 0;
     this.player = player;
 
     this.update = function () {

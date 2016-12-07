@@ -10,7 +10,7 @@ function Game() {
     this.camera = null;
 
     this.player = null;
-    this.monster = new Array(MONSTER_NUM);
+    this.monster = new Array(MONSTER_BIRTHPLACE);
 
     this.dieTimer = DIE_TIME;
     this.items = new Array (ITEM_NUM);
@@ -32,6 +32,13 @@ function Game() {
             this.monster[j + MONSTER_BIRTHPLACE / 2].init(this.camera);
         }
 
+        for (var m = 0; m < MONSTER_NUM - MONSTER_BIRTHPLACE; m++) {
+            var newMonster = new Monster(MONSTER_INIT_OUT[m][0] * TILE_LEN, MONSTER_INIT_OUT[m][1] * TILE_LEN, CHARACTER_SPEED);
+            newMonster.init(this.camera);
+            newMonster.outOfBirthPlace = true;
+            this.monster.push(newMonster);
+        }
+
         this.map = mapAll;
         this.map.setCamera(this.camera);
 
@@ -42,8 +49,12 @@ function Game() {
 
         for (var r = 0; r < ITEM_ARRAY.length; r++) {
             this.items[r] = new Array(ITEM_ARRAY[r].length);
+            var itemNum = 0;
             for (var z = 0; z < ITEM_ARRAY[r].length; z++) {
-                if (ITEM_ARRAY[r][z] === 0) continue;
+                if (ITEM_ARRAY[r][z] === 0) {
+                    this.items[r][z] = undefined;
+                    continue;
+                }
 
                 this.items[r][z] = new Item((z + BORDER.START_POINT + 1) * TILE_LEN, (r + BORDER.START_POINT + 1) * TILE_LEN, this.camera);
             }
@@ -101,10 +112,28 @@ function Game() {
             case GAME_STATE.START:
                 break;
             case GAME_STATE.GAME:
+                var renderStart = playerViewLeftTop(this.camera),
+                    renderEnd = playerViewRightBottom(this.camera);
+
+                var renderStartX = renderStart.posnX / TILE_LEN - ITEM_BORDER.START,
+                    renderStartY = renderStart.posnY / TILE_LEN - ITEM_BORDER.START,
+                    renderEndX = renderEnd.posnX / TILE_LEN - ITEM_BORDER.START,
+                    renderEndY = renderEnd.posnY / TILE_LEN - ITEM_BORDER.START;
+
                 bgCtx.clearRect(0,0,WIDTH,HEIGHT);
                 this.map.render(bgCtx);
-                for (var t = 0; t < this.items.length; t++) {
-                    for (var s = 0; s < this.items[t].length; s++) {
+                for (var t = renderStartY; t < renderEndY; t++) {
+                    for (var s = renderStartX; s < renderEndX; s++) {
+                        //DEBUG
+                        if (this.items[t] === undefined) {
+                            console.log("ERROR");
+                        }
+
+
+
+
+
+
                         if (this.items[t][s] === undefined) {
                             continue;
                         }
