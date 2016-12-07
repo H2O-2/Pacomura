@@ -37,17 +37,29 @@ Item.prototype.render = function (bgCtx) {
 		}
 	};
 
-function PointItem(posnX, posnY) {
+function PointItem(posnX, posnY, camera) {
 	this.posnX = posnX;
 	this.posnY = posnY;
+	this.width = 7;
+	this.height = 12;
+	this.camera = camera;
 }
 
 PointItem.prototype = new Item();
 
-function SpecialItem(posnX, posnY, itemType) {
+PointItem.prototype.update = function () {
+	if (isUsed) {
+		return;
+	}
+
+	isUsed = true;
+};
+
+function SpecialItem(posnX, posnY, itemType, camera) {
 	this.posnX = posnX;
 	this.posnY = posnY;
 	this.itemType = itemType;
+	this.camera = camera;
 }
 
 SpecialItem.prototype = new Item();

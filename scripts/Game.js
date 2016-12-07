@@ -85,9 +85,12 @@ function Game() {
                     continue;
                 }
 
-                this.items[r][z] = new Item((z + BORDER.START_POINT + 1) * TILE_LEN, (r + BORDER.START_POINT + 1) * TILE_LEN, this.camera);
+                this.items[r][z] = new PointItem((z + BORDER.START_POINT + 1) * TILE_LEN, (r + BORDER.START_POINT + 1) * TILE_LEN, this.camera);
             }
         }
+
+        //DEBUG
+        this.items[0][5] = new SpecialItem(8*32,96,ITEM_TYPE.EFFECT_02,this.camera);
 
     };
 
@@ -102,7 +105,7 @@ function Game() {
         if (this.gameStatus == GAME_STATE.DIE && this.dieTimer <= 0){
             this.gameStatus = GAME_STATE.GAME;
             this.player.revive();
-            this.dieTimer = DIE_TIME   ;
+            this.dieTimer = DIE_TIME;
         }
         //console.log(this);
 
@@ -117,14 +120,33 @@ function Game() {
                     var curMonster = this.monster[i];
 
                     curMonster.update();
-                    
                 }
+
 
                 // DEBUG
                 //this.monster[2].update();
 
                 this.map.update();
                 //this.player.notifyObserver();
+                var playerTile = posnToTile(posnCenter(this.player.posnX), posnCenter(this.player.posnY));
+
+                var playerItemX = playerTile.posnX / TILE_LEN - ITEM_BORDER.START + 1,
+                    playerItemY = playerTile.posnY / TILE_LEN - ITEM_BORDER.START + 1;
+
+        
+                for (var a = 0; a < ITEM_OBSERVER; a++) {
+                    for (var b = 0; b < ITEM_OBSERVER; b++) {
+                        var curItem = this.items[playerItemY + a][playerItemX + b];
+                        if (curItem === undefined) continue;
+
+                        var test = this.player.collision(curItem);
+                        var test2 = curItem.collision(this.player);
+
+                        if (this.player.collision(curItem) === MOVE_ACTION.NO_MOVE) {
+                            this.items[playerItemY + a][playerItemX + b] = undefined;
+                        }
+                    }
+                }
                 break;
             case GAME_STATE.DIE:
                 this.dieTimer--;

@@ -20,8 +20,8 @@ function GameElement(posnX, posnY) {
             tolerance = KURO_SPEED;
         }
 
-        if (((this instanceof Player && this.radius + obj.width/2 > Math.abs(this.posnX - obj.posnX) + tolerance &&
-            this.radius + obj.height/2 > Math.abs(this.posnY - obj.posnY) + tolerance) ||
+        if (((this instanceof Player && (this.radius + obj.width/2 > Math.abs(this.posnX - obj.posnX)) &&
+            (this.radius + obj.height/2 > Math.abs(this.posnY - obj.posnY) + tolerance)) ||
             (obj instanceof Player && this.width/2 + obj.radius > Math.abs(this.posnX - obj.posnX) + tolerance &&
             this.height/2 + obj.radius > Math.abs(this.posnY - obj.posnY) + tolerance)) ||
             (!(this instanceof Player) && !(obj instanceof Player) &&

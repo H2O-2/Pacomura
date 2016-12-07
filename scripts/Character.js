@@ -17,7 +17,6 @@ function Character(posnX, posnY, speed) {
     this.speed = speed; // speed of the character
     this.animationArray = new Array(ANIMATION_FRAMES);
     this.currentAnimation = null;
-    //this.outOfBirthPlace = true;
 }
 
 Character.prototype = new GameElement();
@@ -144,7 +143,12 @@ Character.prototype.basicMove = function (outOfBirthPlace) {
         this.posnX = this.tileFront.posnX - TILE_LEN;
     } else if ((this.charDir === keyToDir(KEY.KEY_RIGHT)) && this.canMove(KEY.KEY_RIGHT, outOfBirthPlace) === MOVE_ACTION.MOVE) {
         this.posnX += this.speed;
+    } else if(this.charDir === undefined && this.charDirPrev !== undefined) {
+        this.charDir = this.charDirPrev;
+        this.basicMove(outOfBirthPlace);
     }
+
+    return;
 };
 
 function Monster(posnX, posnY, speed) {
@@ -358,6 +362,7 @@ function Player(posnX, posnY, speed) {
     this.height = PLAYER_RAD * 2;
     this.width = PLAYER_RAD * 2;
     this.charDir = undefined;
+    this.charDirPrev = undefined;
     this.speed = speed;
     this.itemNum = 0; // the POINT ITEM player gets
     this.camera = null;
@@ -366,7 +371,6 @@ function Player(posnX, posnY, speed) {
     this.life = PLAYER_LIFE; // life of player
     this.caught = false;
     this.outOfBirthPlace = false;
-    //this.playerStatus =
 }
 
 Player.prototype = new Character();
@@ -381,7 +385,6 @@ Player.prototype.init = function (camera) {
     }
 
     this.camera = camera;
-    this.charDir = keyToDir(KEY.KEY_LEFT);
 };
 
 Player.prototype.charMove = function () {
@@ -401,7 +404,6 @@ Player.prototype.notifyObserver = function () {
         if (this.observers[i] === null) {
             var test = this.observers[i];
         }
-        //console.log("PASS");
         this.observers[i].checkPlayer();
     }
 };
