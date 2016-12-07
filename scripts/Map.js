@@ -37,11 +37,11 @@ function Map() {
         this.camera = camera;
     };
 
-    this.update = function (player) {
+    this.update = function () {
         this.camera.update();
     };
 
-    this.render = function (bgCtx, player) {
+    this.render = function (bgCtx) {
         //console.log(-offsetX(this.camera.cameraX),-offsetY(this.camera.cameraY));
         s_map.draw(bgCtx, -offsetX(this.camera.cameraX), -offsetY(this.camera.cameraY));
         //s_homuraKuro[3][0].drawWithSize(bgCtx, this.tiles[0][0].posnX, this.tiles[0][0].posnY, s_homuraKuro[3][0].width, 5);

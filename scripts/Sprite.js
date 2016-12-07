@@ -136,7 +136,7 @@ function spriteInit(img) {
     s_pistol = new Sprite(img, TILE_LEN * 15 + 8, TILE_LEN * 2 + 5, 16, 23);
     s_shotgun = new Sprite(img, TILE_LEN * 16 + 4, TILE_LEN * 2 + 7, 24, 19);
 
-    s_map = new Sprite(img, 0, TILE_LEN * 9, TILE_LEN * (MAP_WIDTH + 4), TILE_LEN * (MAP_HEIGHT + 4));
+    s_map = new Sprite(img, 0, TILE_LEN * 9, TILE_LEN * MAP_WIDTH, TILE_LEN * MAP_HEIGHT);
 }
 
 

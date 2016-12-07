@@ -24,14 +24,15 @@ function Game() {
 
         // initialize Monsters
         for (var j = 0; j < MONSTER_BIRTHPLACE / 2; j++) {
-            this.monster[j] = new Monster(j * (TILE_LEN + 3) + INIT_POSN.MONSTER_X * TILE_LEN, INIT_POSN.MONSTER_Y * TILE_LEN, CHARACTER_SPEED);
-            this.monster[j + MONSTER_BIRTHPLACE / 2] = new Monster(j * (TILE_LEN + 3) + INIT_POSN.MONSTER_X * TILE_LEN, 1.5 * TILE_LEN + INIT_POSN.MONSTER_Y * TILE_LEN, CHARACTER_SPEED);
+            this.monster[j] = new Monster(j * (TILE_LEN + 3) + INIT_POSN.MONSTER_X * TILE_LEN,
+                INIT_POSN.MONSTER_Y * TILE_LEN, CHARACTER_SPEED);
+            this.monster[j + MONSTER_BIRTHPLACE / 2] = new Monster(j * (TILE_LEN + 3) + INIT_POSN.MONSTER_X * TILE_LEN,
+                1.5 * TILE_LEN + INIT_POSN.MONSTER_Y * TILE_LEN, CHARACTER_SPEED);
             this.monster[j].init(this.camera);
             this.monster[j + MONSTER_BIRTHPLACE / 2].init(this.camera);
         }
 
         this.map = mapAll;
-        s_map.draw(bgCtx, 0, 0);
         this.map.setCamera(this.camera);
 
         for (var k = 0; k < MONSTER_NUM; k++) {
@@ -82,7 +83,7 @@ function Game() {
                 // DEBUG
                 //this.monster[2].update();
 
-                this.map.update(this.player);
+                this.map.update();
                 this.player.notifyObserver();
                 break;
             case GAME_STATE.DIE:
@@ -101,11 +102,19 @@ function Game() {
                 break;
             case GAME_STATE.GAME:
                 bgCtx.clearRect(0,0,WIDTH,HEIGHT);
-                this.map.render(bgCtx, this.player);
+                this.map.render(bgCtx);
+                for (var t = 0; t < this.items.length; t++) {
+                    for (var s = 0; s < this.items[t].length; s++) {
+                        if (this.items[t][s] === undefined) {
+                            continue;
+                        }
+                        this.items[t][s].render(bgCtx);
+                    }
+                }
 
+                ctx.clearRect(0,0,WIDTH,HEIGHT);
+                this.player.render(ctx);
                 enemyCtx.clearRect(0,0,WIDTH,HEIGHT);
-
-
                 //DEBUG
                 //this.monster[2].render(ctx);
 
@@ -121,9 +130,6 @@ function Game() {
 
 
                 }
-
-                ctx.clearRect(0,0,WIDTH,HEIGHT);
-                this.player.render(ctx);
                 break;
             case GAME_STATE.DIE:
                 ctx.clearRect(0,0,WIDTH,HEIGHT);
@@ -138,16 +144,6 @@ function Game() {
         s_grenade.draw(bgCtx, 0, 0);
         //console.log(C_WIDTH / 2 + offsetX(this.camera.cameraX), C_HEIGHT / 2 + offsetY(this.camera.cameraY));
 
-/*
-        for (var t = 0; t < this.items.length; t++) {
-            for (var s = 0; s < this.items[t].length; s++) {
-                if (this.items[t][s] === undefined) {
-                    continue;
-                }
-                this.items[t][s].render(bgCtx);
-            }
-        }
-*/
 
 /*
         // DEBUG
