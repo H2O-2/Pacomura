@@ -36,14 +36,15 @@ function Game() {
 
         for (var k = 0; k < MONSTER_NUM; k++) {
             this.player.observers = this.monster;
-            var test = this.monster[0];
             this.player.observers[k].attach(this.player);
         }
 
         for (var r = 0; r < ITEM_ARRAY.length; r++) {
             this.items[r] = new Array(ITEM_ARRAY[r].length);
             for (var z = 0; z < ITEM_ARRAY[r].length; z++) {
-                this.items[r][z] = new Item((ITEM_ARRAY[r][z] + BORDER.START_POINT) * TILE_LEN, (r + BORDER.START_POINT) * TILE_LEN);
+                if (ITEM_ARRAY[r][z] === 0) continue;
+
+                this.items[r][z] = new Item((z + BORDER.START_POINT + 1) * TILE_LEN, (r + BORDER.START_POINT + 1) * TILE_LEN, this.camera);
             }
         }
 
@@ -134,15 +135,19 @@ function Game() {
                 console.log("ERROR");
         }
 
-        for (t = 0; t < this.items.length; t++) {
-            if (this.items[t] === null) {
-                continue;
-            }
+        s_grenade.draw(bgCtx, 0, 0);
+        //console.log(C_WIDTH / 2 + offsetX(this.camera.cameraX), C_HEIGHT / 2 + offsetY(this.camera.cameraY));
+
+/*
+        for (var t = 0; t < this.items.length; t++) {
             for (var s = 0; s < this.items[t].length; s++) {
+                if (this.items[t][s] === undefined) {
+                    continue;
+                }
                 this.items[t][s].render(bgCtx);
             }
         }
-
+*/
 
 /*
         // DEBUG
