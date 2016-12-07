@@ -15,6 +15,10 @@ function main() {
         canvas.height = C_HEIGHT;
         canvas.style.padding = "1px";
         canvas.style.borderRadius = "10px";
+        enemy.width = C_WIDTH;
+        enemy.height = C_HEIGHT;
+        enemy.style.padding = "1px";
+        enemy.style.borderRadius = "10px";
         bg.width = C_WIDTH;
         bg.height = C_HEIGHT;
         bg.style.padding = "1px";
@@ -28,6 +32,10 @@ function main() {
         canvas.height = HEIGHT * (1 + MOBILE_OFFESET);
         canvas.style.padding = "1px";
         canvas.style.borderRadius = "10px";
+        enemy.width = WIDTH * (1 + MOBILE_OFFESET);
+        enemy.height = HEIGHT * (1 + MOBILE_OFFESET);
+        enemy.style.padding = "1px";
+        enemy.style.borderRadius = "10px";
         bg.width = WIDTH * (1 + MOBILE_OFFESET);
         bg.height = HEIGHT * (1 + MOBILE_OFFESET);
         bg.style.padding = "1px";

@@ -7,12 +7,13 @@ function Character(posnX, posnY, speed) {
     this.posnY = posnY;
     this.height = 0; // character height
     this.width = 0; // character
-    this.charDir = keyToDir(KEY.KEY_DOWN); // current direction
+    this.charDir = keyToDir(KEY.KEY_UP); // current direction
     this.frontEmpty = true; // true if the tile in front of the character is empty
     this.tileFront = null; // tile in front of character
     this.sideEmpty = true; // true if both tiles on two sides of the front tile are empty
     this.tileSide = null; // tile beside that in front of character
     this.kuro = true; // true if player has the effect of special item (kuroka)
+    this.outOfBirthPlace = false;
     this.speed = speed; // speed of the character
     this.animationArray = new Array(ANIMATION_FRAMES);
     this.currentAnimation = null;
@@ -33,17 +34,40 @@ Character.prototype.checkJump = function (posn) {
 
 // check for border
 Character.prototype.checkBorder = function (dir, x, y) {
-    return (((dir == KEY.KEY_UP) && (y - BORDER.START_POINT * TILE_LEN <= 0)) ||
-            ((dir == KEY.KEY_DOWN) && (BORDER.END_POINT_Y * TILE_LEN - y <= 0)) ||
-            ((dir == KEY.KEY_LEFT) && (x - BORDER.START_POINT * TILE_LEN <= 0)) ||
-            ((dir == KEY.KEY_RIGHT) && (BORDER.END_POINT_X * TILE_LEN - x <= 0)));
+    return ((dir == KEY.KEY_UP) && (y - BORDER.START_POINT * TILE_LEN <= 0)) ||
+        ((dir == KEY.KEY_DOWN) && (BORDER.END_POINT_Y * TILE_LEN - y <= 0)) ||
+        ((dir == KEY.KEY_LEFT) && (x - BORDER.START_POINT * TILE_LEN <= 0)) ||
+        ((dir == KEY.KEY_RIGHT) && (BORDER.END_POINT_X * TILE_LEN - x <= 0));
 };
+
+Character.prototype.exitCollision = function (posnX) {
+    return (posnX > BIRTH.EXIT_START * TILE_LEN) && (posnX < BIRTH.EXIT_END * TILE_LEN);
+};
+
+Character.prototype.birthAreaCollisionY = function (posnY) {
+    return posnY > BIRTH.START_POINT_Y * TILE_LEN && posnY < BIRTH.END_POINT_Y * TILE_LEN;
+};
+
+Character.prototype.checkBirthBorder = function (dir, x, y) {
+    var test = this.exitCollision(x);
+    var test1 = (dir == KEY.KEY_UP);
+    var test2 = dir == (y - BIRTH.START_POINT_Y * TILE_LEN <= 0);
+
+    return ((dir == KEY.KEY_UP) && (y - (BIRTH.START_POINT_Y + 2) * TILE_LEN <= 0) && !this.exitCollision(x)) ||
+        ((dir == KEY.KEY_DOWN) && (BIRTH.END_POINT_Y * TILE_LEN - y <= 0)) ||
+        ((dir == KEY.KEY_LEFT) && (x - BIRTH.START_POINT_X * TILE_LEN <= 0)) ||
+        ((dir == KEY.KEY_RIGHT) && (BIRTH.END_POINT_X * TILE_LEN - x <= 0));
+};
+
 
 // return -1 (can't move), 0 (front tolerate), 1(can move), 2(double direction tolerate)
 Character.prototype.canMove = function (dir, outOfBirthPlace) {
+    if (this instanceof Monster && !this.outOfBirthPlace && this.checkBirthBorder(dir, this.posnX, this.posnY)) {
+        return -1;
+    }
 
     if (this.checkBorder(dir, this.posnX, this.posnY)) {
-        return false;
+        return -1;
     }
 
     if (dir == KEY.KEY_UP) {
@@ -130,7 +154,7 @@ function Monster(posnX, posnY, speed) {
     this.prevY = -1;
     this.speed = speed;
     this.availableDir = new Array(1);
-    this.outOfBirthPlace = true;
+    this.outOfBirthPlace = false;
     this.player = null;
     this.animationArray = new Array(ANIMATION_FRAMES);
     this.currentAnimation = null;
@@ -218,7 +242,8 @@ Monster.prototype.dirIsAvailable = function (dir, outOfBirthPlace) {
 };
 
 Monster.prototype.checkDir = function () {
-    if (this.newDirMove < NEW_DIR_MOVE && !this.collided()) return false;
+    if (this.outOfBirthPlace && this.newDirMove < NEW_DIR_MOVE && !this.collided()) return false;
+    if (!this.outOfBirthPlace && this.newDirMove < BIRTH_DIR_MOVE && !this.collided()) return false;
 
     if (this.charDir == keyToDir(KEY.KEY_UP) || this.charDir == keyToDir(KEY.KEY_DOWN)) {
         if (this.dirIsAvailable(KEY.KEY_LEFT, this.outOfBirthPlace)) this.availableDir.push(keyToDir(KEY.KEY_LEFT));
@@ -285,6 +310,10 @@ Monster.prototype.setAnimation = function () {
 };
 
 Monster.prototype.update = function () {
+    if (!this.outOfBirthPlace) {
+        this.outOfBirthPlace = this.posnY < BIRTH.START_POINT_Y * TILE_LEN;
+    }
+
     if (this.killed) {
         this.corpseTime++;
     } else {
@@ -299,7 +328,7 @@ Monster.prototype.render = function (bgCtx) {
         s_qbDead.draw(bgCtx, this.posnX - offsetX(this.camera.cameraX), 
             this.posnY - offsetY(this.camera.cameraY));
     } else {
-        this.currentAnimation.currentFrame().draw(bgCtx, this.posnX - offsetX(this.camera.cameraX),
+        this.currentAnimation.currentFrame().draw(enemyCtx, this.posnX - offsetX(this.camera.cameraX),
                                                 this.posnY - offsetY(this.camera.cameraY));
     }
 };
@@ -320,6 +349,7 @@ function Player(posnX, posnY, speed) {
     this.observers = new Array(MONSTER_NUM);
     this.life = PLAYER_LIFE; // life of player
     this.caught = false;
+    this.outOfBirthPlace = false;
     //this.playerStatus =
 }
 
@@ -335,6 +365,7 @@ Player.prototype.init = function (camera) {
     }
 
     this.camera = camera;
+    this.charDir = keyToDir(KEY.KEY_LEFT);
 };
 
 Player.prototype.charMove = function () {
@@ -403,7 +434,7 @@ Player.prototype.render = function (ctx) {
         }
 
     } else {
-        s_homuraNorm[3][0].draw(ctx, this.posnX - offsetX(this.camera.cameraX), this.posnY - offsetY(this.camera.cameraY));
+        s_homuraNorm[0][0].draw(ctx, this.posnX - offsetX(this.camera.cameraX), this.posnY - offsetY(this.camera.cameraY));
     }
 };
 

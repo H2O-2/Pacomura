@@ -2,8 +2,10 @@
  * Created by H2O2 on 16/10/30.
  */
 
-var canvas = document.getElementById("myCanvas"),
+var canvas = document.getElementById("playerCanvas"),
     ctx = canvas.getContext("2d"),
+    enemy = document.getElementById("enemyCanvas"),
+    enemyCtx = enemy.getContext("2d"),
     bg = document.getElementById("bgCanvas"),
     bgCtx = bg.getContext("2d");
 
@@ -24,7 +26,12 @@ var GAME_STATE = {START: 1, GAME: 2, DIE: 3,FINISH: 4};
 var DIE_TIME = 80;
 var MONSTER_CORPSE_TIME = 150;
 
-var INIT_POSN = {PLAYER_X: 2, PLAYER_Y: 2};
+var MONSTER_NUM = 12;
+var MONSTER_BIRTHPLACE = 12;
+//var MONSTER_OTHER = 10;
+
+var INIT_POSN = {PLAYER_X: 15, PLAYER_Y: 18.5, MONSTER_X: 12.5, MONSTER_Y: 15};
+
 var MAP_WIDTH = 31,
     MAP_HEIGHT = 34;
 var BORDER = {START_POINT: 2, END_POINT_X: 28, END_POINT_Y: 31};
@@ -32,6 +39,8 @@ var BIRTH_BORDER_X = 11;
 var BIRTH_BORDER_Y = 13;
 var BIRTH_WIDTH = 7;
 var BIRTH_HEIGHT = 4;
+var BIRTH = {START_POINT_X: 12, START_POINT_Y: 14, END_POINT_X: 18, END_POINT_Y: 17, EXIT_START: 14, EXIT_END: 16};
+var BIRTH_EXIT_LEN = 3;
 
 var JUMP_ARRAY = [14,15,17,18];
 
@@ -57,6 +66,7 @@ var KURO_SPEED = 5;
 var PLAYER_LIFE = 10;
 
 var NEW_DIR_MOVE = 30;
+var BIRTH_DIR_MOVE = 25;
 
 var ANIMATION_FRAMES = 4;
 var MODIFY_RIGHT = 7;
@@ -65,8 +75,6 @@ var CAMERA_SPEED = 10;
 
 var CAMERA_BORDER = 1/2;
 var COLLISION_TOLERENCE = 0;
-
-var MONSTER_NUM = 20;
 
 var ITEM_NUM = 5;
 var POINT_WIDTH = 7,

@@ -2,8 +2,6 @@
  * Created by H2O2 on 16/10/29.
  */
 
- // 加一层canvas
-
 function Game() {
     //this.gameStatus = GAME_STATE.START;
     this.gameStatus = GAME_STATE.GAME;
@@ -25,9 +23,11 @@ function Game() {
         this.player.init(this.camera);
 
         // initialize Monsters
-        for (var i = 0; i < this.monster.length; i++) {
-            this.monster[i] = new Monster((i+3) * INIT_POSN.PLAYER_X * TILE_LEN, 2 * TILE_LEN, CHARACTER_SPEED);
-            this.monster[i].init(this.camera);
+        for (var j = 0; j < MONSTER_BIRTHPLACE / 2; j++) {
+            this.monster[j] = new Monster(j * (TILE_LEN + 3) + INIT_POSN.MONSTER_X * TILE_LEN, INIT_POSN.MONSTER_Y * TILE_LEN, CHARACTER_SPEED);
+            this.monster[j + MONSTER_BIRTHPLACE / 2] = new Monster(j * (TILE_LEN + 3) + INIT_POSN.MONSTER_X * TILE_LEN, 1.5 * TILE_LEN + INIT_POSN.MONSTER_Y * TILE_LEN, CHARACTER_SPEED);
+            this.monster[j].init(this.camera);
+            this.monster[j + MONSTER_BIRTHPLACE / 2].init(this.camera);
         }
 
         this.map = mapAll;
@@ -36,6 +36,7 @@ function Game() {
 
         for (var k = 0; k < MONSTER_NUM; k++) {
             this.player.observers = this.monster;
+            var test = this.monster[0];
             this.player.observers[k].attach(this.player);
         }
 
@@ -98,9 +99,10 @@ function Game() {
             case GAME_STATE.START:
                 break;
             case GAME_STATE.GAME:
-                ctx.clearRect(0,0,WIDTH,HEIGHT);
-                this.player.render(ctx);
                 bgCtx.clearRect(0,0,WIDTH,HEIGHT);
+                this.map.render(bgCtx, this.player);
+
+                enemyCtx.clearRect(0,0,WIDTH,HEIGHT);
 
 
                 //DEBUG
@@ -113,13 +115,14 @@ function Game() {
                     if (curMonster.corpseTime > MONSTER_CORPSE_TIME) {
                         curMonster = null;
                     } else {
-                        this.monster[i].render(bgCtx);
+                        this.monster[i].render(enemyCtx);
                     }
 
-                    
+
                 }
 
-                this.map.render(bgCtx, this.player);
+                ctx.clearRect(0,0,WIDTH,HEIGHT);
+                this.player.render(ctx);
                 break;
             case GAME_STATE.DIE:
                 ctx.clearRect(0,0,WIDTH,HEIGHT);
