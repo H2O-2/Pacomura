@@ -85,13 +85,33 @@ function Game() {
                     continue;
                 }
 
-                this.items[r][z] = new PointItem((z + BORDER.START_POINT + 1) * TILE_LEN, (r + BORDER.START_POINT + 1) * TILE_LEN, this.camera);
+                switch (ITEM_ARRAY[r][z]) {
+                    case 1:
+                        this.items[r][z] = new PointItem((z + BORDER.START_POINT + 1) * TILE_LEN,
+                            (r + BORDER.START_POINT + 1) * TILE_LEN, this.camera);
+                        break;
+                    case 2:
+                        this.items[r][z] = new SpecialItem((z + BORDER.START_POINT + 1) * TILE_LEN,
+                            (r + BORDER.START_POINT + 1) * TILE_LEN, ITEM_TYPE.GRENADE, this.camera);
+                        break;
+                    case 3:
+                        this.items[r][z] = new SpecialItem((z + BORDER.START_POINT + 1) * TILE_LEN,
+                            (r + BORDER.START_POINT + 1) * TILE_LEN, ITEM_TYPE.PISTOL, this.camera);
+                        break;
+                    case 4:
+                        this.items[r][z] = new SpecialItem((z + BORDER.START_POINT + 1) * TILE_LEN,
+                            (r + BORDER.START_POINT + 1) * TILE_LEN, ITEM_TYPE.SHOTGUN, this.camera);
+                        break;
+                    case 5:
+                        this.items[r][z] = new SpecialItem((z + BORDER.START_POINT + 1) * TILE_LEN,
+                            (r + BORDER.START_POINT + 1) * TILE_LEN, ITEM_TYPE.ROCKET, this.camera);
+                        break;
+                    default:
+                        console.log("ERROR");
+                        break;
+                }
             }
         }
-
-        //DEBUG
-        this.items[0][5] = new SpecialItem(8*32,96,ITEM_TYPE.EFFECT_02,this.camera);
-
     };
 
     this.isDead = function () {
@@ -127,23 +147,50 @@ function Game() {
                 //this.monster[2].update();
 
                 this.map.update();
+                console.log(this.points);
                 //this.player.notifyObserver();
                 var playerTile = posnToTile(posnCenter(this.player.posnX), posnCenter(this.player.posnY));
 
-                var playerItemX = playerTile.posnX / TILE_LEN - ITEM_BORDER.START + 1,
-                    playerItemY = playerTile.posnY / TILE_LEN - ITEM_BORDER.START + 1;
+                var playerItemX = playerTile.posnX / TILE_LEN - ITEM_BORDER.START,
+                    playerItemY = playerTile.posnY / TILE_LEN - ITEM_BORDER.START;
+
+                if (playerItemX < 0) playerItemX = 0;
+                if (playerItemY < 0) playerItemY = 0;
 
         
                 for (var a = 0; a < ITEM_OBSERVER; a++) {
                     for (var b = 0; b < ITEM_OBSERVER; b++) {
-                        var curItem = this.items[playerItemY + a][playerItemX + b];
+                        var curX = playerItemX + b;
+                        var curY = playerItemY + a;
+
+                        if (curY >= this.items.length) {
+                            curY = this.items.length - 1;
+                        }
+
+                        var curItem = this.items[curY][curX];
                         if (curItem === undefined) continue;
 
-                        var test = this.player.collision(curItem);
-                        var test2 = curItem.collision(this.player);
+                        var curPlayer = new Player(this.player.posnX, this.player.posnY, this.player.speed);
+                        curPlayer.posnX = posnCenter(this.player.posnX);
+                        curPlayer.posnY = posnCenter(this.player.posnY);
 
-                        if (this.player.collision(curItem) === MOVE_ACTION.NO_MOVE) {
-                            this.items[playerItemY + a][playerItemX + b] = undefined;
+                        if (curPlayer.collision(curItem) === MOVE_ACTION.NO_MOVE) {
+                            switch (curItem.type) {
+                                case ITEM_TYPE.POINT:
+                                    this.points += POINTS.POINT;
+                                    break;
+                                case ITEM_TYPE.LIFE:
+                                    this.points += POINTS.LIFE;
+                                    this.player.life++;
+                                    break;
+                                default:
+                                    this.points += POINTS.SPECIAL;
+                                    this.player.kuro = true;
+                                    this.player.speed = KURO_SPEED;
+                                    break;
+                            }
+
+                            this.items[curY][curX] = undefined;
                         }
                     }
                 }

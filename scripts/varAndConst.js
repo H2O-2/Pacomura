@@ -32,8 +32,8 @@ var MONSTER_NUM = 20;
 var MONSTER_BIRTHPLACE = 12;
 //var MONSTER_OTHER = 10;
 
-//var INIT_POSN = {PLAYER_X: 15, PLAYER_Y: 24.5, MONSTER_X: 12.5, MONSTER_Y: 15};
-var INIT_POSN = {PLAYER_X: 2, PLAYER_Y: 2, MONSTER_X: 12.5, MONSTER_Y: 15};
+var INIT_POSN = {PLAYER_X: 15, PLAYER_Y: 24.5, MONSTER_X: 12.5, MONSTER_Y: 15};
+//var INIT_POSN = {PLAYER_X: 2, PLAYER_Y: 2, MONSTER_X: 12.5, MONSTER_Y: 15};
 //var MONSTER_INIT_OUT = [[2,2],[2,28],[10,2],[10,28],[24,2],[24,28],[31,2],[31,28]];
 var MONSTER_INIT_OUT = [[2,2],[28,2],[2,10],[28,10],[2,24],[28,24],[2,31],[28,31]];
 
@@ -53,12 +53,17 @@ var KEY = {KEY_LEFT: 37, KEY_UP: 38, KEY_RIGHT: 39, KEY_DOWN: 40};
 var KEY_TO_DIR = 37;
 
 var TILE_STATUS = {EMPTY: "EMPTY", OCCUPIED: "OCCUPIED", BIRTH_AREA:"BIRTH_AREA"};
-var ITEM_TYPE = {POINT: 0, LIFE: 1, EFFECT_01: 2, EFFECT_02: 3, EFFECT_03: 4, EFFECT_04: 5};
+var ITEM_TYPE = {POINT: 0, LIFE: 1, GRENADE: 2, SHOTGUN: 3, ROCKET: 4, PISTOL: 5};
+var ITEM_SIZE = {POINT_WIDTH: 7, POINT_HEIGHT: 12, GRENADE_WIDTH: 13, GRENADE_HEIGHT: 19,
+                    PISTOL_WIDTH: 16, PISTOL_HEIGHT: 23, ROCKET_WIDTH: 24, ROCKET_HEIGHT: 11,
+                    SHOTGUN_WIDTH: 24, SHOTGUN_HEIGHT: 19, LIFE_WIDTH: 17, LIFE_HEIGHT: 23};
+var LIFE_POSN = {X: 17, Y: 13};
+var POINTS = {POINT: 10, SPECIAL: 50, LIFE: 100, KILL: 50};
 var ITEM_BORDER = {START: 3, END_X: 29, END_Y: 32};
 var ITEM_ARRAY = [
         [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
         [1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,1],
-        [1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,1],
+        [2,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,3],
         [1,0,0,1,0,0,0,0,1,0,0,1,1,1,1,0,0,1,0,0,0,0,1,0,0,1],
         [1,0,0,1,1,1,1,1,1,0,0,1,0,0,1,0,0,1,1,1,1,1,1,0,0,1],
         [1,0,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0,0,1],
@@ -82,7 +87,7 @@ var ITEM_ARRAY = [
         [1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1],
         [1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1],
         [1,0,0,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,0,0,1],
-        [1,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1],
+        [4,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,5],
         [1,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1],
         [1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1]
         ];
@@ -98,7 +103,8 @@ var MONSTER_SIDE_WIDTH = 28;
 var MONSTER_SIDE_HEIGHT = 21;
 
 var CHARACTER_SPEED = 2.7;
-var KURO_SPEED = 5;
+var KURO_SPEED = 4.1;
+var KURO_TIME = 800;
 var PLAYER_LIFE = 10;
 
 var NEW_DIR_MOVE = 30;

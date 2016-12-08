@@ -12,7 +12,6 @@ function Character(posnX, posnY, speed) {
     this.tileFront = null; // tile in front of character
     this.sideEmpty = true; // true if both tiles on two sides of the front tile are empty
     this.tileSide = null; // tile beside that in front of character
-    this.kuro = true; // true if player has the effect of special item (kuroka)
     this.outOfBirthPlace = false;
     this.speed = speed; // speed of the character
     this.animationArray = new Array(ANIMATION_FRAMES);
@@ -61,11 +60,8 @@ Character.prototype.checkBirthBorder = function (dir, x, y) {
 
 // return -1 (can't move), 0 (front tolerate), 1(can move), 2(double direction tolerate)
 Character.prototype.canMove = function (dir, outOfBirthPlace) {
-    if (this instanceof Monster && !this.outOfBirthPlace && this.checkBirthBorder(dir, this.posnX, this.posnY)) {
-        return -1;
-    }
-
-    if (this.checkBorder(dir, this.posnX, this.posnY)) {
+    if ((this instanceof Monster && !this.outOfBirthPlace && this.checkBirthBorder(dir, this.posnX, this.posnY))
+        || this.checkBorder(dir, this.posnX, this.posnY)) {
         return -1;
     }
 
@@ -147,8 +143,6 @@ Character.prototype.basicMove = function (outOfBirthPlace) {
         this.charDir = this.charDirPrev;
         this.basicMove(outOfBirthPlace);
     }
-
-    return;
 };
 
 function Monster(posnX, posnY, speed) {
@@ -196,6 +190,8 @@ Monster.prototype.checkPlayer = function () {
             this.player.caught = true;
             this.player.life--;
         } else {
+            this.player.killNum++;
+            this.player.points += (this.killNum * POINTS.KILL);
             this.killed = true;
         }
     }
@@ -365,6 +361,8 @@ function Player(posnX, posnY, speed) {
     this.charDirPrev = undefined;
     this.speed = speed;
     this.itemNum = 0; // the POINT ITEM player gets
+    this.killNum = 0; // monsters player killed in a kuro mode
+    this.kuroTime = 0; // timer for kuro mode
     this.camera = null;
     this.animationArray = new Array(ANIMATION_FRAMES * 2);
     this.observers = new Array(MONSTER_NUM);
@@ -408,12 +406,6 @@ Player.prototype.notifyObserver = function () {
     }
 };
 
-Player.prototype.findItem = function () {
-    var curTile = posnToTile(posnCenter(this.posnX), posnCenter(this.posnY));
-
-
-};
-
 Player.prototype.revive = function () {
     this.posnX = INIT_POSN.PLAYER_X * TILE_LEN;
     this.posnY = INIT_POSN.PLAYER_Y * TILE_LEN;
@@ -434,6 +426,15 @@ Player.prototype.update = function () {
     this.charDirPrev = this.charDir;
     this.charDir = keyEvt.getDir();
     this.charMove();
+
+    if (this.kuro && this.kuroTime > KURO_TIME) {
+        this.kuro = false;
+        this.kuroTime = 0;
+        this.speed = CHARACTER_SPEED;
+    } else {
+        this.kuroTime++;
+    }
+
     if (this.charDir === undefined && this.posnX != INIT_POSN.PLAYER_X * TILE_LEN && this.posnY != INIT_POSN.posnY * TILE_LEN) {
         this.charDir = this.charDirPrev;
     }

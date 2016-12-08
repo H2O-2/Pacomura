@@ -15,25 +15,34 @@ Item.prototype = new GameElement();
 Item.prototype.render = function (bgCtx) {
 		if (this.isUsed) return;
 
-		if (this.type == ITEM_TYPE.POINT) {
-			s_greifSeed.draw(bgCtx, this.posnX - Math.round(POINT_WIDTH / 2) - offsetX(this.camera.cameraX),
-                this.posnY - Math.round(POINT_HEIGHT / 2) - offsetY(this.camera.cameraY));
-			//s_greifSeed.draw(bgCtx, this.posnX - 4, this.posnY - 7);
-		} else if (this.type == ITEM_TYPE.EFFECT_01) {
-			s_grenade.draw(bgCtx, this.posnX - Math.round(POINT_WIDTH / 2) - offsetX(this.camera.cameraX),
-				this.posnY - Math.round(POINT_HEIGHT / 2) - offsetY(this.camera.cameraY));
-		} else if (this.type == ITEM_TYPE.EFFECT_02) {
-			s_shotgun.draw(bgCtx, this.posnX - Math.round(POINT_WIDTH / 2) - offsetX(this.camera.cameraX),
-                this.posnY - Math.round(POINT_HEIGHT / 2) - offsetY(this.camera.cameraY));
-		} else if (this.type == ITEM_TYPE.EFFECT_03) {
-			s_rocket.draw(bgCtx, this.posnX - Math.round(POINT_WIDTH / 2) - offsetX(this.camera.cameraX),
-                this.posnY - Math.round(POINT_HEIGHT / 2) - offsetY(this.camera.cameraY));
-		} else if(this.type == ITEM_TYPE.EFFECT_04) {
-			s_pistol.draw(bgCtx, this.posnX - Math.round(POINT_WIDTH / 2) - offsetX(this.camera.cameraX),
-                this.posnY - Math.round(POINT_HEIGHT / 2) - offsetY(this.camera.cameraY));
-		} else {
-			s_soulgem.draw(bgCtx, this.posnX - Math.round(POINT_WIDTH / 2) - offsetX(this.camera.cameraX),
-                this.posnY - Math.round(POINT_HEIGHT / 2) - offsetY(this.camera.cameraY));
+		switch (this.type) {
+			case ITEM_TYPE.POINT:
+                s_greifSeed.draw(bgCtx, this.posnX - Math.round(POINT_WIDTH / 2) - offsetX(this.camera.cameraX),
+                    this.posnY - Math.round(POINT_HEIGHT / 2) - offsetY(this.camera.cameraY));
+                break;
+			case ITEM_TYPE.GRENADE:
+                s_grenade.draw(bgCtx, this.posnX - Math.round(POINT_WIDTH / 2) - offsetX(this.camera.cameraX),
+                    this.posnY - Math.round(POINT_HEIGHT / 2) - offsetY(this.camera.cameraY));
+                break;
+			case ITEM_TYPE.PISTOL:
+                s_pistol.draw(bgCtx, this.posnX - Math.round(POINT_WIDTH / 2) - offsetX(this.camera.cameraX),
+                    this.posnY - Math.round(POINT_HEIGHT / 2) - offsetY(this.camera.cameraY));
+                break;
+			case ITEM_TYPE.ROCKET:
+                s_rocket.draw(bgCtx, this.posnX - Math.round(POINT_WIDTH / 2) - offsetX(this.camera.cameraX),
+                    this.posnY - Math.round(POINT_HEIGHT / 2) - offsetY(this.camera.cameraY));
+                break;
+			case ITEM_TYPE.SHOTGUN:
+                s_shotgun.draw(bgCtx, this.posnX - Math.round(POINT_WIDTH / 2) - offsetX(this.camera.cameraX),
+                    this.posnY - Math.round(POINT_HEIGHT / 2) - offsetY(this.camera.cameraY));
+                break;
+			case ITEM_TYPE.LIFE:
+                s_soulgem.draw(bgCtx, this.posnX - offsetX(this.camera.cameraX),
+					this.posnY - Math.round(POINT_HEIGHT / 2) - offsetY(this.camera.cameraY));
+                break;
+			default:
+				console.log("ITEM ERROR");
+				break;
 		}
 	};
 
@@ -48,18 +57,48 @@ function PointItem(posnX, posnY, camera) {
 PointItem.prototype = new Item();
 
 PointItem.prototype.update = function () {
-	if (isUsed) {
+	if (this.isUsed) {
 		return;
 	}
 
-	isUsed = true;
+	this.isUsed = true;
 };
 
 function SpecialItem(posnX, posnY, itemType, camera) {
 	this.posnX = posnX;
 	this.posnY = posnY;
-	this.itemType = itemType;
+    this.width = 13;
+    this.height = 19;
+	this.type = itemType;
 	this.camera = camera;
 }
 
 SpecialItem.prototype = new Item();
+
+SpecialItem.prototype.init = function () {
+    switch (this.type) {
+        case ITEM_TYPE.GRENADE:
+            this.width = 13;
+            this.height = 19;
+            break;
+        case ITEM_TYPE.PISTOL:
+            this.width = 16;
+            this.height = 23;
+            break;
+        case ITEM_TYPE.ROCKET:
+            this.width = 24;
+            this.height = 11;
+            break;
+        case ITEM_TYPE.SHOTGUN:
+            this.width = 24;
+            this.height = 19;
+            break;
+        case ITEM_TYPE.LIFE:
+            this.width = 17;
+            this.height = 23;
+            break;
+        default:
+            console.log("ITEM ERROR");
+            break;
+    }
+};
