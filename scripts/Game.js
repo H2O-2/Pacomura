@@ -15,6 +15,9 @@ function Game() {
     this.dieTimer = DIE_TIME;
     this.items = new Array (ITEM_NUM);
 
+    this.failUI = new Animation(s_homuraKuro[3]);
+    this.victoryUI = new Array (2);
+
     this.monsterReset = function () {
         for (var i = 0; i < this.monster.length; i++) {
             this.monster[i] = null;
@@ -50,6 +53,9 @@ function Game() {
 
         this.camera = new Camera(this.player);
         this.player.init(this.camera);
+
+        this.victoryUI[0] = new Animation(s_homuraNorm[3]);
+        this.victoryUI[1] = new Animation(s_madoka[3]);
 
         // initialize Monsters
         for (var j = 0; j < MONSTER_BIRTHPLACE / 2; j++) {
@@ -118,8 +124,13 @@ function Game() {
         return this.player.life <= 0;
     };
 
+    this.isVictory = function () {
+        return this.player.itemNum >= POINT_TOTAL;
+    };
+
     this.update = function () {
-        if (this.player.life <= 0) this.gameStatus = GAME_STATE.FINISH;
+        if (this.isDead()) this.gameStatus = GAME_STATE.FAILURE;
+        else if (this.isVictory()) this.gameStatus = GAME_STATE.VICTORY;
         else if (this.player.caught) this.gameStatus = GAME_STATE.DIE;
 
         if (this.gameStatus == GAME_STATE.DIE && this.dieTimer <= 0){
@@ -139,6 +150,24 @@ function Game() {
                 for (var i = 0; i < this.monster.length; i++) {
                     var curMonster = this.monster[i];
 
+                    if (curMonster === undefined) continue;
+/*
+                    if (manhattanS(curMonster, this.player) < OBSERVER_RAD * TILE_LEN) {
+                        var OBSERVER_COLLISION = 10;
+                        if (curMonster.posnX - this.player.posnX <= OBSERVER_COLLISION * TILE_LEN &&
+                            curMonster.posnX - this.player.posnX > 0) {
+                            this.monster[i].charDir = keyToDir(KEY.KEY_LEFT);
+                        } else if (curMonster.posnX - this.player.posnX >= -OBSERVER_COLLISION * TILE_LEN &&
+                            curMonster.posnX - this.player.posnX < 0) {
+                            this.monster[i].charDir = keyToDir(KEY.KEY_RIGHT);
+                        } else if (curMonster.posnY - this.player.posnY <= OBSERVER_COLLISION * TILE_LEN &&
+                            curMonster.posnY - this.player.posnY > 0) {
+                            this.monster[i].charDir = keyToDir(KEY.KEY_DOWN);
+                        } else {
+                            this.monster[i].charDir = keyToDir(KEY.KEY_UP);
+                        }
+                    }
+*/
                     curMonster.update();
                 }
 
@@ -157,7 +186,7 @@ function Game() {
                 if (playerItemX < 0) playerItemX = 0;
                 if (playerItemY < 0) playerItemY = 0;
 
-        
+                // Item update
                 for (var a = 0; a < ITEM_OBSERVER; a++) {
                     for (var b = 0; b < ITEM_OBSERVER; b++) {
                         var curX = playerItemX + b;
@@ -178,6 +207,7 @@ function Game() {
                             switch (curItem.type) {
                                 case ITEM_TYPE.POINT:
                                     this.points += POINTS.POINT;
+                                    this.player.itemNum++;
                                     break;
                                 case ITEM_TYPE.LIFE:
                                     this.points += POINTS.LIFE;
@@ -198,11 +228,21 @@ function Game() {
             case GAME_STATE.DIE:
                 this.dieTimer--;
                 break;
-            case GAME_STATE.FINISH:
+            case GAME_STATE.FAILURE:
+                if (this.dieTimer > 0) this.dieTimer--;
+                break;
+            case GAME_STATE.VICTORY:
+                for (var v = 0; v < this.monster.length; v++) {
+                    var victoryMonster = this.monster[v];
+                    victoryMonster.killed = true;
+                    victoryMonster.update();
+                }
                 break;
             default:
-                console.log("ERROR");
+                break;
         }
+
+
     };
 
     this.render = function (ctx, bgCtx) {
@@ -218,7 +258,7 @@ function Game() {
                     renderEndX = renderEnd.posnX / TILE_LEN - ITEM_BORDER.START,
                     renderEndY = renderEnd.posnY / TILE_LEN - ITEM_BORDER.START;
 
-                bgCtx.clearRect(0,0,WIDTH,HEIGHT);
+                bgCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
                 this.map.render(bgCtx);
                 for (var t = renderStartY; t < renderEndY; t++) {
                     for (var s = renderStartX; s < renderEndX; s++) {
@@ -235,9 +275,9 @@ function Game() {
                     }
                 }
 
-                ctx.clearRect(0,0,WIDTH,HEIGHT);
+                ctx.clearRect(0,0,C_WIDTH,C_HEIGHT);
                 this.player.render(ctx);
-                enemyCtx.clearRect(0,0,WIDTH,HEIGHT);
+                enemyCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
                 //DEBUG
                 //this.monster[2].render(ctx);
 
@@ -259,13 +299,40 @@ function Game() {
                 this.player.DieRender(ctx, this.dieTimer);
                 this.monsterReset();
                 break;
-            case GAME_STATE.FINISH:
+            case GAME_STATE.FAILURE:
+                if (this.dieTimer > 0) {
+                    ctx.clearRect(0,0,WIDTH,HEIGHT);
+                    this.player.DieRender(ctx, this.dieTimer);
+                } else {
+                    ctx.clearRect(0,0,C_WIDTH,C_HEIGHT);
+                    enemyCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
+                    bgCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
+                    this.failUI.currentFrame().draw(bgCtx, C_WIDTH/2 - TILE_LEN / 2, C_HEIGHT/3);
+                    this.failUI.update();
+                }
+                break;
+            case GAME_STATE.VICTORY:
+
+                if (this.monster[0].corpseTime > MONSTER_CORPSE_TIME / 2) {
+                    ctx.clearRect(0,0,C_WIDTH,C_HEIGHT);
+                    enemyCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
+                    bgCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
+                    this.victoryUI[0].currentFrame().draw(bgCtx, C_WIDTH/2 - TILE_LEN, C_HEIGHT/3);
+                    this.victoryUI[1].currentFrame().draw(bgCtx, C_WIDTH/2, C_HEIGHT/3);
+                    this.victoryUI[0].update();
+                    this.victoryUI[1].update();
+                } else {
+                    enemyCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
+
+                    for (var m = 0; m < this.monster.length; m++) {
+                        this.monster[m].render(enemyCtx);
+                    }
+                }
                 break;
             default:
-                console.log("ERROR");
+                break;
         }
 
-        s_grenade.draw(bgCtx, 0, 0);
         //console.log(C_WIDTH / 2 + offsetX(this.camera.cameraX), C_HEIGHT / 2 + offsetY(this.camera.cameraY));
 
 

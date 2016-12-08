@@ -182,10 +182,10 @@ Monster.prototype.attach = function (player) {
 };
 
 Monster.prototype.checkPlayer = function () {
-    if (manhattanS(this, this.player) > 2 * TILE_LEN) return;
+    if (manhattanS(this, this.player) > OBSERVER_RAD * TILE_LEN) return;
 
     if (this.player.collision(this) == MOVE_ACTION.NO_MOVE && !this.player.caught) {
-        if (!this.player.kuro) {
+        if (!this.player.kuro && !this.killed) {
             console.log("COLLIDE");
             this.player.caught = true;
             this.player.life--;
@@ -274,7 +274,21 @@ Monster.prototype.charMove = function () {
         this.height = MONSTER_FRONT_LEN;
         this.width = MONSTER_FRONT_LEN;
     }
-
+/*
+    var OBSERVER_COLLISION = 10;
+    if (this.posnX - this.player.posnX <= OBSERVER_COLLISION &&
+        this.posnX - this.player.posnX > 0 && Math.abs(this.posnY - this.player.posnY) > this.posnX - this.player.posnX) {
+        this.availableDir[0] = keyToDir(KEY.KEY_LEFT);
+    } else if (this.posnX - this.player.posnX >= -OBSERVER_COLLISION &&
+        this.posnX - this.player.posnX < 0 && Math.abs(this.posnY - this.player.posnY) > -(this.posnX - this.player.posnX)) {
+        this.availableDir[0] = keyToDir(KEY.KEY_RIGHT);
+    } else if (this.posnY - this.player.posnY <= OBSERVER_COLLISION &&
+        this.posnY - this.player.posnY > 0) {
+        this.availableDir[0] = keyToDir(KEY.KEY_DOWN);
+    } else {
+        this.availableDir[0] = keyToDir(KEY.KEY_UP);
+    }
+*/
     if (this.availableDir.length === 1 && !this.collided()) {
         this.prevX = this.posnX;
         this.prevY = this.posnY;
@@ -431,7 +445,7 @@ Player.prototype.update = function () {
         this.kuro = false;
         this.kuroTime = 0;
         this.speed = CHARACTER_SPEED;
-    } else {
+    } else if (this.kuro) {
         this.kuroTime++;
     }
 

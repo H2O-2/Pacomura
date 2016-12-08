@@ -2,7 +2,7 @@
  * Created by H2O2 on 16/10/10.
  */
 
-var s_homuraNorm, s_homuraKuro, s_qb, s_qbDead, s_soulgem,
+var s_homuraNorm, s_homuraKuro, s_qb, s_madoka,s_qbDead, s_soulgem,
     s_greifSeed, s_rocket, s_grenade, s_pistol,
     s_shotgun, s_map;
 
@@ -119,6 +119,37 @@ function spriteInit(img) {
             new Sprite(img, TILE_LEN * 12 + 3, 2, 26, 28),
             new Sprite(img, TILE_LEN * 13 + 4, 2, 24, 29),
             new Sprite(img, TILE_LEN * 14 + 3, 2, 26, 28)
+        ]
+    ];
+
+    s_madoka = [
+        // left
+        [
+            new Sprite(img, TILE_LEN + 4, TILE_LEN, 24, 32),
+            new Sprite(img, 4, TILE_LEN + 1, 26, 31),
+            new Sprite(img, TILE_LEN + 4, TILE_LEN, 24, 32),
+            new Sprite(img, TILE_LEN * 2 + 4, TILE_LEN + 1, 24, 31)
+        ],
+        // up
+        [
+            new Sprite(img, TILE_LEN + 4, TILE_LEN * 3, 25, 32),
+            new Sprite(img, 5, TILE_LEN * 3 + 1, 23, 31),
+            new Sprite(img, TILE_LEN + 4, TILE_LEN * 3, 25, 32),
+            new Sprite(img, TILE_LEN * 2 + 4, TILE_LEN * 3 + 1, 24, 31)
+        ],
+        // right
+        [
+            new Sprite(img, TILE_LEN + 4, TILE_LEN * 2, 24, 32),
+            new Sprite(img, 2, TILE_LEN * 2 + 1, 26, 31),
+            new Sprite(img, TILE_LEN + 4, TILE_LEN * 2, 24, 32),
+            new Sprite(img, TILE_LEN * 2 + 4, TILE_LEN * 2 + 1, 24, 31)
+        ],
+        // down
+        [
+            new Sprite(img, TILE_LEN + 2, TILE_LEN * 4, 29, 32),
+            new Sprite(img, 2, 1 + TILE_LEN * 4, 29, 31),
+            new Sprite(img, TILE_LEN + 2, TILE_LEN * 4, 29, 32),
+            new Sprite(img, TILE_LEN * 2 + 2, 1 + TILE_LEN * 4, 29, 31)
         ]
     ];
 

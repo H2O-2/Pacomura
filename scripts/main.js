@@ -55,7 +55,7 @@ function main() {
         //game.debugging();
 
         var loop = function () {
-            game.update();
+            var gameStatus = game.update();
             game.render(ctx, bgCtx);
             window.requestAnimationFrame(loop);
         };
