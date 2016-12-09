@@ -19,14 +19,14 @@
             right: 0;
         }
 
-        canvas#bgCanvas {
+        canvas#bgCanvas, canvas#infoCanvas {
             z-index: 5;
             background-color: rgba(243,186,220,.3);
             box-shadow: 0 0 40px 10px #1F1F1F;
         }
 
-        canvas#debug {
-            z-index: 100;
+        canvas#infoCanvas {
+            top: 68%;
         }
 
         html, body {
@@ -46,10 +46,10 @@
     </style>
 </head>
 <body>
-    <canvas id="debug" width="640" height="384"></canvas>
     <canvas id="bgCanvas"></canvas>
     <canvas id="enemyCanvas"></canvas>
     <canvas id="playerCanvas"></canvas>
+    <canvas id="infoCanvas"></canvas>
     <script src="scripts/varAndConst.js"></script>
     <script src="scripts/global.js"></script>
     <script src="scripts/Sprite.js"></script>

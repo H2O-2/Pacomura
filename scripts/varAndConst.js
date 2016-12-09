@@ -7,12 +7,16 @@ var canvas = document.getElementById("playerCanvas"),
     enemy = document.getElementById("enemyCanvas"),
     enemyCtx = enemy.getContext("2d"),
     bg = document.getElementById("bgCanvas"),
-    bgCtx = bg.getContext("2d");
+    bgCtx = bg.getContext("2d"),
+    info = document.getElementById("infoCanvas"),
+    infoCtx = info.getContext("2d");
 
 var WIDTH = window.innerWidth,
     HEIGHT = window.innerHeight,
     C_WIDTH = 640,
-    C_HEIGHT = 384;
+    C_HEIGHT = 384,
+    INFO_WIDTH = 640,
+    INFO_HEIGHT = 40;
 
 var GLOBAL_BUFFER = 0.8;
 var TURN_BUFFER = 3;
@@ -22,19 +26,18 @@ var OBSERVER_RAD = 2;
 var ITEM_OBSERVER = 3;
 
 var GAME_STATE = {START: 1, GAME: 2, DIE: 3, FAILURE: 4, VICTORY: 5};
-//var PLAYER_STATE = {NORM: 1, DIE: 2, REVIVE: 3};
 
 var DIE_TIME = 80;
 var MONSTER_CORPSE_TIME = 150;
 
-var MONSTER_NUM = 20;
+var MONSTER_NUM = 25;
 var MONSTER_BIRTHPLACE = 12;
 //var MONSTER_OTHER = 10;
 
 var INIT_POSN = {PLAYER_X: 15, PLAYER_Y: 24.5, MONSTER_X: 12.5, MONSTER_Y: 15};
 //var INIT_POSN = {PLAYER_X: 2, PLAYER_Y: 2, MONSTER_X: 12.5, MONSTER_Y: 15};
-//var MONSTER_INIT_OUT = [[2,2],[2,28],[10,2],[10,28],[24,2],[24,28],[31,2],[31,28]];
-var MONSTER_INIT_OUT = [[2,2],[28,2],[2,10],[28,10],[2,24],[28,24],[2,31],[28,31]];
+var MONSTER_INIT_OUT = [[2,2],[28,2],[2,10],[28,10],[2,24],[28,24],[2,31],[28,31],
+                        [28,10],[2,24],[28,24],[2,31],[28,31]];
 
 var MAP_WIDTH = 31,
     MAP_HEIGHT = 34;
@@ -44,7 +47,6 @@ var BIRTH_BORDER_Y = 13;
 var BIRTH_WIDTH = 7;
 var BIRTH_HEIGHT = 4;
 var BIRTH = {START_POINT_X: 12, START_POINT_Y: 14, END_POINT_X: 18, END_POINT_Y: 17, EXIT_START: 14, EXIT_END: 16};
-var BIRTH_EXIT_LEN = 3;
 
 var JUMP_ARRAY = [14,15,17,18];
 
@@ -117,7 +119,6 @@ var REFRESH_SPEED = 8;
 var CAMERA_SPEED = 10;
 
 var CAMERA_BORDER = 1/2;
-var COLLISION_TOLERENCE = 0;
 
 var ITEM_NUM = 5;
 var POINT_WIDTH = 7,

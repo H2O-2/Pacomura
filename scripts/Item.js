@@ -49,8 +49,8 @@ Item.prototype.render = function (bgCtx) {
 function PointItem(posnX, posnY, camera) {
 	this.posnX = posnX;
 	this.posnY = posnY;
-	this.width = 7;
-	this.height = 12;
+	this.width = ITEM_SIZE.POINT_WIDTH;
+	this.height = ITEM_SIZE.POINT_HEIGHT;
 	this.camera = camera;
 }
 
@@ -67,8 +67,8 @@ PointItem.prototype.update = function () {
 function SpecialItem(posnX, posnY, itemType, camera) {
 	this.posnX = posnX;
 	this.posnY = posnY;
-    this.width = 13;
-    this.height = 19;
+    this.width = ITEM_SIZE.GRENADE_WIDTH;
+    this.height = ITEM_SIZE.GRENADE_HEIGHT;
 	this.type = itemType;
 	this.camera = camera;
 }
@@ -78,27 +78,26 @@ SpecialItem.prototype = new Item();
 SpecialItem.prototype.init = function () {
     switch (this.type) {
         case ITEM_TYPE.GRENADE:
-            this.width = 13;
-            this.height = 19;
+            this.width = ITEM_SIZE.GRENADE_WIDTH;
+            this.height = ITEM_SIZE.GRENADE_HEIGHT;
             break;
         case ITEM_TYPE.PISTOL:
-            this.width = 16;
-            this.height = 23;
+            this.width = ITEM_SIZE.PISTOL_WIDTH;
+            this.height = ITEM_SIZE.PISTOL_HEIGHT;
             break;
         case ITEM_TYPE.ROCKET:
-            this.width = 24;
-            this.height = 11;
+            this.width = ITEM_SIZE.ROCKET_WIDTH;
+            this.height = ITEM_SIZE.ROCKET_HEIGHT;
             break;
         case ITEM_TYPE.SHOTGUN:
-            this.width = 24;
-            this.height = 19;
+            this.width = ITEM_SIZE.SHOTGUN_WIDTH;
+            this.height = ITEM_SIZE.SHOTGUN_HEIGHT;
             break;
         case ITEM_TYPE.LIFE:
-            this.width = 17;
-            this.height = 23;
+            this.width = ITEM_SIZE.LIFE_WIDTH;
+            this.height = ITEM_SIZE.LIFE_HEIGHT;
             break;
         default:
-            console.log("ITEM ERROR");
             break;
     }
 };

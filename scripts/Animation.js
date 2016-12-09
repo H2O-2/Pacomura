@@ -8,10 +8,8 @@ function Animation(sprite) {
     this.frames = 0;
 
     this.update = function () {
-        //console.log("NO");
 
         if (this.globalFrame % REFRESH_SPEED === 0) { 
-            //console.log("YES");
             this.frames++; }
 
         if (this.frames >= ANIMATION_FRAMES) {

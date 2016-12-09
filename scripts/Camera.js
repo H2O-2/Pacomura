@@ -9,19 +9,12 @@ function Camera(player) {
 
     this.update = function () {
 
-        //console.log("CAMERA BEFORE " + this.cameraX, this.cameraY);
-
         this.cameraX += (player.posnX - this.cameraX) / CAMERA_SPEED;
         this.cameraY += (player.posnY - this.cameraY) / CAMERA_SPEED;
 
-        //console.log("CAMERA AFTER " + this.cameraX, this.cameraY);
-
         if (this.cameraX <= C_WIDTH * CAMERA_BORDER) {
-            //console.log("PASS");
-            //console.log("CAMERA " + this.cameraX, this.cameraY);
             this.cameraX = C_WIDTH * CAMERA_BORDER;
         } else if (this.cameraX >= MAP_WIDTH * TILE_LEN - C_WIDTH * CAMERA_BORDER) {
-            //console.log("PASS");
             this.cameraX = MAP_WIDTH * TILE_LEN - C_WIDTH * CAMERA_BORDER;
         }
 
@@ -30,8 +23,6 @@ function Camera(player) {
         } else if (this.cameraY >= MAP_HEIGHT * TILE_LEN - C_HEIGHT * CAMERA_BORDER) {
             this.cameraY = MAP_HEIGHT * TILE_LEN - C_HEIGHT * CAMERA_BORDER;
         }
-
-        //console.log("CAMERA END " + this.cameraX, this.cameraY);
 
     };
 }

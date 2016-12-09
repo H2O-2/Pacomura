@@ -70,8 +70,6 @@ function playerViewLeftTop(camera) {
         topPosn = ITEM_BORDER.START * TILE_LEN;
     }
 
-    //console.log(leftPosn, topPosn);
-
     return posnToTile(leftPosn, topPosn);
 }
 

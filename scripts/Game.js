@@ -47,7 +47,7 @@ function Game() {
         }
     };
 
-    this.gameInit = function (ctx, bgCtx) {
+    this.gameInit = function () {
         this.player = new Player(INIT_POSN.PLAYER_X * TILE_LEN, INIT_POSN.PLAYER_Y * TILE_LEN, CHARACTER_SPEED);
         console.log("PLAYER: " + this.player.posnX, this.player.posnY);
 
@@ -138,7 +138,6 @@ function Game() {
             this.player.revive();
             this.dieTimer = DIE_TIME;
         }
-        //console.log(this);
 
         switch (this.gameStatus) {
             case GAME_STATE.START:
@@ -177,7 +176,6 @@ function Game() {
 
                 this.map.update();
                 console.log(this.points);
-                //this.player.notifyObserver();
                 var playerTile = posnToTile(posnCenter(this.player.posnX), posnCenter(this.player.posnY));
 
                 var playerItemX = playerTile.posnX / TILE_LEN - ITEM_BORDER.START,
@@ -290,8 +288,14 @@ function Game() {
                     } else {
                         this.monster[i].render(enemyCtx);
                     }
+                }
 
-
+                // render info
+                infoCtx.clearRect(80,0,100,INFO_HEIGHT);
+                var d = PLAYER_LIFE - this.player.life;
+                while (d < PLAYER_LIFE) {
+                    s_soulgem[d].draw(infoCtx, 80 + 27 * (d - PLAYER_LIFE + this.player.life), 8);
+                    d++;
                 }
                 break;
             case GAME_STATE.DIE:
@@ -331,32 +335,6 @@ function Game() {
                 break;
             default:
                 break;
-        }
-
-        //console.log(C_WIDTH / 2 + offsetX(this.camera.cameraX), C_HEIGHT / 2 + offsetY(this.camera.cameraY));
-
-
-/*
-        // DEBUG
-        for (var t = 0; t < 8; t++) {
-            s_greifSeed.draw(bgCtx, 96, 96 + 32 * t);
-        }
-
-        for (var s = 0; s < 8; s++) {
-            s_greifSeed.draw(bgCtx, 96 + 32 * s, 96);
-        }
-*/
-    };
-
-
-    this.debugging = function () {
-        console.log("DEBUG");
-        for (var i = 0; i < MAP_WIDTH; i++) {
-            for (var j = 0; j < MAP_HEIGHT; j++) {
-                //s_homuraKuro[3][0].draw(bgCtx, this.tiles[i][j].posnX, this.tiles[i][j].posnY);
-                debugCtx.rect(this.map.tiles[i][j].posnX, this.map.tiles[i][j].posnY, TILE_LEN, TILE_LEN);
-                debugCtx.stroke();
-            }
         }
     };
 }

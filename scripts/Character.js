@@ -42,10 +42,6 @@ Character.prototype.exitCollision = function (posnX) {
     return (posnX > BIRTH.EXIT_START * TILE_LEN) && (posnX < BIRTH.EXIT_END * TILE_LEN);
 };
 
-Character.prototype.birthAreaCollisionY = function (posnY) {
-    return posnY > BIRTH.START_POINT_Y * TILE_LEN && posnY < BIRTH.END_POINT_Y * TILE_LEN;
-};
-
 Character.prototype.checkBirthBorder = function (dir, x, y) {
     var test = this.exitCollision(x);
     var test1 = (dir == KEY.KEY_UP);
@@ -274,21 +270,7 @@ Monster.prototype.charMove = function () {
         this.height = MONSTER_FRONT_LEN;
         this.width = MONSTER_FRONT_LEN;
     }
-/*
-    var OBSERVER_COLLISION = 10;
-    if (this.posnX - this.player.posnX <= OBSERVER_COLLISION &&
-        this.posnX - this.player.posnX > 0 && Math.abs(this.posnY - this.player.posnY) > this.posnX - this.player.posnX) {
-        this.availableDir[0] = keyToDir(KEY.KEY_LEFT);
-    } else if (this.posnX - this.player.posnX >= -OBSERVER_COLLISION &&
-        this.posnX - this.player.posnX < 0 && Math.abs(this.posnY - this.player.posnY) > -(this.posnX - this.player.posnX)) {
-        this.availableDir[0] = keyToDir(KEY.KEY_RIGHT);
-    } else if (this.posnY - this.player.posnY <= OBSERVER_COLLISION &&
-        this.posnY - this.player.posnY > 0) {
-        this.availableDir[0] = keyToDir(KEY.KEY_DOWN);
-    } else {
-        this.availableDir[0] = keyToDir(KEY.KEY_UP);
-    }
-*/
+
     if (this.availableDir.length === 1 && !this.collided()) {
         this.prevX = this.posnX;
         this.prevY = this.posnY;

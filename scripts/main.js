@@ -2,9 +2,6 @@
  * Created by H2O2 on 16/10/27.
  */
 
-var debugging = document.getElementById("debug"),
-    debugCtx = debugging.getContext("2d");
-
 function main() {
 
     var MOBILE_OFFESET = 1/10;
@@ -23,10 +20,15 @@ function main() {
         bg.height = C_HEIGHT;
         bg.style.padding = "1px";
         bg.style.borderRadius = "10px";
-        debugging.width = C_WIDTH;
-        debugging.height = C_HEIGHT;
+        info.width = INFO_WIDTH;
+        info.height = INFO_HEIGHT;
+        info.style.padding = "1px";
+        info.style.borderRadius = "10px";
+        infoCtx.fillStyle = '#242424';
+        infoCtx.font = "20px Helvetica";
+        infoCtx.fillText("LIFE: ",20,27);
+        infoCtx.fillText("SCORE: 0",C_WIDTH - 200, 27);
         e = "mousedown";
-        console.log("DEBUG" + debugging.height);
     } else {
         canvas.width = WIDTH * (1 + MOBILE_OFFESET);
         canvas.height = HEIGHT * (1 + MOBILE_OFFESET);
@@ -40,9 +42,6 @@ function main() {
         bg.height = HEIGHT * (1 + MOBILE_OFFESET);
         bg.style.padding = "1px";
         bg.style.borderRadius = "10px";
-        debugging.width = WIDTH * (1 + MOBILE_OFFESET);
-        debugging.height = HEIGHT * (1 + MOBILE_OFFESET);
-        console.log("MOBILE" + debugging.height);
     }
 
     var img = new Image();
@@ -52,7 +51,6 @@ function main() {
         spriteInit(this);
         var game = new Game();
         game.gameInit(ctx, bgCtx);
-        //game.debugging();
 
         var loop = function () {
             var gameStatus = game.update();
