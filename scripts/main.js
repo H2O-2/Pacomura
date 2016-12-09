@@ -26,8 +26,6 @@ function main() {
         info.style.borderRadius = "10px";
         infoCtx.fillStyle = '#242424';
         infoCtx.font = "20px Helvetica";
-        infoCtx.fillText("LIFE: ",20,27);
-        infoCtx.fillText("SCORE: 0",C_WIDTH - 200, 27);
         e = "mousedown";
     } else {
         canvas.width = WIDTH * (1 + MOBILE_OFFESET);

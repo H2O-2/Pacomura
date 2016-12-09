@@ -2,9 +2,11 @@
  * Created by H2O2 on 16/10/29.
  */
 
+window.addEventListener("keydown", readInput);
+
 function Game() {
-    //this.gameStatus = GAME_STATE.START;
-    this.gameStatus = GAME_STATE.GAME;
+    this.gameStatus = GAME_STATE.START;
+    //this.gameStatus = GAME_STATE.GAME;
     this.points = 0;
 
     this.camera = null;
@@ -12,9 +14,13 @@ function Game() {
     this.player = null;
     this.monster = new Array(MONSTER_BIRTHPLACE);
 
+    this.startBlink = true;
+    this.startTimer = 0;
+
     this.dieTimer = DIE_TIME;
     this.items = new Array (ITEM_NUM);
 
+    this.startUI = new Animation(s_homuraNorm[3]);
     this.failUI = new Animation(s_homuraKuro[3]);
     this.victoryUI = new Array (2);
 
@@ -49,7 +55,6 @@ function Game() {
 
     this.gameInit = function () {
         this.player = new Player(INIT_POSN.PLAYER_X * TILE_LEN, INIT_POSN.PLAYER_Y * TILE_LEN, CHARACTER_SPEED);
-        console.log("PLAYER: " + this.player.posnX, this.player.posnY);
 
         this.camera = new Camera(this.player);
         this.player.init(this.camera);
@@ -113,7 +118,6 @@ function Game() {
                             (r + BORDER.START_POINT + 1) * TILE_LEN, ITEM_TYPE.ROCKET, this.camera);
                         break;
                     default:
-                        console.log("ERROR");
                         break;
                 }
             }
@@ -141,6 +145,12 @@ function Game() {
 
         switch (this.gameStatus) {
             case GAME_STATE.START:
+                if (keyEvt.getGame()) {
+                    this.gameStatus = GAME_STATE.GAME;
+                    this.update();
+                }
+
+                this.startUI.update();
                 break;
             case GAME_STATE.GAME:
                 this.player.update();
@@ -175,7 +185,6 @@ function Game() {
                 //this.monster[2].update();
 
                 this.map.update();
-                console.log(this.points);
                 var playerTile = posnToTile(posnCenter(this.player.posnX), posnCenter(this.player.posnY));
 
                 var playerItemX = playerTile.posnX / TILE_LEN - ITEM_BORDER.START,
@@ -239,13 +248,37 @@ function Game() {
             default:
                 break;
         }
+        return;
 
+    };
 
+    this.toggleStartBink = function () {
+        if (this.startBlink) {
+            this.startBlink = false;
+            return;
+        }
+
+        this.startBlink = true;
     };
 
     this.render = function (ctx, bgCtx) {
         switch (this.gameStatus) {
             case GAME_STATE.START:
+                bgCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
+
+                s_title.draw(bgCtx,(C_WIDTH-11*TILE_LEN)/2,50);
+                this.startUI.currentFrame().draw(bgCtx,C_WIDTH/2-TILE_LEN/2,C_HEIGHT * 2/3);
+
+                infoCtx.clearRect(0,0,INFO_WIDTH,INFO_HEIGHT);
+                if (this.startBlink) {
+                    infoCtx.textAlign = "center";
+                    infoCtx.fillText("PRESS SPACE TO START", INFO_WIDTH/2, 27);
+                    this.startTimer++;
+                } else {
+                    this.startTimer++;
+                }
+
+                if (this.startTimer % START_TEXT_BLINK === 0) this.toggleStartBink();
                 break;
             case GAME_STATE.GAME:
                 var renderStart = playerViewLeftTop(this.camera),
@@ -260,12 +293,6 @@ function Game() {
                 this.map.render(bgCtx);
                 for (var t = renderStartY; t < renderEndY; t++) {
                     for (var s = renderStartX; s < renderEndX; s++) {
-                        //DEBUG
-                        if (this.items[t] === undefined) {
-                            console.log("ERROR");
-                        }
-
-
                         if (this.items[t][s] === undefined) {
                             continue;
                         }
@@ -291,7 +318,9 @@ function Game() {
                 }
 
                 // render info
-                infoCtx.clearRect(80,0,100,INFO_HEIGHT);
+                infoCtx.clearRect(0,0,INFO_WIDTH,INFO_HEIGHT);
+                infoCtx.fillText("LIFE: ",50,27);
+                infoCtx.fillText("SCORE: 0",C_WIDTH - 150, 27);
                 var d = PLAYER_LIFE - this.player.life;
                 while (d < PLAYER_LIFE) {
                     s_soulgem[d].draw(infoCtx, 80 + 27 * (d - PLAYER_LIFE + this.player.life), 8);
@@ -311,7 +340,8 @@ function Game() {
                     ctx.clearRect(0,0,C_WIDTH,C_HEIGHT);
                     enemyCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
                     bgCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
-                    this.failUI.currentFrame().draw(bgCtx, C_WIDTH/2 - TILE_LEN / 2, C_HEIGHT/3);
+                    s_gameOver.draw(bgCtx,(C_WIDTH-520)/2,100);
+                    this.failUI.currentFrame().draw(bgCtx, C_WIDTH/2 - TILE_LEN / 2, C_HEIGHT * 2/3);
                     this.failUI.update();
                 }
                 break;
@@ -321,8 +351,9 @@ function Game() {
                     ctx.clearRect(0,0,C_WIDTH,C_HEIGHT);
                     enemyCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
                     bgCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
-                    this.victoryUI[0].currentFrame().draw(bgCtx, C_WIDTH/2 - TILE_LEN, C_HEIGHT/3);
-                    this.victoryUI[1].currentFrame().draw(bgCtx, C_WIDTH/2, C_HEIGHT/3);
+                    s_victory.draw(bgCtx,(C_WIDTH-11*TILE_LEN)/2,100);
+                    this.victoryUI[0].currentFrame().draw(bgCtx, C_WIDTH/2 - TILE_LEN, C_HEIGHT * 2/3);
+                    this.victoryUI[1].currentFrame().draw(bgCtx, C_WIDTH/2, C_HEIGHT * 2/3);
                     this.victoryUI[0].update();
                     this.victoryUI[1].update();
                 } else {

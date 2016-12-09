@@ -168,8 +168,6 @@ Monster.prototype.init = function (camera) {
     }
 
     this.availableDir[0] = this.charDir;
-    console.log("SPEED: ", this.speed);
-
     this.camera = camera;
 };
 
@@ -182,7 +180,6 @@ Monster.prototype.checkPlayer = function () {
 
     if (this.player.collision(this) == MOVE_ACTION.NO_MOVE && !this.player.caught) {
         if (!this.player.kuro && !this.killed) {
-            console.log("COLLIDE");
             this.player.caught = true;
             this.player.life--;
         } else {
@@ -465,8 +462,6 @@ Player.prototype.DieRender = function(ctx , dieTime) {
     var curAnime;
     if (this.charDir !== undefined) {
         curAnime = this.currentAnimation.currentFrame();
-        console.log(curAnime.height * (dieTime / DIE_TIME));
-
         if (curAnime === s_homuraNorm[2][1] || curAnime === s_homuraKuro[2][1]) {
             curAnime.drawWithSize(ctx, this.posnX - offsetX(this.camera.cameraX) - ANIMATION_CORRECTION + MODIFY_RIGHT,
                 this.posnY - offsetY(this.camera.cameraY), curAnime.width, curAnime.height * (dieTime / DIE_TIME));

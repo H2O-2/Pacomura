@@ -4,7 +4,7 @@
 
 var s_homuraNorm, s_homuraKuro, s_qb, s_madoka,s_qbDead, s_soulgem,
     s_greifSeed, s_rocket, s_grenade, s_pistol,
-    s_shotgun, s_map;
+    s_shotgun, s_map, s_title, s_gameOver, s_victory;
 
 function Sprite(img, xSprite, ySprite, width, height) {
     this.img = img; // the whole sprite sheet
@@ -20,7 +20,7 @@ Sprite.prototype.draw = function (context, xCanvas, yCanvas) {
 };
 
 Sprite.prototype.drawWithSize = function (context, xCanvas, yCanvas, width, height) {
-    context.drawImage(this.img, this.xSprite, this.ySprite, width, height, xCanvas, yCanvas, width, height);
+    if (height !== 0) context.drawImage(this.img, this.xSprite, this.ySprite, width, height, xCanvas, yCanvas, width, height);
 };
 
 function spriteInit(img) {
@@ -167,7 +167,12 @@ function spriteInit(img) {
     s_pistol = new Sprite(img, TILE_LEN * 15 + 8, TILE_LEN * 2 + 5, 16, 23);
     s_shotgun = new Sprite(img, TILE_LEN * 16 + 4, TILE_LEN * 2 + 7, 24, 19);
 
-    s_map = new Sprite(img, 0, TILE_LEN * 9, TILE_LEN * MAP_WIDTH, TILE_LEN * MAP_HEIGHT);
+    s_map = new Sprite(img, 0, TILE_LEN * 11, TILE_LEN * MAP_WIDTH, TILE_LEN * MAP_HEIGHT);
+
+    s_title = new Sprite(img, TILE_LEN * 17, 0, 11 * TILE_LEN, 146);
+
+    s_gameOver = new Sprite(img, TILE_LEN * 17, 5 * TILE_LEN, 520, 74);
+    s_victory = new Sprite(img, TILE_LEN * 17, 8 * TILE_LEN, 11 * TILE_LEN, 74);
 }
 
 
