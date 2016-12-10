@@ -6,7 +6,6 @@ window.addEventListener("keydown", readInput);
 
 function Game() {
     this.gameStatus = GAME_STATE.START;
-    //this.gameStatus = GAME_STATE.GAME;
     this.points = 0;
 
     this.camera = null;
@@ -14,8 +13,8 @@ function Game() {
     this.player = null;
     this.monster = new Array(MONSTER_BIRTHPLACE);
 
-    this.startBlink = true;
-    this.startTimer = 0;
+    this.blink = true;
+    this.blinkTimer = 0;
 
     this.dieTimer = DIE_TIME;
     this.items = new Array (ITEM_NUM);
@@ -23,6 +22,54 @@ function Game() {
     this.startUI = new Animation(s_homuraNorm[3]);
     this.failUI = new Animation(s_homuraKuro[3]);
     this.victoryUI = new Array (2);
+
+    this.itemInit = function () {
+        for (var r = 0; r < ITEM_ARRAY.length; r++) {
+            this.items[r] = new Array(ITEM_ARRAY[r].length);
+            for (var z = 0; z < ITEM_ARRAY[r].length; z++) {
+                if (ITEM_ARRAY[r][z] === 0) {
+                    this.items[r][z] = undefined;
+                    continue;
+                }
+
+                switch (ITEM_ARRAY[r][z]) {
+                    case 1:
+                        this.items[r][z] = new PointItem((z + BORDER.START_POINT + 1) * TILE_LEN,
+                            (r + BORDER.START_POINT + 1) * TILE_LEN, this.camera);
+                        break;
+                    case 2:
+                        this.items[r][z] = new SpecialItem((z + BORDER.START_POINT + 1) * TILE_LEN,
+                            (r + BORDER.START_POINT + 1) * TILE_LEN, ITEM_TYPE.GRENADE, this.camera);
+                        break;
+                    case 3:
+                        this.items[r][z] = new SpecialItem((z + BORDER.START_POINT + 1) * TILE_LEN,
+                            (r + BORDER.START_POINT + 1) * TILE_LEN, ITEM_TYPE.PISTOL, this.camera);
+                        break;
+                    case 4:
+                        this.items[r][z] = new SpecialItem((z + BORDER.START_POINT + 1) * TILE_LEN,
+                            (r + BORDER.START_POINT + 1) * TILE_LEN, ITEM_TYPE.SHOTGUN, this.camera);
+                        break;
+                    case 5:
+                        this.items[r][z] = new SpecialItem((z + BORDER.START_POINT + 1) * TILE_LEN,
+                            (r + BORDER.START_POINT + 1) * TILE_LEN, ITEM_TYPE.ROCKET, this.camera);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    };
+
+    this.gameReset = function () {
+        this.gameStatus = GAME_STATE.GAME;
+        this.points = 0;
+        this.player.revive();
+        this.player.life = PLAYER_LIFE;
+        this.player.itemNum = 0;
+        this.monsterReset();
+        this.dieTimer = DIE_TIME;
+        this.itemInit();
+    };
 
     this.monsterReset = function () {
         for (var i = 0; i < this.monster.length; i++) {
@@ -87,41 +134,7 @@ function Game() {
             this.player.observers[k].attach(this.player);
         }
 
-        for (var r = 0; r < ITEM_ARRAY.length; r++) {
-            this.items[r] = new Array(ITEM_ARRAY[r].length);
-            var itemNum = 0;
-            for (var z = 0; z < ITEM_ARRAY[r].length; z++) {
-                if (ITEM_ARRAY[r][z] === 0) {
-                    this.items[r][z] = undefined;
-                    continue;
-                }
-
-                switch (ITEM_ARRAY[r][z]) {
-                    case 1:
-                        this.items[r][z] = new PointItem((z + BORDER.START_POINT + 1) * TILE_LEN,
-                            (r + BORDER.START_POINT + 1) * TILE_LEN, this.camera);
-                        break;
-                    case 2:
-                        this.items[r][z] = new SpecialItem((z + BORDER.START_POINT + 1) * TILE_LEN,
-                            (r + BORDER.START_POINT + 1) * TILE_LEN, ITEM_TYPE.GRENADE, this.camera);
-                        break;
-                    case 3:
-                        this.items[r][z] = new SpecialItem((z + BORDER.START_POINT + 1) * TILE_LEN,
-                            (r + BORDER.START_POINT + 1) * TILE_LEN, ITEM_TYPE.PISTOL, this.camera);
-                        break;
-                    case 4:
-                        this.items[r][z] = new SpecialItem((z + BORDER.START_POINT + 1) * TILE_LEN,
-                            (r + BORDER.START_POINT + 1) * TILE_LEN, ITEM_TYPE.SHOTGUN, this.camera);
-                        break;
-                    case 5:
-                        this.items[r][z] = new SpecialItem((z + BORDER.START_POINT + 1) * TILE_LEN,
-                            (r + BORDER.START_POINT + 1) * TILE_LEN, ITEM_TYPE.ROCKET, this.camera);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
+        this.itemInit();
     };
 
     this.isDead = function () {
@@ -133,11 +146,16 @@ function Game() {
     };
 
     this.update = function () {
-        if (this.isDead()) this.gameStatus = GAME_STATE.FAILURE;
-        else if (this.isVictory()) this.gameStatus = GAME_STATE.VICTORY;
-        else if (this.player.caught) this.gameStatus = GAME_STATE.DIE;
+        if (this.isDead() && this.dieTimer > 0) {
+            keyEvt.setGame(false);
+            this.gameStatus = GAME_STATE.FAILURE;
+        } else if (this.isVictory() && this.monster[0].corpseTime < MONSTER_CORPSE_TIME / 2) {
+            keyEvt.setGame(false);
+            this.gameStatus = GAME_STATE.VICTORY;
+        }
+        else if (this.player.caught && this.gameStatus == GAME_STATE.GAME) this.gameStatus = GAME_STATE.DIE;
 
-        if (this.gameStatus == GAME_STATE.DIE && this.dieTimer <= 0){
+        if (this.gameStatus == GAME_STATE.DIE && this.dieTimer < 0){
             this.gameStatus = GAME_STATE.GAME;
             this.player.revive();
             this.dieTimer = DIE_TIME;
@@ -237,6 +255,10 @@ function Game() {
                 break;
             case GAME_STATE.FAILURE:
                 if (this.dieTimer > 0) this.dieTimer--;
+                if (keyEvt.getGame()) {
+                    this.gameReset();
+                    this.update();
+                }
                 break;
             case GAME_STATE.VICTORY:
                 for (var v = 0; v < this.monster.length; v++) {
@@ -244,21 +266,37 @@ function Game() {
                     victoryMonster.killed = true;
                     victoryMonster.update();
                 }
+
+                if (keyEvt.getGame()) {
+                    this.gameReset();
+                    this.update();
+                }
                 break;
             default:
                 break;
         }
-        return;
-
     };
 
     this.toggleStartBink = function () {
-        if (this.startBlink) {
-            this.startBlink = false;
+        if (this.blink) {
+            this.blink = false;
             return;
         }
 
-        this.startBlink = true;
+        this.blink = true;
+    };
+
+    this.infoBlink = function (str) {
+        infoCtx.clearRect(0,0,INFO_WIDTH,INFO_HEIGHT);
+        if (this.blink) {
+            infoCtx.textAlign = "center";
+            infoCtx.fillText(str, INFO_WIDTH/2, 27);
+            this.blinkTimer++;
+        } else {
+            this.blinkTimer++;
+        }
+
+        if (this.blinkTimer % START_TEXT_BLINK === 0) this.toggleStartBink();
     };
 
     this.render = function (ctx, bgCtx) {
@@ -269,16 +307,7 @@ function Game() {
                 s_title.draw(bgCtx,(C_WIDTH-11*TILE_LEN)/2,50);
                 this.startUI.currentFrame().draw(bgCtx,C_WIDTH/2-TILE_LEN/2,C_HEIGHT * 2/3);
 
-                infoCtx.clearRect(0,0,INFO_WIDTH,INFO_HEIGHT);
-                if (this.startBlink) {
-                    infoCtx.textAlign = "center";
-                    infoCtx.fillText("PRESS SPACE TO START", INFO_WIDTH/2, 27);
-                    this.startTimer++;
-                } else {
-                    this.startTimer++;
-                }
-
-                if (this.startTimer % START_TEXT_BLINK === 0) this.toggleStartBink();
+                this.infoBlink("PRESS SPACE TO START");
                 break;
             case GAME_STATE.GAME:
                 var renderStart = playerViewLeftTop(this.camera),
@@ -319,8 +348,10 @@ function Game() {
 
                 // render info
                 infoCtx.clearRect(0,0,INFO_WIDTH,INFO_HEIGHT);
+                var scoreText = "SCORE: " + this.points;
+
                 infoCtx.fillText("LIFE: ",50,27);
-                infoCtx.fillText("SCORE: 0",C_WIDTH - 150, 27);
+                infoCtx.fillText(scoreText,C_WIDTH - 120, 27);
                 var d = PLAYER_LIFE - this.player.life;
                 while (d < PLAYER_LIFE) {
                     s_soulgem[d].draw(infoCtx, 80 + 27 * (d - PLAYER_LIFE + this.player.life), 8);
@@ -340,9 +371,15 @@ function Game() {
                     ctx.clearRect(0,0,C_WIDTH,C_HEIGHT);
                     enemyCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
                     bgCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
+                    infoCtx.clearRect(0,0,INFO_WIDTH,INFO_HEIGHT);
+                    var finalScore = "YOUR SCORE: " + this.points;
+
                     s_gameOver.draw(bgCtx,(C_WIDTH-520)/2,100);
                     this.failUI.currentFrame().draw(bgCtx, C_WIDTH/2 - TILE_LEN / 2, C_HEIGHT * 2/3);
                     this.failUI.update();
+                    bgCtx.textAlign = "center";
+                    bgCtx.fillText(finalScore,C_WIDTH/2, C_HEIGHT * 9/10);
+                    this.infoBlink("PRESS SPACE TO RESTART");
                 }
                 break;
             case GAME_STATE.VICTORY:
@@ -356,6 +393,7 @@ function Game() {
                     this.victoryUI[1].currentFrame().draw(bgCtx, C_WIDTH/2, C_HEIGHT * 2/3);
                     this.victoryUI[0].update();
                     this.victoryUI[1].update();
+                    this.infoBlink("PRESS SPACE TO RESTART");
                 } else {
                     enemyCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
 

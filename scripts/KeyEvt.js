@@ -18,7 +18,7 @@ function KeyEvt() {
 
     this.setGame = function (isStarted) {
         gameStart = isStarted;
-    }
+    };
 
     this.getGame = function () {
         return gameStart;
@@ -33,5 +33,9 @@ function readInput(e) {
         keyEvt.setDir(e.keyCode);
     }
 
-    if (e.keyCode == KEY.SPACE) keyEvt.setGame(true);
+    console.log(e.keyCode);
+    if (e.keyCode == KEY.SPACE) {
+        console.log("TRUE");
+        keyEvt.setGame(true);
+    }
 }

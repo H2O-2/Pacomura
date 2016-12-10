@@ -423,6 +423,7 @@ Player.prototype.update = function () {
     if (this.kuro && this.kuroTime > KURO_TIME) {
         this.kuro = false;
         this.kuroTime = 0;
+        this.killNum = 0;
         this.speed = CHARACTER_SPEED;
     } else if (this.kuro) {
         this.kuroTime++;
