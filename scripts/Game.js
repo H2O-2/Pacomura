@@ -11,13 +11,16 @@ function Game() {
     this.camera = null;
 
     this.player = null;
+    this.totalLife = PLAYER_LIFE;
     this.monster = new Array(MONSTER_BIRTHPLACE);
 
     this.blink = true;
     this.blinkTimer = 0;
 
     this.dieTimer = DIE_TIME;
+
     this.items = new Array (ITEM_NUM);
+    this.lifeItem = false;
 
     this.startUI = new Animation(s_homuraNorm[3]);
     this.failUI = new Animation(s_homuraKuro[3]);
@@ -53,6 +56,10 @@ function Game() {
                         this.items[r][z] = new SpecialItem((z + BORDER.START_POINT + 1) * TILE_LEN,
                             (r + BORDER.START_POINT + 1) * TILE_LEN, ITEM_TYPE.ROCKET, this.camera);
                         break;
+                    case 6:
+                        this.items[r][z] = new SpecialItem((z + BORDER.START_POINT + 1) * TILE_LEN,
+                            (r + BORDER.START_POINT + 1) * TILE_LEN, ITEM_TYPE.LIFE, this.camera);
+                        break;
                     default:
                         break;
                 }
@@ -65,6 +72,7 @@ function Game() {
         this.points = 0;
         this.player.revive();
         this.player.life = PLAYER_LIFE;
+        this.totalLife = PLAYER_LIFE;
         this.player.itemNum = 0;
         this.monsterReset();
         this.dieTimer = DIE_TIME;
@@ -172,6 +180,7 @@ function Game() {
                 break;
             case GAME_STATE.GAME:
                 this.player.update();
+                if (this.player.life <= PLAYER_LIFE) this.totalLife = PLAYER_LIFE;
 
                 // update Monster
                 for (var i = 0; i < this.monster.length; i++) {
@@ -235,8 +244,12 @@ function Game() {
                                     this.player.itemNum++;
                                     break;
                                 case ITEM_TYPE.LIFE:
+                                    if (!this.lifeItem) break;
                                     this.points += POINTS.LIFE;
                                     this.player.life++;
+                                    if (this.totalLife >= PLAYER_LIFE) this.totalLife++;
+                                    this.lifeItem = false;
+                                    this.items[a][b] = undefined;
                                     break;
                                 default:
                                     this.points += POINTS.SPECIAL;
@@ -246,12 +259,18 @@ function Game() {
                             }
 
                             this.items[curY][curX] = undefined;
+
+                            var lifeItemRate = Math.floor(Math.random() * 100);
+                            if (!this.lifeItem && lifeItemRate == 50) {
+                                this.lifeItem = true;
+                            }
                         }
                     }
                 }
                 break;
             case GAME_STATE.DIE:
                 this.dieTimer--;
+                this.lifeItem = false;
                 break;
             case GAME_STATE.FAILURE:
                 if (this.dieTimer > 0) this.dieTimer--;
@@ -322,7 +341,8 @@ function Game() {
                 this.map.render(bgCtx);
                 for (var t = renderStartY; t < renderEndY; t++) {
                     for (var s = renderStartX; s < renderEndX; s++) {
-                        if (this.items[t][s] === undefined) {
+                        if (this.items[t][s] === undefined ||
+                            (this.items[t][s].type == ITEM_TYPE.LIFE && !this.lifeItem)) {
                             continue;
                         }
                         this.items[t][s].render(bgCtx);
@@ -352,9 +372,9 @@ function Game() {
 
                 infoCtx.fillText("LIFE: ",50,27);
                 infoCtx.fillText(scoreText,C_WIDTH - 120, 27);
-                var d = PLAYER_LIFE - this.player.life;
-                while (d < PLAYER_LIFE) {
-                    s_soulgem[d].draw(infoCtx, 80 + 27 * (d - PLAYER_LIFE + this.player.life), 8);
+                var d = this.totalLife - this.player.life;
+                while (d < this.totalLife) {
+                    s_soulgem[d % 3].draw(infoCtx, 80 + 27 * (d - this.totalLife + this.player.life), 8);
                     d++;
                 }
                 break;

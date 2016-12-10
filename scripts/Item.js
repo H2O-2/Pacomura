@@ -37,7 +37,7 @@ Item.prototype.render = function (bgCtx) {
                     this.posnY - Math.round(POINT_HEIGHT / 2) - offsetY(this.camera.cameraY));
                 break;
 			case ITEM_TYPE.LIFE:
-                s_soulgem.draw(bgCtx, this.posnX - offsetX(this.camera.cameraX),
+                s_soulgem[0].draw(bgCtx, this.posnX - offsetX(this.camera.cameraX),
 					this.posnY - Math.round(POINT_HEIGHT / 2) - offsetY(this.camera.cameraY));
                 break;
 			default:
