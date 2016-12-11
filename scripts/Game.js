@@ -255,12 +255,13 @@ function Game() {
                                     this.points += POINTS.SPECIAL;
                                     this.player.kuro = true;
                                     this.player.speed = KURO_SPEED;
+                                    this.player.kuroTime = 0;
                                     break;
                             }
 
                             this.items[curY][curX] = undefined;
 
-                            var lifeItemRate = Math.floor(Math.random() * 100);
+                            var lifeItemRate = Math.floor(Math.random() * 200);
                             if (!this.lifeItem && lifeItemRate == 50) {
                                 this.lifeItem = true;
                             }
@@ -392,27 +393,35 @@ function Game() {
                     enemyCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
                     bgCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
                     infoCtx.clearRect(0,0,INFO_WIDTH,INFO_HEIGHT);
-                    var finalScore = "YOUR SCORE: " + this.points;
+                    var failScore = "YOUR SCORE: " + this.points;
 
                     s_gameOver.draw(bgCtx,(C_WIDTH-520)/2,100);
                     this.failUI.currentFrame().draw(bgCtx, C_WIDTH/2 - TILE_LEN / 2, C_HEIGHT * 2/3);
                     this.failUI.update();
                     bgCtx.textAlign = "center";
-                    bgCtx.fillText(finalScore,C_WIDTH/2, C_HEIGHT * 9/10);
+                    bgCtx.fillText(failScore,C_WIDTH/2, C_HEIGHT * 9/10);
                     this.infoBlink("PRESS SPACE TO RESTART");
                 }
                 break;
             case GAME_STATE.VICTORY:
-
                 if (this.monster[0].corpseTime > MONSTER_CORPSE_TIME / 2) {
+                    if (this.player.life > 0) {
+                        this.points += this.player.life * POINTS.LIFE;
+                        this.player.life = 0;
+                        this.dieTimer = 0;
+                    }
                     ctx.clearRect(0,0,C_WIDTH,C_HEIGHT);
                     enemyCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
                     bgCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
-                    s_victory.draw(bgCtx,(C_WIDTH-11*TILE_LEN)/2,100);
+                    var victoryScore = "YOUR SCORE: " + this.points;
+
+                    s_victory.draw(bgCtx,(C_WIDTH-13*TILE_LEN)/2,100);
                     this.victoryUI[0].currentFrame().draw(bgCtx, C_WIDTH/2 - TILE_LEN, C_HEIGHT * 2/3);
                     this.victoryUI[1].currentFrame().draw(bgCtx, C_WIDTH/2, C_HEIGHT * 2/3);
                     this.victoryUI[0].update();
                     this.victoryUI[1].update();
+                    bgCtx.textAlign = "center";
+                    bgCtx.fillText(victoryScore,C_WIDTH/2, C_HEIGHT * 9/10);
                     this.infoBlink("PRESS SPACE TO RESTART");
                 } else {
                     enemyCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);

@@ -16,9 +16,6 @@ function Map() {
         this.tiles[MAP_WIDTH - 1].push(new Tile(-1,-1));
         this.tiles[MAP_WIDTH - 1][MAP_HEIGHT].tileStatus = TILE_STATUS.OCCUPIED;
 
-        console.log("FIRST");
-        console.log(this.tiles[0][0]);
-
         for (var m = 0; m < WALL_ARRAY.length; m++) {
             for (var n = 0; n < WALL_ARRAY[m].length; n++) {
                 this.tiles[WALL_ARRAY[m][n]][m].tileStatus = TILE_STATUS.OCCUPIED;

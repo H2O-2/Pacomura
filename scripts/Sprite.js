@@ -172,7 +172,7 @@ function spriteInit(img) {
     s_title = new Sprite(img, TILE_LEN * 17, 0, 11 * TILE_LEN, 146);
 
     s_gameOver = new Sprite(img, TILE_LEN * 17, 5 * TILE_LEN, 520, 74);
-    s_victory = new Sprite(img, TILE_LEN * 17, 8 * TILE_LEN, 11 * TILE_LEN, 74);
+    s_victory = new Sprite(img, TILE_LEN * 17, 8 * TILE_LEN, 13 * TILE_LEN, 74);
 }
 
 

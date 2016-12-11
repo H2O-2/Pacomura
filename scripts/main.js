@@ -45,20 +45,35 @@ function main() {
     var img = new Image();
     img.src = "img/gameSprite.png";
 
+    var posnReference = $("#bgCanvas");
+    var infoCanvas = $("#infoCanvas");
+    var icons = $(".icons");
+
     img.onload = function () {
         spriteInit(this);
         var game = new Game();
         game.gameInit(ctx, bgCtx);
 
         var loop = function () {
-            var gameStatus = game.update();
+            infoCanvas.offset({top: posnReference.offset().top + posnReference.height() + INFO_INTERVAL, left: this.left});
+
+            if (window.innerHeight > 650) {
+                icons.offset({top: window.innerHeight - 100, left: this.left});
+            }
+/*
+            if (icons.offset().top > infoCanvas.offset().top + infoCanvas.height()) {
+                icons.css('display','block');
+            } else {
+                icons.css('display','none');
+            }
+*/
+            game.update();
             game.render(ctx, bgCtx);
             window.requestAnimationFrame(loop);
         };
         window.requestAnimationFrame(loop);
     };
 }
-
 
 window.onload = function () {
     main();
