@@ -5,7 +5,7 @@
 window.addEventListener("keydown", readInput);
 
 function Game() {
-    this.gameStatus = GAME_STATE.START;
+    this.gameStatus = GAME_STATE.FAILURE;
     this.points = 0;
 
     this.camera = null;
@@ -327,7 +327,7 @@ function Game() {
                 s_title.draw(bgCtx,(C_WIDTH-11*TILE_LEN)/2,50);
                 this.startUI.currentFrame().draw(bgCtx,C_WIDTH/2-TILE_LEN/2,C_HEIGHT * 2/3);
 
-                this.infoBlink("PRESS SPACE TO START");
+                this.infoBlink("PRESS ENTER TO START");
                 break;
             case GAME_STATE.GAME:
                 var renderStart = playerViewLeftTop(this.camera),
@@ -400,7 +400,9 @@ function Game() {
                     this.failUI.update();
                     bgCtx.textAlign = "center";
                     bgCtx.fillText(failScore,C_WIDTH/2, C_HEIGHT * 9/10);
-                    this.infoBlink("PRESS SPACE TO RESTART");
+                    this.infoBlink("PRESS ENTER TO RESTART");
+
+
                 }
                 break;
             case GAME_STATE.VICTORY:
@@ -422,7 +424,7 @@ function Game() {
                     this.victoryUI[1].update();
                     bgCtx.textAlign = "center";
                     bgCtx.fillText(victoryScore,C_WIDTH/2, C_HEIGHT * 9/10);
-                    this.infoBlink("PRESS SPACE TO RESTART");
+                    this.infoBlink("PRESS ENTER TO RESTART");
                 } else {
                     enemyCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
 

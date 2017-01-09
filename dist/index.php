@@ -25,7 +25,7 @@ Emoji from http://momokami.net/kotonoha/qb.html
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <link rel="stylesheet" href="styles/mainTest-04ae69593c.css"/>
+    <link rel="stylesheet" href="styles/mainTest-7996e5e39d.css"/>
     <title>Pacomura</title>
 
 </head>
@@ -34,7 +34,9 @@ Emoji from http://momokami.net/kotonoha/qb.html
     <canvas id="enemyCanvas"></canvas>
     <canvas id="playerCanvas"></canvas>
     <canvas id="infoCanvas"></canvas>
-    <div class="wrapper"></div>
+    <div class="high_score"></div>
+    <div class="message"></div>
+    <div class="wrapper jumbotron"></div>
     <div class="icons"><a href="https://github.com/H2O-2/Pacomura" target="_blank"><i class="fa fa-3x fa-github" aria-hidden="true"></i></a></div>
     <script src="scripts/main-b48d3e961c.js"></script>
 </body>

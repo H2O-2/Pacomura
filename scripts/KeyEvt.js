@@ -33,7 +33,7 @@ function readInput(e) {
         keyEvt.setDir(e.keyCode);
     }
 
-    if (e.keyCode == KEY.SPACE) {
+    if (e.keyCode == KEY.ENTER) {
         keyEvt.setGame(true);
     }
 }

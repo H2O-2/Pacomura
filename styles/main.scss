@@ -1,30 +1,38 @@
+$canvasBg: rgba(243,186,220,.3);
+$boardBg: rgba(243,186,220,.6);
+
 @media (max-width: 1280px) {
   .timeStamp {
-    display: none; } }
-html, body {
-  overflow: hidden; }
+    display: none;
+  }
+}
+
+html,body {
+  overflow: hidden;
+}
 
 canvas {
   z-index: 10;
   display: block;
   position: absolute;
   margin: 0 auto;
-  top: 15%;
-  /* Mobile modify */
+  top: 15%; /* Mobile modify */
   bottom: 0;
-  left: 0;
-  /* Mobile modify */
-  right: 0; }
+  left: 0; /* Mobile modify */
+  right: 0;
+}
 
 canvas#bgCanvas, canvas#infoCanvas {
   z-index: 5;
-  background-color: rgba(243, 186, 220, 0.3);
-  box-shadow: 0 0 40px 10px #1F1F1F; }
+  background-color: $canvasBg;
+  box-shadow: 0 0 40px 10px #1F1F1F;
+}
 
 html, body {
   width: 100%;
   height: 100%;
-  background-color: #717171; }
+  background-color: #717171;
+}
 
 .wrapper {
   width: 100%;
@@ -34,28 +42,35 @@ html, body {
   background: url("../img/bg.jpg") fixed center top no-repeat;
   background-size: cover;
   opacity: 0.7;
-  filter: blur(2px); }
+  filter: blur(2px);
+}
 
 .icons {
   width: 2.7em;
   height: 2.7em;
   margin: 0 auto;
-  z-index: 999; }
+  z-index: 999;
+}
 
 i {
-  color: grey; }
+  color: grey;
+}
 
 i:hover {
-  color: #dc94d1; }
+  color: #dc94d1;
+}
+
+// High Score Board
 
 .high_score_btn {
-  background-color: rgba(243, 186, 220, 0.6);
+  background-color: $boardBg;
   -moz-transform: rotate(270deg);
-  -webkit-transform: rotate(270deg);
-  -o-transform: rotate(270deg);
-  -ms-transform: rotate(270deg);
+  -webkit-transform: rotate(270deg) ;
+  -o-transform: rotate(270deg) ;
+  -ms-transform: rotate(270deg) ;
   transform: rotate(270deg);
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+
   margin-top: 15rem;
   margin-right: -4rem;
   padding: 0.5rem 1.5rem 2rem 1.5rem;
@@ -64,34 +79,41 @@ i:hover {
   cursor: pointer;
   position: fixed;
   right: 0;
-  z-index: 2; }
+  z-index: 2;
+}
 
 .high_score_btn h4 {
   color: #ffe3e3;
   font-size: 1.5rem;
-  font-weight: 300; }
+  font-weight: 300;
+}
 
 .high_score_board {
   position: absolute;
-  background-color: rgba(243, 186, 220, 0.6);
+  background-color: $boardBg;
   z-index: 2;
   border: 1px solid #e29494;
   border-radius: 10px 0 0 10px;
   right: 0;
   top: 4rem;
-  display: none; }
+  display: none;
+}
 
 .table > thead > tr > th, .table > tbody > tr > td, .table > tbody > tr > th {
   padding: 2rem 3rem 1rem 3rem;
   border: none;
-  font-size: 18px; }
+  font-size: 18px;
+}
 
 .table > thead > tr > th {
-  border-bottom: 1px solid #ddd; }
+  border-bottom: 1px solid #ddd;
+}
 
 .high_score_board .closeHighBrd {
   float: right;
   margin: .2rem .5rem -2rem 0;
-  cursor: pointer; }
+  cursor: pointer;
+}
 
-/*# sourceMappingURL=main.css.map */
+
+
