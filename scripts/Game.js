@@ -5,7 +5,7 @@
 window.addEventListener("keydown", readInput);
 
 function Game() {
-    this.gameStatus = GAME_STATE.FAILURE;
+    this.gameStatus = GAME_STATE.START;
     this.points = 0;
 
     this.camera = null;
@@ -25,6 +25,8 @@ function Game() {
     this.startUI = new Animation(s_homuraNorm[3]);
     this.failUI = new Animation(s_homuraKuro[3]);
     this.victoryUI = new Array (2);
+
+    this.inputRendered = false;
 
     this.itemInit = function () {
         for (var r = 0; r < ITEM_ARRAY.length; r++) {
@@ -77,6 +79,10 @@ function Game() {
         this.monsterReset();
         this.dieTimer = DIE_TIME;
         this.itemInit();
+
+        // remove input element
+        var highSubmit = $('form.high_score_submit');
+        if (highSubmit.length) highSubmit.remove();
     };
 
     this.monsterReset = function () {
@@ -396,13 +402,21 @@ function Game() {
                     var failScore = "YOUR SCORE: " + this.points;
 
                     s_gameOver.draw(bgCtx,(C_WIDTH-520)/2,100);
-                    this.failUI.currentFrame().draw(bgCtx, C_WIDTH/2 - TILE_LEN / 2, C_HEIGHT * 2/3);
+                    this.failUI.currentFrame().draw(bgCtx, C_WIDTH/2 - TILE_LEN / 2, C_HEIGHT * 3/5);
                     this.failUI.update();
                     bgCtx.textAlign = "center";
                     bgCtx.fillText(failScore,C_WIDTH/2, C_HEIGHT * 9/10);
-                    this.infoBlink("PRESS ENTER TO RESTART");
 
+                    if (!this.inputRendered) {
+                        $('#infoCanvas').after(USER_INPUT_HTML);
+                        this.inputRendered = true;
+                        placeHighInput();
+                    }
 
+                    checkInput();
+
+                    if (keyEvt.getInputStatus()) this.infoBlink("ENTER YOUR NAME");
+                    else this.infoBlink("PRESS ENTER TO RESTART");
                 }
                 break;
             case GAME_STATE.VICTORY:
@@ -418,13 +432,25 @@ function Game() {
                     var victoryScore = "YOUR SCORE: " + this.points;
 
                     s_victory.draw(bgCtx,(C_WIDTH-13*TILE_LEN)/2,100);
-                    this.victoryUI[0].currentFrame().draw(bgCtx, C_WIDTH/2 - TILE_LEN, C_HEIGHT * 2/3);
-                    this.victoryUI[1].currentFrame().draw(bgCtx, C_WIDTH/2, C_HEIGHT * 2/3);
+                    this.victoryUI[0].currentFrame().draw(bgCtx, C_WIDTH/2 - TILE_LEN, C_HEIGHT * 3/5);
+                    this.victoryUI[1].currentFrame().draw(bgCtx, C_WIDTH/2, C_HEIGHT * 3/5);
                     this.victoryUI[0].update();
                     this.victoryUI[1].update();
                     bgCtx.textAlign = "center";
                     bgCtx.fillText(victoryScore,C_WIDTH/2, C_HEIGHT * 9/10);
                     this.infoBlink("PRESS ENTER TO RESTART");
+
+                    if (!this.inputRendered) {
+                        $('#infoCanvas').after(USER_INPUT_HTML);
+                        this.inputRendered = true;
+                        placeHighInput();
+                    }
+
+                    checkInput();
+
+                    if (keyEvt.getInputStatus()) this.infoBlink("ENTER YOUR NAME");
+                    else this.infoBlink("PRESS ENTER TO RESTART");
+
                 } else {
                     enemyCtx.clearRect(0,0,C_WIDTH,C_HEIGHT);
 

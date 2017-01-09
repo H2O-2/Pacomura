@@ -39,10 +39,6 @@ Emoji from http://momokami.net/kotonoha/qb.html
     <canvas id="enemyCanvas"></canvas>
     <canvas id="playerCanvas"></canvas>
     <canvas id="infoCanvas"></canvas>
-    <form action="" method="post">
-        <input type="text" name="username" size="30" value="Homura" />
-        <input type="submit" name="submit" value="SUBMIT" />
-    </form>
     <div class="high_score_btn" onclick="showHighScore()"><h4>High Score</h4></div>
     <div class="high_score_board">
         <p class="closeHighBrd" onclick="hideHighScore()">x</p>

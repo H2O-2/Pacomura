@@ -7,6 +7,7 @@ window.addEventListener("keydown", readInput);
 function KeyEvt() {
     var gameStart = false;
     var dirPressed;
+    var inputting = false;
 
     this.setDir = function (dir) {
         dirPressed = dir - KEY_TO_DIR;
@@ -23,6 +24,15 @@ function KeyEvt() {
     this.getGame = function () {
         return gameStart;
     };
+
+    this.getInputStatus = function () {
+        return inputting;
+    };
+
+    this.inputToggle = function () {
+        if (inputting) inputting = false;
+        else inputting = true;
+    };
 }
 
 var keyEvt = new KeyEvt();
@@ -33,7 +43,7 @@ function readInput(e) {
         keyEvt.setDir(e.keyCode);
     }
 
-    if (e.keyCode == KEY.ENTER) {
+    if (e.keyCode == KEY.ENTER && !keyEvt.getInputStatus()) {
         keyEvt.setGame(true);
     }
 }

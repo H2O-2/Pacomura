@@ -11,6 +11,11 @@ var canvas = document.getElementById("playerCanvas"),
     info = document.getElementById("infoCanvas"),
     infoCtx = info.getContext("2d");
 
+var USER_INPUT_HTML = $('<form class="high_score_submit" action="" method="post">' +
+    '<input id="inputName" type="text" name="username" size="30" value="Homura" />' +
+    '<input id="submitName" type="submit" name="submit" value="SUBMIT" />' +
+    '</form>');
+
 var WIDTH = window.innerWidth,
     HEIGHT = window.innerHeight,
     C_WIDTH = 640,
@@ -52,7 +57,7 @@ var BIRTH = {START_POINT_X: 12, START_POINT_Y: 14, END_POINT_X: 18, END_POINT_Y:
 
 var JUMP_ARRAY = [14,15,17,18];
 
-var KEY = {KEY_LEFT: 37, KEY_UP: 38, KEY_RIGHT: 39, KEY_DOWN: 40, ENTER: 32};
+var KEY = {KEY_LEFT: 37, KEY_UP: 38, KEY_RIGHT: 39, KEY_DOWN: 40, ENTER: 13};
 var KEY_TO_DIR = 37;
 
 var TILE_STATUS = {EMPTY: "EMPTY", OCCUPIED: "OCCUPIED", BIRTH_AREA:"BIRTH_AREA"};

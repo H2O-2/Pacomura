@@ -115,5 +115,41 @@ i:hover {
   cursor: pointer;
 }
 
+.high_score_submit {
+  position: absolute;
+  z-index: 100;
+}
+
+.high_score_submit #inputName {
+  background-color: $canvasBg;
+  border: none;
+  width: 12rem;
+  color: lightgrey;
+  font-weight: 300;
+  padding: .3rem .3rem .3rem .5rem;
+  border-radius: .2rem;
+  margin-right: .5rem;
+}
+
+.high_score_submit #inputName:focus {
+  outline: none;
+  background-color: $boardBg;
+  color: #353535;
+}
+
+.high_score_submit #submitName {
+  border: none;
+  background-color: black;
+  color: white;
+  font-weight: 300;
+  font-size: 1rem;
+  padding: .45rem .7rem .45rem .7rem;
+  border-radius: .2rem;
+}
+
+.high_score_submit #submitName:focus {
+  outline: none;
+}
+
 
 

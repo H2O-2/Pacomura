@@ -94,4 +94,35 @@ i:hover {
   margin: .2rem .5rem -2rem 0;
   cursor: pointer; }
 
+.high_score_submit {
+  position: absolute;
+  z-index: 100; }
+
+.high_score_submit #inputName {
+  background-color: rgba(243, 186, 220, 0.3);
+  border: none;
+  width: 12rem;
+  color: lightgrey;
+  font-weight: 300;
+  padding: .3rem .3rem .3rem .5rem;
+  border-radius: .2rem;
+  margin-right: .5rem; }
+
+.high_score_submit #inputName:focus {
+  outline: none;
+  background-color: rgba(243, 186, 220, 0.6);
+  color: #353535; }
+
+.high_score_submit #submitName {
+  border: none;
+  background-color: black;
+  color: white;
+  font-weight: 300;
+  font-size: 1rem;
+  padding: .45rem .7rem .45rem .7rem;
+  border-radius: .2rem; }
+
+.high_score_submit #submitName:focus {
+  outline: none; }
+
 /*# sourceMappingURL=main.css.map */
