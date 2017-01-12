@@ -27,7 +27,7 @@ gulp.task('clean', function() {
 });
 
 gulp.task('usemin',['jshint'], function () {
-  return gulp.src('./index.php')
+  return gulp.src('./index.html')
       .pipe(usemin({
         css:[minifycss(),rev()],
         js: [ngannotate(),uglify(),rev()]
@@ -55,13 +55,14 @@ gulp.task('default', ['clean'], function() {
 // Watch
 gulp.task('watch', ['browser-sync'], function() {
   // Watch .js files
-  gulp.watch('{scripts/*.js,./*.css,./*.php}', ['usemin']);
+  gulp.watch('{scripts/*.js,./*.css,./*.html, ./*.php}', ['usemin']);
 
 });
 
 gulp.task('browser-sync', ['default'], function () {
    var files = [
       './*.php',
+      './*.html',
       './*.css',
       'img/*.png',
       'img/*.jpg',
@@ -72,7 +73,7 @@ gulp.task('browser-sync', ['default'], function () {
    browserSync.init(files, {
       server: {
          baseDir: "dist",
-         index: "index.php"
+         index: "index.html"
       }
    });
         // Watch any files in dist/, reload on change

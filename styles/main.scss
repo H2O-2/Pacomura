@@ -7,6 +7,13 @@ $boardBg: rgba(243,186,220,.6);
   }
 }
 
+@media (max-height: 680px) {
+  .icons {
+    position: relative;
+    float: left;
+  }
+}
+
 html,body {
   overflow: hidden;
 }
@@ -149,6 +156,12 @@ i:hover {
 
 .high_score_submit #submitName:focus {
   outline: none;
+}
+
+.submit_info {
+  position: absolute;
+  z-index: 100;
+  color: #000;
 }
 
 

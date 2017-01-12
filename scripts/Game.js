@@ -79,10 +79,14 @@ function Game() {
         this.monsterReset();
         this.dieTimer = DIE_TIME;
         this.itemInit();
+        this.inputRendered = false;
 
         // remove input element
-        var highSubmit = $('form.high_score_submit');
+        var highSubmit = $('form.high_score_submit'),
+            submitInfo = $('.submit_info');
+
         if (highSubmit.length) highSubmit.remove();
+        if (submitInfo.length) submitInfo.remove();
     };
 
     this.monsterReset = function () {
@@ -402,16 +406,19 @@ function Game() {
                     var failScore = "YOUR SCORE: " + this.points;
 
                     s_gameOver.draw(bgCtx,(C_WIDTH-520)/2,100);
-                    this.failUI.currentFrame().draw(bgCtx, C_WIDTH/2 - TILE_LEN / 2, C_HEIGHT * 3/5);
+                    this.failUI.currentFrame().draw(bgCtx, C_WIDTH/2 - TILE_LEN / 2, C_HEIGHT * .55);
                     this.failUI.update();
                     bgCtx.textAlign = "center";
                     bgCtx.fillText(failScore,C_WIDTH/2, C_HEIGHT * 9/10);
 
-                    if (!this.inputRendered) {
-                        $('#infoCanvas').after(USER_INPUT_HTML);
-                        this.inputRendered = true;
-                        placeHighInput();
-                    }
+                    $(document).ready(function () {
+                        if (!game.inputRendered) {
+                            $('#infoCanvas').after(USER_INPUT_HTML);
+                            game.inputRendered = true;
+                            placeHighInput();
+                            submitScore();
+                        }
+                    });
 
                     checkInput();
 
@@ -438,13 +445,15 @@ function Game() {
                     this.victoryUI[1].update();
                     bgCtx.textAlign = "center";
                     bgCtx.fillText(victoryScore,C_WIDTH/2, C_HEIGHT * 9/10);
-                    this.infoBlink("PRESS ENTER TO RESTART");
 
-                    if (!this.inputRendered) {
-                        $('#infoCanvas').after(USER_INPUT_HTML);
-                        this.inputRendered = true;
-                        placeHighInput();
-                    }
+                    $(document).ready(function () {
+                        if (!game.inputRendered) {
+                            $('#infoCanvas').after(USER_INPUT_HTML);
+                            game.inputRendered = true;
+                            placeHighInput();
+                            submitScore();
+                        }
+                    });
 
                     checkInput();
 

@@ -2,6 +2,8 @@
  * Created by H2O2 on 16/10/27.
  */
 
+var game;
+
 function main() {
 
     var MOBILE_OFFESET = 1/10;
@@ -51,14 +53,14 @@ function main() {
 
     img.onload = function () {
         spriteInit(this);
-        var game = new Game();
+        game = new Game();
         game.gameInit(ctx, bgCtx);
 
         var loop = function () {
             infoCanvas.offset({top: posnReference.offset().top + posnReference.height() + INFO_INTERVAL, left: this.left});
 
-            if (window.innerHeight > 650) {
-                icons.offset({top: window.innerHeight - 100, left: this.left});
+            if (window.innerHeight > 680) {
+                //icons.offset({top: window.innerHeight - 100, left: this.left});
             }
 /*
             if (icons.offset().top > infoCanvas.offset().top + infoCanvas.height()) {
